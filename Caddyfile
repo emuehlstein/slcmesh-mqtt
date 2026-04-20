@@ -1,0 +1,9 @@
+chicagooffline.com {
+    reverse_proxy localhost:3000
+}
+
+mqtt.chicagooffline.com {
+    # MQTT runs on port 1883 (raw TCP)
+    # This subdomain is for documentation/future WebSocket MQTT if needed
+    respond "MQTT broker available on port 1883" 200
+}

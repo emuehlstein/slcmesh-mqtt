@@ -1,0 +1,6 @@
+*.pem
+*.key
+.env
+.DS_Store
+corescope-data/
+caddy-data/

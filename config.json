@@ -1,0 +1,11 @@
+{
+  "port": 3000,
+  "mqtt": {
+    "broker": "mqtt://localhost:1883",
+    "topic": "meshcore/+/+/packets"
+  },
+  "mqttSources": [],
+  "channelKeys": {},
+  "defaultRegion": "ORD",
+  "dbPath": "/app/data/meshcore.db"
+}
