@@ -55,6 +55,13 @@ HEALTH_ENV_FILE
   echo "⚠️  Created $HEALTH_ENV with a placeholder TEST_CHANNEL_SECRET. Edit this file before using health checks in production."
 fi
 
+# Refuse to deploy with placeholder secret
+if grep -q "CHANGE_ME" "$HEALTH_ENV"; then
+  echo "❌ TEST_CHANNEL_SECRET is still the placeholder value."
+  echo "   Edit $HEALTH_ENV and set a real secret before deploying."
+  exit 1
+fi
+
 # Build meshcore-health-check image
 docker build -t meshcore-health-check:latest "$HEALTH_DIR"
 
@@ -88,5 +95,9 @@ echo "🌐 Web UI: https://chicagooffline.com"
 echo "📡 MQTT: mqtt://mqtt.chicagooffline.com:1883"
 echo "🩺 Health Check: https://healthcheck.chicagooffline.com"
 
-# Show logs
-docker logs -f corescope
+# Show recent logs (follow only in interactive terminals)
+if [ -t 1 ]; then
+  docker logs -f corescope
+else
+  docker logs --tail 20 corescope
+fi
