@@ -97,6 +97,7 @@ cp dev-config.json ~/corescope-dev-data/config.json
 cp dev-theme.json ~/corescope-dev-data/theme.json
 cp dev-public/audio-retro-modem.js ~/dev-public/audio-retro-modem.js
 cp dev-public/index.html ~/dev-public/index.html
+cp dev-map.js ~/dev-public/map.js
 
 # Start prod CoreScope (internal Caddy disabled)
 docker run -d --name corescope \
@@ -115,6 +116,7 @@ docker run -d --name corescope-dev \
   -v ~/corescope-dev-data:/app/data \
   -v ~/dev-public/index.html:/app/public/index.html:ro \
   -v ~/dev-public/audio-retro-modem.js:/app/public/audio-retro-modem.js:ro \
+  -v ~/dev-public/map.js:/app/public/map.js:ro \
   --network "$NETWORK_NAME" \
   ghcr.io/kpa-clawbot/corescope:latest
 
