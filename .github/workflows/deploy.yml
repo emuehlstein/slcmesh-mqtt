@@ -25,13 +25,8 @@ jobs:
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             set -e
             REPO_DIR=\$HOME/chimesh-mqtt
-            if [ ! -d "\$REPO_DIR/.git" ]; then
-              GIT_TERMINAL_PROMPT=0 git clone https://github.com/emuehlstein/chimesh-mqtt.git \$REPO_DIR
-            else
-              git -C \$REPO_DIR remote set-url origin https://github.com/emuehlstein/chimesh-mqtt.git
-              GIT_TERMINAL_PROMPT=0 git -C \$REPO_DIR fetch origin main
-              git -C \$REPO_DIR reset --hard origin/main
-            fi
+            rm -rf \$REPO_DIR
+            git clone https://github.com/emuehlstein/chimesh-mqtt.git \$REPO_DIR
             cd \$REPO_DIR
             TEST_CHANNEL_SECRET='${{ secrets.CARTOGRAPHER_HEALTHCHECK_KEY }}' bash deploy.sh
           EOF
