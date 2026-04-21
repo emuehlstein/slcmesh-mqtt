@@ -25,9 +25,8 @@ jobs:
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             set -e
             REPO_DIR=\$HOME/chimesh-mqtt
-            git config --global credential.helper ''
             rm -rf \$REPO_DIR
-            git clone https://github.com/emuehlstein/chimesh-mqtt.git \$REPO_DIR
+            GIT_TERMINAL_PROMPT=0 GIT_CONFIG_NOSYSTEM=1 HOME=/tmp git clone https://github.com/emuehlstein/chimesh-mqtt.git \$REPO_DIR
             cd \$REPO_DIR
             TEST_CHANNEL_SECRET='${{ secrets.CARTOGRAPHER_HEALTHCHECK_KEY }}' bash deploy.sh
           EOF
