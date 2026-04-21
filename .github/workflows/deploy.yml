@@ -24,7 +24,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             set -e
-            REPO_DIR=\$HOME/chicagooffline-corescope
+            REPO_DIR=\$HOME/chimesh-mqtt
             if [ ! -d "\$REPO_DIR/.git" ]; then
               git clone https://github.com/emuehlstein/chimesh-mqtt.git \$REPO_DIR
             else
