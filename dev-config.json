@@ -13,7 +13,6 @@
     "#healthcheck": "3ae59c2cda86744c75e68b3975a902ae"
   },
   "defaultRegion": "ORD",
-  "dbPath": "/app/data/meshcore-dev.db",
   "mapDefaults": {
     "center": [
       41.8781,
