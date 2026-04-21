@@ -7,3 +7,7 @@ mqtt.chicagooffline.com {
     # This subdomain is for documentation/future WebSocket MQTT if needed
     respond "MQTT broker available on port 1883" 200
 }
+
+healthcheck.chicagooffline.com {
+    reverse_proxy meshcore-health-check:3090
+}

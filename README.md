@@ -5,6 +5,7 @@ MeshCore network analyzer for Chicago (ORD region).
 ## URLs
 - **Web UI:** https://chicagooffline.com
 - **MQTT Broker:** mqtt://mqtt.chicagooffline.com:1883
+- **Health Check:** https://healthcheck.chicagooffline.com
 
 ## Architecture
 ```
@@ -14,6 +15,8 @@ chicagooffline.com (EC2 t3.small)
 │   ├── Go backend + packet store
 │   ├── Caddy HTTPS proxy
 │   └── Web UI
+├── Mesh Health Check Container
+│   └── Observer reachability test app (port 3090, internal only)
 └── Data Sources
     ├── Local observer nodes → publish to mqtt.chicagooffline.com:1883
     └── (Optional) LetsMesh public feed
@@ -45,6 +48,15 @@ CoreScope configuration. Edit and commit to trigger deployment.
 Caddy reverse proxy + HTTPS. Handles:
 - `chicagooffline.com` → CoreScope web UI
 - `mqtt.chicagooffline.com` → MQTT documentation
+- `healthcheck.chicagooffline.com` → Mesh Health Check app
+
+### Mesh Health Check Environment
+On first deploy, `deploy.sh` creates `~/meshcore-health-check/.env` with defaults.
+
+Important values to set on the server:
+- `TEST_CHANNEL_NAME` - channel used for health-check test messages
+- `TEST_CHANNEL_SECRET` - channel secret (replace placeholder)
+- `TURNSTILE_ENABLED` - set to `1` if you want Cloudflare Turnstile protection
 
 ### Connecting Observer Nodes
 Point your observer nodes (meshcoretomqtt, meshcore-packet-capture) to:
@@ -69,6 +81,7 @@ docker restart corescope
 ```
 A    chicagooffline.com       → <EC2-elastic-ip>
 A    mqtt.chicagooffline.com  → <EC2-elastic-ip>
+A    healthcheck.chicagooffline.com  → <EC2-elastic-ip>
 ```
 
 ## Maintenance
