@@ -29,6 +29,6 @@ dev-scope.chicagooffline.com {
 
     # Proxy everything else to dev CoreScope
     handle {
-        reverse_proxy corescope-dev:3001
+        reverse_proxy corescope-dev:3000
     }
 }
