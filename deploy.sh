@@ -7,11 +7,13 @@ NETWORK_NAME="chicagooffline-net"
 HEALTH_DIR="$HOME/meshcore-health-check"
 HEALTH_ENV="$HEALTH_DIR/.env"
 
-# Stop existing container if running
+# Stop existing containers if running
 docker stop corescope 2>/dev/null || true
 docker rm corescope 2>/dev/null || true
 docker stop meshcore-health-check 2>/dev/null || true
 docker rm meshcore-health-check 2>/dev/null || true
+docker stop landing 2>/dev/null || true
+docker rm landing 2>/dev/null || true
 
 # Ensure shared network exists so Caddy can reverse proxy to other containers by name
 docker network inspect "$NETWORK_NAME" >/dev/null 2>&1 || docker network create "$NETWORK_NAME"
@@ -90,6 +92,14 @@ docker run -d --name corescope \
   -v ~/landing:/srv/landing:ro \
   --network "$NETWORK_NAME" \
   ghcr.io/kpa-clawbot/corescope:latest
+
+# Start landing page container (nginx static file server on port 8080)
+docker run -d --name landing \
+  --restart=unless-stopped \
+  -v ~/landing:/usr/share/nginx/html:ro \
+  -e NGINX_PORT=8080 \
+  --network "$NETWORK_NAME" \
+  nginx:alpine
 
 # Start Mesh Health Check behind CoreScope's Caddy
 docker run -d --name meshcore-health-check \

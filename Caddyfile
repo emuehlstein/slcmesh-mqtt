@@ -1,6 +1,5 @@
 chicagooffline.com {
-    root * /srv/landing
-    file_server
+    reverse_proxy landing:8080
 }
 
 scope.chicagooffline.com {
