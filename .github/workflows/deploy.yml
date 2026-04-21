@@ -25,6 +25,7 @@ jobs:
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             set -e
             REPO_DIR=\$HOME/chimesh-mqtt
+            git config --global credential.helper ''
             rm -rf \$REPO_DIR
             git clone https://github.com/emuehlstein/chimesh-mqtt.git \$REPO_DIR
             cd \$REPO_DIR
