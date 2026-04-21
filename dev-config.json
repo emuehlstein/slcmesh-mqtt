@@ -1,0 +1,24 @@
+{
+  "port": 3001,
+  "mqtt": {
+    "broker": "mqtt://corescope:1883",
+    "topic": "meshcore/+/+/packets"
+  },
+  "mqttSources": [],
+  "channelKeys": {
+    "#public": "8b3387e9c5cdea6ac9e5edbaa115cd72",
+    "#atak": "d757e9af29e04f21843df60fc620671a",
+    "#wardriving": "e3c26491e9cd321e3a6be50d57d54acf",
+    "#test": "9cd8fcf22a47333b591d96a2b848b73f",
+    "#healthcheck": "3ae59c2cda86744c75e68b3975a902ae"
+  },
+  "defaultRegion": "ORD",
+  "dbPath": "/app/data/meshcore-dev.db",
+  "mapDefaults": {
+    "center": [
+      41.8781,
+      -87.6298
+    ],
+    "zoom": 11
+  }
+}

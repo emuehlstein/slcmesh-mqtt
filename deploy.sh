@@ -84,18 +84,6 @@ fi
 # Build meshcore-health-check image
 docker build -t meshcore-health-check:latest "$HEALTH_DIR"
 
-# Ensure dev-scope repo is present and up to date
-DEV_REPO_DIR=$HOME/chicagooffline-corescope
-if [ ! -d "$DEV_REPO_DIR/.git" ]; then
-  GIT_SSH_COMMAND="ssh -i $HOME/.ssh/chimesh_deploy -o StrictHostKeyChecking=no" \
-    git clone git@github.com:emuehlstein/chicagooffline-corescope.git $DEV_REPO_DIR
-else
-  git -C $DEV_REPO_DIR remote set-url origin git@github.com:emuehlstein/chicagooffline-corescope.git
-  GIT_SSH_COMMAND="ssh -i $HOME/.ssh/chimesh_deploy -o StrictHostKeyChecking=no" \
-    git -C $DEV_REPO_DIR fetch origin main
-  git -C $DEV_REPO_DIR reset --hard origin/main
-fi
-
 # Create directories if they don't exist
 mkdir -p ~/corescope-data ~/corescope-dev-data ~/caddy-data ~/landing ~/dev-public
 
@@ -105,10 +93,10 @@ cp Caddyfile ~/Caddyfile
 cp landing/index.html ~/landing/index.html
 
 # Copy dev-scope config and custom assets
-cp $DEV_REPO_DIR/dev-config.json ~/corescope-dev-data/config.json
-cp $DEV_REPO_DIR/dev-theme.json ~/corescope-dev-data/theme.json
-cp $DEV_REPO_DIR/public/audio-retro-modem.js ~/dev-public/audio-retro-modem.js
-cp $DEV_REPO_DIR/public/index.html ~/dev-public/index.html
+cp dev-config.json ~/corescope-dev-data/config.json
+cp dev-theme.json ~/corescope-dev-data/theme.json
+cp dev-public/audio-retro-modem.js ~/dev-public/audio-retro-modem.js
+cp dev-public/index.html ~/dev-public/index.html
 
 # Start prod CoreScope (internal Caddy disabled)
 docker run -d --name corescope \
