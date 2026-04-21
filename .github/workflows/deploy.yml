@@ -23,8 +23,14 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
-            cd ~/chicagooffline-corescope
-            git pull origin main
+            set -e
+            REPO_DIR=\$HOME/chicagooffline-corescope
+            if [ ! -d "\$REPO_DIR/.git" ]; then
+              git clone https://github.com/emuehlstein/chimesh-mqtt.git \$REPO_DIR
+            else
+              git -C \$REPO_DIR pull --ff-only origin main
+            fi
+            cd \$REPO_DIR
             TEST_CHANNEL_SECRET='${{ secrets.CARTOGRAPHER_HEALTHCHECK_KEY }}' bash deploy.sh
           EOF
 
