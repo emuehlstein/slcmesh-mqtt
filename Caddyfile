@@ -16,3 +16,19 @@ mqtt.chicagooffline.com {
 health.chicagooffline.com, healthcheck.chicagooffline.com {
     reverse_proxy meshcore-health-check:3090
 }
+
+# === Dev environments ===
+
+dev-scope.chicagooffline.com {
+    # Serve custom JS files (voices, etc.) directly
+    handle /custom/* {
+        root * /srv/dev-public
+        uri strip_prefix /custom
+        file_server
+    }
+
+    # Proxy everything else to dev CoreScope
+    handle {
+        reverse_proxy corescope-dev:3001
+    }
+}

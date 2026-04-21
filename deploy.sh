@@ -16,6 +16,8 @@ HEALTH_ENV="$HEALTH_DIR/.env"
 # Stop existing containers if running
 docker stop corescope 2>/dev/null || true
 docker rm corescope 2>/dev/null || true
+docker stop corescope-dev 2>/dev/null || true
+docker rm corescope-dev 2>/dev/null || true
 docker stop meshcore-health-check 2>/dev/null || true
 docker rm meshcore-health-check 2>/dev/null || true
 docker stop landing 2>/dev/null || true
@@ -82,15 +84,33 @@ fi
 # Build meshcore-health-check image
 docker build -t meshcore-health-check:latest "$HEALTH_DIR"
 
+# Ensure dev-scope repo is present and up to date
+DEV_REPO_DIR=$HOME/chicagooffline-corescope
+if [ ! -d "$DEV_REPO_DIR/.git" ]; then
+  GIT_SSH_COMMAND="ssh -i $HOME/.ssh/chimesh_deploy -o StrictHostKeyChecking=no" \
+    git clone git@github.com:emuehlstein/chicagooffline-corescope.git $DEV_REPO_DIR
+else
+  git -C $DEV_REPO_DIR remote set-url origin git@github.com:emuehlstein/chicagooffline-corescope.git
+  GIT_SSH_COMMAND="ssh -i $HOME/.ssh/chimesh_deploy -o StrictHostKeyChecking=no" \
+    git -C $DEV_REPO_DIR fetch origin main
+  git -C $DEV_REPO_DIR reset --hard origin/main
+fi
+
 # Create directories if they don't exist
-mkdir -p ~/corescope-data ~/caddy-data ~/landing
+mkdir -p ~/corescope-data ~/corescope-dev-data ~/caddy-data ~/landing ~/dev-public
 
 # Copy config and static files
 cp config.json ~/corescope-data/config.json
 cp Caddyfile ~/Caddyfile
 cp landing/index.html ~/landing/index.html
 
-# Start CoreScope (internal Caddy disabled — external Caddy handles TLS/routing)
+# Copy dev-scope config and custom assets
+cp $DEV_REPO_DIR/dev-config.json ~/corescope-dev-data/config.json
+cp $DEV_REPO_DIR/dev-theme.json ~/corescope-dev-data/theme.json
+cp $DEV_REPO_DIR/public/audio-retro-modem.js ~/dev-public/audio-retro-modem.js
+cp $DEV_REPO_DIR/public/index.html ~/dev-public/index.html
+
+# Start prod CoreScope (internal Caddy disabled)
 docker run -d --name corescope \
   --restart=unless-stopped \
   -p 1883:1883 \
@@ -99,15 +119,24 @@ docker run -d --name corescope \
   --network "$NETWORK_NAME" \
   ghcr.io/kpa-clawbot/corescope:latest
 
+# Start dev CoreScope (port 3001, separate DB, custom index.html injected)
+docker run -d --name corescope-dev \
+  --restart=unless-stopped \
+  -e DISABLE_CADDY=true \
+  -v ~/corescope-dev-data:/app/data \
+  -v ~/dev-public/index.html:/app/public/index.html:ro \
+  -v ~/dev-public/audio-retro-modem.js:/app/public/audio-retro-modem.js:ro \
+  --network "$NETWORK_NAME" \
+  ghcr.io/kpa-clawbot/corescope:latest
+
 # Start external Caddy for TLS termination and routing
-docker stop caddy 2>/dev/null || true
-docker rm caddy 2>/dev/null || true
 docker run -d --name caddy \
   --restart=unless-stopped \
   -p 80:80 -p 443:443 \
   -v ~/Caddyfile:/etc/caddy/Caddyfile:ro \
   -v ~/caddy-data:/data/caddy \
   -v ~/landing:/srv/landing:ro \
+  -v ~/dev-public:/srv/dev-public:ro \
   --network "$NETWORK_NAME" \
   caddy:latest
 
