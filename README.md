@@ -3,7 +3,8 @@
 MeshCore network analyzer for Chicago (ORD region).
 
 ## URLs
-- **Web UI:** https://chicagooffline.com
+- **Landing Page:** https://chicagooffline.com
+- **Network Scope:** https://scope.chicagooffline.com
 - **MQTT Broker:** mqtt://mqtt.chicagooffline.com:1883
 - **Health Check:** https://health.chicagooffline.com
 
@@ -80,10 +81,11 @@ docker restart corescope
 
 ## DNS Records
 ```
-A    chicagooffline.com       → <EC2-elastic-ip>
-A    mqtt.chicagooffline.com  → <EC2-elastic-ip>
-A    health.chicagooffline.com → <EC2-elastic-ip>
-A    healthcheck.chicagooffline.com  → <EC2-elastic-ip>
+A    chicagooffline.com                → <EC2-elastic-ip>
+A    scope.chicagooffline.com          → <EC2-elastic-ip>
+A    mqtt.chicagooffline.com           → <EC2-elastic-ip>
+A    health.chicagooffline.com         → <EC2-elastic-ip>
+A    healthcheck.chicagooffline.com    → <EC2-elastic-ip>
 ```
 
 Note: during troubleshooting we found DNS drift between hostnames. `health.chicagooffline.com` and `healthcheck.chicagooffline.com` were pointed at the current EC2 instance, while `chicagooffline.com` and `mqtt.chicagooffline.com` were still resolving to an older IP. Keep all four records aligned to the same host before debugging HTTPS or proxy issues.

@@ -73,11 +73,12 @@ fi
 docker build -t meshcore-health-check:latest "$HEALTH_DIR"
 
 # Create directories if they don't exist
-mkdir -p ~/corescope-data ~/caddy-data
+mkdir -p ~/corescope-data ~/caddy-data ~/landing
 
-# Copy config files
+# Copy config and static files
 cp config.json ~/corescope-data/config.json
 cp Caddyfile ~/Caddyfile
+cp landing/index.html ~/landing/index.html
 
 # Start CoreScope
 docker run -d --name corescope \
@@ -86,6 +87,7 @@ docker run -d --name corescope \
   -v ~/corescope-data:/app/data \
   -v ~/Caddyfile:/etc/caddy/Caddyfile:ro \
   -v ~/caddy-data:/data/caddy \
+  -v ~/landing:/srv/landing:ro \
   --network "$NETWORK_NAME" \
   ghcr.io/kpa-clawbot/corescope:latest
 
@@ -98,9 +100,10 @@ docker run -d --name meshcore-health-check \
   meshcore-health-check:latest
 
 echo "✅ CoreScope deployed!"
-echo "🌐 Web UI: https://chicagooffline.com"
-echo "📡 MQTT: mqtt://mqtt.chicagooffline.com:1883"
-echo "🩺 Health Check: https://healthcheck.chicagooffline.com"
+echo "🌐 Landing:    https://chicagooffline.com"
+echo "📡 Scope:      https://scope.chicagooffline.com"
+echo "📻 MQTT:       mqtt://mqtt.chicagooffline.com:1883"
+echo "🩺 Health:     https://health.chicagooffline.com"
 
 # Show recent logs (follow only in interactive terminals)
 if [ -t 1 ]; then

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chicago Mesh</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --accent: #4f8ef7;
+      --accent-hover: #6ba3ff;
+      --text: #e2e4ed;
+      --muted: #8b90a8;
+      --tag-bg: #1e2235;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .logo {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      text-align: center;
+      max-width: 480px;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.15rem 0.5rem;
+      margin-top: 0.25rem;
+      width: fit-content;
+    }
+
+    .footer {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f4f5f9;
+        --surface: #ffffff;
+        --border: #dde0ea;
+        --accent: #2563eb;
+        --accent-hover: #1d4ed8;
+        --text: #1a1d2e;
+        --muted: #6b7094;
+        --tag-bg: #eef2ff;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">Chicago Mesh</div>
+  <h1>LoRa off-grid communications<br>for the Chicagoland area</h1>
+  <p class="subtitle">
+    A community MeshCore network covering the ORD region.
+    Monitor the network, check observer coverage, or learn more at the Chicagoland Mesh community site.
+  </p>
+
+  <div class="cards">
+    <a class="card" href="https://scope.chicagooffline.com">
+      <div class="card-icon">📡</div>
+      <div class="card-title">Network Scope</div>
+      <div class="card-desc">Live packet analyzer and node map for the Chicago MeshCore network.</div>
+      <span class="card-tag">scope.chicagooffline.com</span>
+    </a>
+
+    <a class="card" href="https://health.chicagooffline.com">
+      <div class="card-icon">🩺</div>
+      <div class="card-title">Health Check</div>
+      <div class="card-desc">Generate a test code, send it to the health check channel, and see which observer nodes heard it.</div>
+      <span class="card-tag">health.chicagooffline.com</span>
+    </a>
+
+    <a class="card" href="https://chimesh.org">
+      <div class="card-icon">🌐</div>
+      <div class="card-title">Chicagoland Mesh</div>
+      <div class="card-desc">Community site for Meshtastic, MeshCore, Reticulum, and LoRa enthusiasts in Chicagoland.</div>
+      <span class="card-tag">chimesh.org</span>
+    </a>
+  </div>
+
+  <div class="footer">
+    Chicago Mesh &mdash; ORD region &nbsp;·&nbsp;
+    <a href="https://chimesh.org">Chicagoland Mesh community</a>
+  </div>
+
+</body>
+</html>
