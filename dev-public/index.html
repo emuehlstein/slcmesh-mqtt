@@ -47,14 +47,14 @@
         <a href="#/home" class="nav-link" data-route="home" data-priority="high">Home</a>
         <a href="#/packets" class="nav-link" data-route="packets" data-priority="high">Packets</a>
         <a href="#/map" class="nav-link" data-route="map" data-priority="high">Map</a>
-        <a href="#/live" class="nav-link" data-route="live" data-priority="high">Live</a>
+        <a href="#/live" class="nav-link" data-route="live" data-priority="high">🔴 Live</a>
         <a href="#/channels" class="nav-link" data-route="channels">Channels</a>
         <a href="#/nodes" class="nav-link" data-route="nodes" data-priority="high">Nodes</a>
         <a href="#/traces" class="nav-link" data-route="traces">Traces</a>
         <a href="#/observers" class="nav-link" data-route="observers">Observers</a>
         <a href="#/analytics" class="nav-link" data-route="analytics">Analytics</a>
-        <a href="#/perf" class="nav-link" data-route="perf">Perf</a>
-        <a href="#/audio-lab" class="nav-link" data-route="audio-lab">Lab</a>
+        <a href="#/perf" class="nav-link" data-route="perf">⚡ Perf</a>
+        <a href="#/audio-lab" class="nav-link" data-route="audio-lab">🎵 Lab</a>
       </div>
       <div class="nav-more-wrap">
         <button class="nav-btn nav-more-btn" id="navMoreBtn" aria-haspopup="true" aria-expanded="false" aria-controls="navMoreMenu" title="More pages">More ▾</button>
@@ -69,14 +69,7 @@
       </div>
       <button class="nav-btn" id="searchToggle" title="Search (Ctrl+K)">🔍</button>
       <button class="nav-btn" id="customizeToggle" title="Customize theme & branding">🎨</button>
-      <label class="theme-toggle" id="darkModeToggle" title="Toggle dark/light mode" aria-label="Toggle dark mode">
-        <input type="checkbox" id="darkModeCheckbox" aria-hidden="true">
-        <span class="theme-toggle-track">
-          <span class="theme-toggle-thumb"></span>
-          <span class="theme-toggle-icon theme-toggle-sun">☀️</span>
-          <span class="theme-toggle-icon theme-toggle-moon">🌙</span>
-        </span>
-      </label>
+      <button class="nav-btn" id="darkModeToggle" title="Toggle dark mode">☀️</button>
       <button class="nav-btn hamburger" id="hamburger" title="Menu" aria-label="Toggle navigation menu">☰</button>
     </div>
   </nav>
@@ -91,127 +84,6 @@
 
   <main id="app" role="main"></main>
 
-  <style>
-  /* === Theme Toggle Switch === */
-  .theme-toggle {
-    display: inline-flex; align-items: center; cursor: pointer;
-    padding: 0; margin: 0; border: none; background: none;
-    min-width: 44px; min-height: 44px; justify-content: center;
-  }
-  .theme-toggle input[type="checkbox"] {
-    position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
-  }
-  .theme-toggle-track {
-    position: relative; width: 46px; height: 24px;
-    background: var(--border); border-radius: 12px;
-    transition: background 0.2s ease; display: flex; align-items: center;
-    border: 1px solid var(--border);
-  }
-  .theme-toggle input:checked ~ .theme-toggle-track {
-    background: var(--accent);
-  }
-  .theme-toggle-thumb {
-    position: absolute; left: 3px; width: 18px; height: 18px;
-    background: #fff; border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    transition: transform 0.2s ease;
-    z-index: 1;
-  }
-  .theme-toggle input:checked ~ .theme-toggle-track .theme-toggle-thumb {
-    transform: translateX(22px);
-  }
-  .theme-toggle-icon {
-    position: absolute; font-size: 10px; line-height: 1;
-    top: 50%; transform: translateY(-50%);
-    pointer-events: none; user-select: none;
-    transition: opacity 0.2s ease;
-  }
-  .theme-toggle-sun { right: 4px; opacity: 1; }
-  .theme-toggle-moon { left: 4px; opacity: 0; }
-  .theme-toggle input:checked ~ .theme-toggle-track .theme-toggle-sun { opacity: 0; }
-  .theme-toggle input:checked ~ .theme-toggle-track .theme-toggle-moon { opacity: 1; }
-  /* Hide version badge in nav stats */
-  .nav-stats .version-badge { display: none !important; }
-  </style>
-  <script>
-  // Customizations for dev-scope.chicagooffline.com
-  (function() {
-    'use strict';
-
-    // --- Dark Mode Toggle (checkbox-based) ---
-    function initDarkToggle() {
-      var checkbox = document.getElementById('darkModeCheckbox');
-      if (!checkbox) return;
-
-      // Sync checkbox state whenever data-theme changes
-      function syncCheckbox() {
-        checkbox.checked = document.documentElement.getAttribute('data-theme') === 'dark';
-      }
-      new MutationObserver(function(muts) {
-        muts.forEach(function(m) { if (m.attributeName === 'data-theme') syncCheckbox(); });
-      }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-      syncCheckbox();
-
-      // Checkbox click drives theme (intercept before app.js click handler)
-      checkbox.addEventListener('change', function() {
-        var theme = checkbox.checked ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('meshcore-theme', theme);
-        // Fire the event app.js uses for theme-refresh
-        window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: theme } }));
-        window.dispatchEvent(new CustomEvent('theme-refresh'));
-      });
-
-      // Prevent the label click from bubbling to app.js's old button handler
-      var label = document.getElementById('darkModeToggle');
-      if (label) {
-        label.addEventListener('click', function(e) {
-          // Let the checkbox change event do the work; suppress extra toggle
-          e.stopPropagation();
-        });
-      }
-    }
-
-    // --- Nav Stats: emoji labels, version hidden via CSS ---
-    // The CSS rule already hides .version-badge.
-    // We use a MutationObserver to prepend emojis after each app.js stats update.
-    function initStatEmojis() {
-      var el = document.getElementById('navStats');
-      if (!el) return;
-
-      var _updating = false;
-      function addEmojis() {
-        if (_updating) return;
-        var html = el.innerHTML;
-        // Only patch if it looks like raw app.js output (no emojis yet)
-        if (html.indexOf('📦') !== -1 || html.indexOf('🔵') !== -1) return;
-        _updating = true;
-        // Pattern: <span class="stat-val">N</span> pkts
-        html = html
-          .replace(/(<span class="stat-val">)/g, function(m, p1, offset, str) {
-            // Look ahead: figure out which label follows this stat-val
-            return p1; // we'll handle with label-based replace
-          });
-        // Replace label patterns
-        html = html
-          .replace(/(<span class="stat-val">[^<]+<\/span>)\s*pkts/g, '📦 $1 pkts')
-          .replace(/(<span class="stat-val">[^<]+<\/span>)\s*nodes/g, '🔵 $1 nodes')
-          .replace(/(<span class="stat-val">[^<]+<\/span>)\s*obs/g, '📡 $1 obs');
-        el.innerHTML = html;
-        _updating = false;
-      }
-
-      new MutationObserver(function() {
-        if (!_updating) addEmojis();
-      }).observe(el, { childList: true, subtree: false });
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      initDarkToggle();
-      initStatEmojis();
-    });
-  })();
-  </script>
   <script src="vendor/qrcode.js"></script>
   <script src="roles.js?v=__BUST__"></script>
   <script src="customize-v2.js?v=__BUST__" onerror="console.error('Failed to load:', this.src)"></script>
