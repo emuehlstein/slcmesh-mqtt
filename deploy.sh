@@ -111,6 +111,7 @@ docker run -d --name corescope \
 docker run -d --name corescope-dev \
   --restart=unless-stopped \
   -e DISABLE_CADDY=true \
+  -e HTTP_PORT=3001 \
   -v ~/corescope-dev-data:/app/data \
   -v ~/dev-public/index.html:/app/public/index.html:ro \
   -v ~/dev-public/audio-retro-modem.js:/app/public/audio-retro-modem.js:ro \
