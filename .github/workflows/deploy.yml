@@ -22,11 +22,20 @@ jobs:
 
       - name: Deploy to EC2
         run: |
+          # Write deploy key to EC2 temporarily for cloning
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "mkdir -p ~/.ssh && echo '${{ secrets.DEPLOY_KEY }}' > ~/.ssh/chimesh_deploy && chmod 600 ~/.ssh/chimesh_deploy"
+
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             set -e
             REPO_DIR=\$HOME/chimesh-mqtt
-            rm -rf \$REPO_DIR && mkdir -p \$REPO_DIR
-            curl -fsSL https://github.com/emuehlstein/chimesh-mqtt/archive/refs/heads/main.tar.gz | tar -xz --strip-components=1 -C \$REPO_DIR
+            export GIT_SSH_COMMAND='ssh -i \$HOME/.ssh/chimesh_deploy -o StrictHostKeyChecking=no'
+            if [ ! -d "\$REPO_DIR/.git" ]; then
+              git clone git@github.com:emuehlstein/chimesh-mqtt.git \$REPO_DIR
+            else
+              git -C \$REPO_DIR fetch origin main
+              git -C \$REPO_DIR reset --hard origin/main
+            fi
             cd \$REPO_DIR
             TEST_CHANNEL_SECRET='${{ secrets.CARTOGRAPHER_HEALTHCHECK_KEY }}' bash deploy.sh
           EOF
