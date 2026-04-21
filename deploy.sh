@@ -3,6 +3,12 @@ set -e
 
 echo "🚀 Deploying CoreScope to chicagooffline.com..."
 
+# Reset DB if requested
+if [ "${RESET_DB:-}" = "true" ]; then
+  echo "⚠️  RESET_DB=true — wiping meshcore.db..."
+  rm -f ~/corescope-data/meshcore.db
+fi
+
 NETWORK_NAME="chicagooffline-net"
 HEALTH_DIR="$HOME/meshcore-health-check"
 HEALTH_ENV="$HEALTH_DIR/.env"

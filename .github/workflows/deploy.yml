@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      reset_db:
+        description: 'Wipe CoreScope database (true/false)'
+        required: false
+        default: 'false'
 
 jobs:
   deploy:
@@ -30,7 +35,7 @@ jobs:
 
           # Pass secret safely via env var, decoded on the remote side
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            HC_SECRET="$HC_SECRET_B64" bash -s << 'ENDSSH'
+            HC_SECRET="$HC_SECRET_B64" RESET_DB="${{ github.event.inputs.reset_db }}" bash -s << 'ENDSSH'
             set -e
             REPO_DIR=$HOME/chimesh-mqtt
             export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/chimesh_deploy -o StrictHostKeyChecking=no"
@@ -41,7 +46,7 @@ jobs:
               git -C $REPO_DIR reset --hard origin/main
             fi
             cd $REPO_DIR
-            TEST_CHANNEL_SECRET="$HC_SECRET" bash deploy.sh
+            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" bash deploy.sh
           ENDSSH
 
       - name: Cleanup
