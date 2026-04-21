@@ -14,6 +14,8 @@ docker stop meshcore-health-check 2>/dev/null || true
 docker rm meshcore-health-check 2>/dev/null || true
 docker stop landing 2>/dev/null || true
 docker rm landing 2>/dev/null || true
+docker stop caddy 2>/dev/null || true
+docker rm caddy 2>/dev/null || true
 
 # Ensure shared network exists so Caddy can reverse proxy to other containers by name
 docker network inspect "$NETWORK_NAME" >/dev/null 2>&1 || docker network create "$NETWORK_NAME"
@@ -82,26 +84,28 @@ cp config.json ~/corescope-data/config.json
 cp Caddyfile ~/Caddyfile
 cp landing/index.html ~/landing/index.html
 
-# Start CoreScope
+# Start CoreScope (internal Caddy disabled — external Caddy handles TLS/routing)
 docker run -d --name corescope \
   --restart=unless-stopped \
-  -p 80:80 -p 443:443 -p 1883:1883 \
+  -p 1883:1883 \
+  -e DISABLE_CADDY=true \
   -v ~/corescope-data:/app/data \
+  --network "$NETWORK_NAME" \
+  ghcr.io/kpa-clawbot/corescope:latest
+
+# Start external Caddy for TLS termination and routing
+docker stop caddy 2>/dev/null || true
+docker rm caddy 2>/dev/null || true
+docker run -d --name caddy \
+  --restart=unless-stopped \
+  -p 80:80 -p 443:443 \
   -v ~/Caddyfile:/etc/caddy/Caddyfile:ro \
   -v ~/caddy-data:/data/caddy \
   -v ~/landing:/srv/landing:ro \
   --network "$NETWORK_NAME" \
-  ghcr.io/kpa-clawbot/corescope:latest
+  caddy:latest
 
-# Start landing page container (nginx static file server on port 8080)
-docker run -d --name landing \
-  --restart=unless-stopped \
-  -v ~/landing:/usr/share/nginx/html:ro \
-  -e NGINX_PORT=8080 \
-  --network "$NETWORK_NAME" \
-  nginx:alpine
-
-# Start Mesh Health Check behind CoreScope's Caddy
+# Start Mesh Health Check behind external Caddy
 docker run -d --name meshcore-health-check \
   --restart=unless-stopped \
   --env-file "$HEALTH_ENV" \

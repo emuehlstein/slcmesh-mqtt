@@ -1,9 +1,10 @@
 chicagooffline.com {
-    reverse_proxy landing:8080
+    root * /srv/landing
+    file_server
 }
 
 scope.chicagooffline.com {
-    reverse_proxy localhost:3000
+    reverse_proxy corescope:3000
 }
 
 mqtt.chicagooffline.com {
