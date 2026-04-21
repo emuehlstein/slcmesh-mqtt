@@ -5,7 +5,7 @@ MeshCore network analyzer for Chicago (ORD region).
 ## URLs
 - **Web UI:** https://chicagooffline.com
 - **MQTT Broker:** mqtt://mqtt.chicagooffline.com:1883
-- **Health Check:** https://healthcheck.chicagooffline.com
+- **Health Check:** https://health.chicagooffline.com
 
 ## Architecture
 ```
@@ -48,7 +48,8 @@ CoreScope configuration. Edit and commit to trigger deployment.
 Caddy reverse proxy + HTTPS. Handles:
 - `chicagooffline.com` → CoreScope web UI
 - `mqtt.chicagooffline.com` → MQTT documentation
-- `healthcheck.chicagooffline.com` → Mesh Health Check app
+- `health.chicagooffline.com` → Mesh Health Check app
+- `healthcheck.chicagooffline.com` → Mesh Health Check app (alternate hostname)
 
 ### Mesh Health Check Environment
 On first deploy, `deploy.sh` creates `~/meshcore-health-check/.env` with defaults.
@@ -81,8 +82,11 @@ docker restart corescope
 ```
 A    chicagooffline.com       → <EC2-elastic-ip>
 A    mqtt.chicagooffline.com  → <EC2-elastic-ip>
+A    health.chicagooffline.com → <EC2-elastic-ip>
 A    healthcheck.chicagooffline.com  → <EC2-elastic-ip>
 ```
+
+Note: during troubleshooting we found DNS drift between hostnames. `health.chicagooffline.com` and `healthcheck.chicagooffline.com` were pointed at the current EC2 instance, while `chicagooffline.com` and `mqtt.chicagooffline.com` were still resolving to an older IP. Keep all four records aligned to the same host before debugging HTTPS or proxy issues.
 
 ## Maintenance
 

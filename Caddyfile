@@ -8,6 +8,6 @@ mqtt.chicagooffline.com {
     respond "MQTT broker available on port 1883" 200
 }
 
-healthcheck.chicagooffline.com {
+health.chicagooffline.com, healthcheck.chicagooffline.com {
     reverse_proxy meshcore-health-check:3090
 }
