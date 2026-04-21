@@ -55,6 +55,13 @@ HEALTH_ENV_FILE
   echo "⚠️  Created $HEALTH_ENV with a placeholder TEST_CHANNEL_SECRET. Edit this file before using health checks in production."
 fi
 
+# If a secret was passed in via env var, write it into the .env (create or update)
+if [ -n "${TEST_CHANNEL_SECRET:-}" ] && [ "${TEST_CHANNEL_SECRET}" != "CHANGE_ME" ]; then
+  if [ -f "$HEALTH_ENV" ]; then
+    sed -i "s|TEST_CHANNEL_SECRET=.*|TEST_CHANNEL_SECRET=${TEST_CHANNEL_SECRET}|" "$HEALTH_ENV"
+  fi
+fi
+
 # Refuse to deploy with placeholder secret
 if grep -q "CHANGE_ME" "$HEALTH_ENV"; then
   echo "❌ TEST_CHANNEL_SECRET is still the placeholder value."
