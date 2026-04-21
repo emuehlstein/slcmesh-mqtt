@@ -7,5 +7,9 @@
   "mqttSources": [],
   "channelKeys": {},
   "defaultRegion": "ORD",
-  "dbPath": "/app/data/meshcore.db"
+  "dbPath": "/app/data/meshcore.db",
+  "mapDefaults": {
+    "center": [41.8781, -87.6298],
+    "zoom": 11
+  }
 }
