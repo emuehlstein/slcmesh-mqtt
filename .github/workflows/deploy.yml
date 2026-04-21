@@ -21,10 +21,10 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             cd ~/chicagooffline-corescope
             git pull origin main
-            bash deploy.sh
+            TEST_CHANNEL_SECRET='${{ secrets.CARTOGRAPHER_HEALTHCHECK_KEY }}' bash deploy.sh
           EOF
 
       - name: Cleanup
