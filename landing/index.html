@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chicago Mesh</title>
+  <title>Chicago Offline</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --border: #2a2d3a;
-      --accent: #4f8ef7;
-      --accent-hover: #6ba3ff;
-      --text: #e2e4ed;
-      --muted: #8b90a8;
-      --tag-bg: #1e2235;
+      --bg: #0C0F1A;           /* Jourdan: cooler/deeper, reduces halos around accents */
+      --surface: #141829;
+      --surface2: #1a1f30;
+      --border: #242840;
+      --accent-cyan: #00E5FF;
+      --accent-amber: #FFB300;
+      --accent-green: #39FF14;
+      --text: #EDF2FF;
+      --muted: #A0AABF;         /* Jourdan: #A0AABF (was #a8aec8) */
+      --divider: #1e2338;
     }
 
     body {
@@ -26,177 +28,326 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
+      padding: 3rem 1.25rem 2.5rem;
     }
 
-    .logo {
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.15em;
+
+    /* ── Header ── */
+    .brand {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
+      color: var(--accent-cyan);
+      margin-bottom: 1rem;
     }
 
     h1 {
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
       color: var(--text);
       text-align: center;
-      margin-bottom: 0.75rem;
+      max-width: 560px;
+      margin-bottom: 0.9rem;
     }
 
     .subtitle {
       color: var(--muted);
-      font-size: 1rem;
+      font-size: 0.95rem;
       text-align: center;
       max-width: 480px;
-      line-height: 1.6;
+      line-height: 1.65;
       margin-bottom: 2.5rem;
     }
 
+    /* ── Divider ── */
+    .divider {
+      width: 100%;
+      max-width: 800px;
+      height: 1px;
+      background: var(--divider);
+      margin-bottom: 2rem;
+    }
+
+    /* ── Section labels ── */
+    .section-label {
+      width: 100%;
+      max-width: 800px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+      padding-left: 0.1rem;
+    }
+
+    /* ── Card grid ── */
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
+      gap: 0.85rem;
       width: 100%;
       max-width: 800px;
+      margin-bottom: 1.5rem;
+    }
+
+    .cards-external {
       margin-bottom: 2.5rem;
     }
 
+    /* ── Card ── */
     .card {
+      --ca: var(--accent-cyan);
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
+      border-radius: 14px;
+      padding: 1.4rem 1.4rem 1.2rem;
       text-decoration: none;
       color: var(--text);
-      transition: border-color 0.15s, transform 0.15s;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      opacity: 0;
+      box-shadow: inset 0 0 0 1px var(--ca);
+      transition: opacity 0.15s;
     }
 
     .card:hover {
-      border-color: var(--accent);
+      border-color: var(--ca);
+      box-shadow: 0 0 18px -4px var(--ca);
       transform: translateY(-2px);
     }
 
-    .card-icon {
-      font-size: 1.5rem;
-      margin-bottom: 0.25rem;
+    .card:hover::before { opacity: 1; }
+
+    /* External cards: slightly muted */
+    .card-external {
+      opacity: 0.85;
+    }
+    .card-external:hover { opacity: 1; }
+
+    /* ── Card icon + title row ── */
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.5rem;
     }
 
+    .card-icon {
+      width: 26px;
+      height: 26px;
+      color: var(--ca);
+      flex-shrink: 0;
+    }
+
+    .card-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── Card body ── */
     .card-title {
-      font-size: 1.05rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
       color: var(--text);
+      line-height: 1.25;
     }
 
     .card-desc {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--muted);
-      line-height: 1.5;
+      line-height: 1.55;
+      flex: 1;
+      margin-bottom: 1rem;
     }
 
-    .card-tag {
+    /* ── CTA pill button ── */
+    .card-cta {
       display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
+      font-size: 0.65rem;
+      font-weight: 700;
+      font-family: "SF Mono", "Fira Code", "Menlo", monospace;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--accent);
-      background: var(--tag-bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.15rem 0.5rem;
-      margin-top: 0.25rem;
+      color: var(--ca);
+      border: 1px solid var(--ca);
+      border-radius: 999px;
+      padding: 0.3rem 0.85rem;
       width: fit-content;
+      opacity: 0.8;
+      transition: opacity 0.15s, background 0.15s;
     }
 
+    .card:hover .card-cta {
+      opacity: 1;
+      background: color-mix(in srgb, var(--ca) 10%, transparent);
+    }
+
+    /* ── Footer ── */
     .footer {
       color: var(--muted);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       text-align: center;
     }
 
     .footer a {
-      color: var(--accent);
+      color: var(--accent-cyan);
       text-decoration: none;
     }
 
-    .footer a:hover {
-      color: var(--accent-hover);
-      text-decoration: underline;
-    }
+    .footer a:hover { text-decoration: underline; }
 
+    /* ── Light mode ── */
     @media (prefers-color-scheme: light) {
       :root {
-        --bg: #f4f5f9;
+        --bg: #f0f4f8;
         --surface: #ffffff;
-        --border: #dde0ea;
-        --accent: #2563eb;
-        --accent-hover: #1d4ed8;
-        --text: #1a1d2e;
-        --muted: #6b7094;
-        --tag-bg: #eef2ff;
+        --surface2: #f8faff;
+        --border: #d0d7e8;
+        --accent-cyan: #0077cc;
+        --accent-amber: #b87000;
+        --accent-green: #1a7a00;
+        --text: #0f1117;
+        --muted: #4a5070;
+        --divider: #dde2f0;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="logo">Chicago Mesh</div>
-  <h1>LoRa off-grid communications<br>for the Chicagoland area</h1>
+
+  <div class="brand">Chicago Offline</div>
+
+  <h1>Off-grid communications for Chicagoland</h1>
+
   <p class="subtitle">
     A community MeshCore network covering the ORD region.
-    Monitor the network, check observer coverage, or learn more at the Chicagoland Mesh community site.
+    Monitor the network, check observer coverage, or connect with the Chicagoland Mesh community.
   </p>
 
+  <div class="divider"></div>
+
+  <!-- ── Hosted tools ── -->
+  <div class="section-label">Hosted by Chicago Mesh</div>
+
   <div class="cards">
-    <a class="card" href="https://scope.chicagooffline.com">
-      <div class="card-icon">📡</div>
-      <div class="card-title">Network Scope</div>
+
+    <a class="card" href="https://scope.chicagooffline.com" style="--ca: #00E5FF">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- radio signal / scope -->
+            <circle cx="12" cy="12" r="2"/>
+            <path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
+            <path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/>
+          </svg>
+        </div>
+        <div class="card-title">Network Scope</div>
+      </div>
       <div class="card-desc">Live packet analyzer and node map for the Chicago MeshCore network.</div>
-      <span class="card-tag">scope.chicagooffline.com</span>
+      <span class="card-cta">scope.chicagooffline.com</span>
     </a>
 
-    <a class="card" href="https://health.chicagooffline.com">
-      <div class="card-icon">🩺</div>
-      <div class="card-title">Health Check</div>
-      <div class="card-desc">Generate a test code, send it to the health check channel, and see which observer nodes heard it.</div>
-      <span class="card-tag">health.chicagooffline.com</span>
+    <a class="card" href="https://health.chicagooffline.com" style="--ca: #FFB300">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- heartbeat / health -->
+            <polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/>
+          </svg>
+        </div>
+        <div class="card-title">Health Check</div>
+      </div>
+      <div class="card-desc">Generate a test code, send it to the health channel, and see which observer nodes heard it.</div>
+      <span class="card-cta">health.chicagooffline.com</span>
     </a>
 
-    <a class="card" href="https://analyzer.letsmesh.net/map?lat=41.96741&long=-87.99225&zoom=9">
-      <div class="card-icon">🗺️</div>
-      <div class="card-title">LetsMesh Map</div>
-      <div class="card-desc">Live node map for all MeshCore networks in the Chicagoland area on LetsMesh.</div>
-      <span class="card-tag">letsmesh.net</span>
-    </a>
-
-    <a class="card" href="https://chgo.meshmapper.net/">
-      <div class="card-icon">📍</div>
-      <div class="card-title">MeshMapper</div>
-      <div class="card-desc">Meshtastic node map and coverage data for the Chicago region.</div>
-      <span class="card-tag">chgo.meshmapper.net</span>
-    </a>
-
-    <a class="card" href="https://aprs.to/?center=42.1176,-87.7972&amp;zoom=9">
-      <div class="card-icon">📻</div>
-      <div class="card-title">APRS Map</div>
-      <div class="card-desc">Live APRS station and digipeater map for the Chicagoland area.</div>
-      <span class="card-tag">aprs.to</span>
-    </a>
-
-    <a class="card" href="https://chimesh.org">
-      <div class="card-icon">🌐</div>
-      <div class="card-title">Chicagoland Mesh</div>
+    <a class="card" href="https://chimesh.org" style="--ca: #00E5FF">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- community / globe -->
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="3" y1="15" x2="21" y2="15"/>
+          </svg>
+        </div>
+        <div class="card-title">Chicagoland Mesh</div>
+      </div>
       <div class="card-desc">Community site for Meshtastic, MeshCore, Reticulum, and LoRa enthusiasts in Chicagoland.</div>
-      <span class="card-tag">chimesh.org</span>
+      <span class="card-cta">chimesh.org</span>
     </a>
+
+  </div>
+
+  <!-- ── External resources ── -->
+  <div class="section-label">External Resources</div>
+
+  <div class="cards cards-external">
+
+    <a class="card card-external" href="https://analyzer.letsmesh.net/map?lat=41.96741&long=-87.99225&zoom=9" style="--ca: #39FF14">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- map pin / location -->
+            <path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div class="card-title">LetsMesh Map</div>
+      </div>
+      <div class="card-desc">Live node map for all MeshCore networks in the Chicagoland area on LetsMesh.</div>
+      <span class="card-cta">letsmesh.net</span>
+    </a>
+
+    <a class="card card-external" href="https://chgo.meshmapper.net/" style="--ca: #39FF14">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- layers / coverage -->
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </div>
+        <div class="card-title">MeshMapper</div>
+      </div>
+      <div class="card-desc">Meshtastic node map and coverage data for the Chicago region.</div>
+      <span class="card-cta">chgo.meshmapper.net</span>
+    </a>
+
+    <a class="card card-external" href="https://aprs.to/?center=42.1176,-87.7972&zoom=9" style="--ca: #FFB300">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- radio tower / broadcast -->
+            <line x1="12" y1="22" x2="12" y2="11"/>
+            <path d="M5 12a7 7 0 0 1 14 0"/>
+            <path d="M1 9a11 11 0 0 1 22 0"/>
+            <circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="card-title">APRS Map</div>
+      </div>
+      <div class="card-desc">Live APRS station and digipeater map for the Chicagoland area.</div>
+      <span class="card-cta">aprs.to</span>
+    </a>
+
   </div>
 
   <div class="footer">
