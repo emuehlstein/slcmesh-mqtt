@@ -35,7 +35,8 @@ docker pull ghcr.io/kpa-clawbot/corescope:latest
 if [ ! -d "$HEALTH_DIR/.git" ]; then
   git clone https://github.com/yellowcooln/meshcore-health-check.git "$HEALTH_DIR"
 else
-  git -C "$HEALTH_DIR" pull --ff-only origin main
+  git -C "$HEALTH_DIR" fetch origin main
+  git -C "$HEALTH_DIR" reset --hard origin/main
 fi
 
 # Create health-check env if missing
