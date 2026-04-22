@@ -122,6 +122,7 @@ docker build -t corescope-chicagooffline:latest \
 echo "✅ Built corescope-chicagooffline:latest (commit $DEV_COMMIT)"
 
 # Start prod CoreScope (internal Caddy disabled)
+docker rm -f corescope 2>/dev/null || true
 docker run -d --name corescope \
   --restart=unless-stopped \
   -p 1883:1883 \
@@ -131,6 +132,7 @@ docker run -d --name corescope \
   ghcr.io/kpa-clawbot/corescope:latest
 
 # Start dev CoreScope (built from chicagooffline fork)
+docker rm -f corescope-dev 2>/dev/null || true
 docker run -d --name corescope-dev \
   --restart=unless-stopped \
   -e DISABLE_CADDY=true \
@@ -140,6 +142,7 @@ docker run -d --name corescope-dev \
   corescope-chicagooffline:latest
 
 # Start external Caddy for TLS termination and routing
+docker rm -f caddy 2>/dev/null || true
 docker run -d --name caddy \
   --restart=unless-stopped \
   -p 80:80 -p 443:443 \
@@ -151,6 +154,7 @@ docker run -d --name caddy \
   caddy:latest
 
 # Start Mesh Health Check behind external Caddy
+docker rm -f meshcore-health-check 2>/dev/null || true
 docker run -d --name meshcore-health-check \
   --restart=unless-stopped \
   --env-file "$HEALTH_ENV" \
