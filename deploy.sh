@@ -4,6 +4,15 @@ set -e
 ENVIRONMENT="${ENVIRONMENT:-production}"
 echo "🚀 Deploying CoreScope [$ENVIRONMENT]..."
 
+# ── Bootstrap Docker if not installed ────────────────────────────────────────
+if ! command -v docker &>/dev/null; then
+  echo "📦 Docker not found — installing..."
+  curl -fsSL https://get.docker.com | sh
+  sudo usermod -aG docker "$USER"
+  # Apply group without logout (newgrp doesn't work in non-interactive shells)
+  exec sg docker "$0"
+fi
+
 # ── Environment-specific config ──────────────────────────────────────────────
 if [ "$ENVIRONMENT" = "dev" ]; then
   SCOPE_VHOST="dev-scope.chicagooffline.com"
