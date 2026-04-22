@@ -147,11 +147,17 @@
     }
     .card-external:hover { opacity: 1; }
 
-    /* ── Card icon ── */
+    /* ── Card icon + title row ── */
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.5rem;
+    }
+
     .card-icon {
-      width: 36px;
-      height: 36px;
-      margin-bottom: 1rem;
+      width: 26px;
+      height: 26px;
       color: var(--ca);
       flex-shrink: 0;
     }
@@ -161,7 +167,7 @@
       height: 100%;
       stroke: currentColor;
       fill: none;
-      stroke-width: 1.6;
+      stroke-width: 1.7;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
@@ -171,7 +177,6 @@
       font-size: 1rem;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 0.4rem;
       line-height: 1.25;
     }
 
@@ -258,39 +263,45 @@
   <div class="cards">
 
     <a class="card" href="https://scope.chicagooffline.com" style="--ca: #00E5FF">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><!-- radio signal / scope -->
-          <circle cx="12" cy="12" r="2"/>
-          <path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
-          <path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/>
-        </svg>
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- radio signal / scope -->
+            <circle cx="12" cy="12" r="2"/>
+            <path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
+            <path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/>
+          </svg>
+        </div>
+        <div class="card-title">Network Scope</div>
       </div>
-      <div class="card-title">Network Scope</div>
       <div class="card-desc">Live packet analyzer and node map for the Chicago MeshCore network.</div>
       <span class="card-cta">scope.chicagooffline.com</span>
     </a>
 
     <a class="card" href="https://health.chicagooffline.com" style="--ca: #FFB300">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><!-- heartbeat / health -->
-          <polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/>
-        </svg>
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- heartbeat / health -->
+            <polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/>
+          </svg>
+        </div>
+        <div class="card-title">Health Check</div>
       </div>
-      <div class="card-title">Health Check</div>
       <div class="card-desc">Generate a test code, send it to the health channel, and see which observer nodes heard it.</div>
       <span class="card-cta">health.chicagooffline.com</span>
     </a>
 
     <a class="card" href="https://chimesh.org" style="--ca: #00E5FF">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><!-- community / globe -->
-          <circle cx="12" cy="12" r="9"/>
-          <path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/>
-          <line x1="3" y1="9" x2="21" y2="9"/>
-          <line x1="3" y1="15" x2="21" y2="15"/>
-        </svg>
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- community / globe -->
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="3" y1="15" x2="21" y2="15"/>
+          </svg>
+        </div>
+        <div class="card-title">Chicagoland Mesh</div>
       </div>
-      <div class="card-title">Chicagoland Mesh</div>
       <div class="card-desc">Community site for Meshtastic, MeshCore, Reticulum, and LoRa enthusiasts in Chicagoland.</div>
       <span class="card-cta">chimesh.org</span>
     </a>
@@ -303,40 +314,46 @@
   <div class="cards cards-external">
 
     <a class="card card-external" href="https://analyzer.letsmesh.net/map?lat=41.96741&long=-87.99225&zoom=9" style="--ca: #39FF14">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><!-- map pin / location -->
-          <path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 0 1 18 0z"/>
-          <circle cx="12" cy="10" r="3"/>
-        </svg>
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- map pin / location -->
+            <path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div class="card-title">LetsMesh Map</div>
       </div>
-      <div class="card-title">LetsMesh Map</div>
       <div class="card-desc">Live node map for all MeshCore networks in the Chicagoland area on LetsMesh.</div>
       <span class="card-cta">letsmesh.net</span>
     </a>
 
     <a class="card card-external" href="https://chgo.meshmapper.net/" style="--ca: #39FF14">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><!-- layers / coverage -->
-          <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-          <polyline points="2 17 12 22 22 17"/>
-          <polyline points="2 12 12 17 22 12"/>
-        </svg>
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- layers / coverage -->
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </div>
+        <div class="card-title">MeshMapper</div>
       </div>
-      <div class="card-title">MeshMapper</div>
       <div class="card-desc">Meshtastic node map and coverage data for the Chicago region.</div>
       <span class="card-cta">chgo.meshmapper.net</span>
     </a>
 
     <a class="card card-external" href="https://aprs.to/?center=42.1176,-87.7972&zoom=9" style="--ca: #FFB300">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><!-- radio tower / broadcast -->
-          <line x1="12" y1="22" x2="12" y2="11"/>
-          <path d="M5 12a7 7 0 0 1 14 0"/>
-          <path d="M1 9a11 11 0 0 1 22 0"/>
-          <circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/>
-        </svg>
+      <div class="card-header">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><!-- radio tower / broadcast -->
+            <line x1="12" y1="22" x2="12" y2="11"/>
+            <path d="M5 12a7 7 0 0 1 14 0"/>
+            <path d="M1 9a11 11 0 0 1 22 0"/>
+            <circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="card-title">APRS Map</div>
       </div>
-      <div class="card-title">APRS Map</div>
       <div class="card-desc">Live APRS station and digipeater map for the Chicagoland area.</div>
       <span class="card-cta">aprs.to</span>
     </a>
