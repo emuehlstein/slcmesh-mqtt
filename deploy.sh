@@ -125,6 +125,10 @@ RESULT_RETENTION_SECONDS=604800
 MAX_USES_PER_CODE=3
 
 TURNSTILE_ENABLED=0
+
+# Persist observer coordinates across container restarts
+# Default path is /app/observer.json (not in the mounted volume) — this moves it to /app/data/
+OBSERVERS_FILE=data/observer.json
 HEALTH_ENV_FILE
   fi
 
