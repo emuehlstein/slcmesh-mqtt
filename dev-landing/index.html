@@ -11,11 +11,15 @@
       --bg: #0f1117;
       --surface: #1a1d27;
       --border: #2a2d3a;
-      --accent: #4f8ef7;
-      --accent-hover: #6ba3ff;
-      --text: #e2e4ed;
-      --muted: #8b90a8;
+      /* Jourdan palette — accessibility + sunlight legibility */
+      --accent: #00E5FF;        /* Signal Cyan — primary brand/links */
+      --accent-hover: #33ecff;
+      --accent-amber: #FFB300;  /* Beacon Amber — CTA / action affordances */
+      --accent-green: #39FF14;  /* Mesh Green — status/nodes/success */
+      --text: #EDF2FF;          /* Off-white — reduces bloom in sunlight vs pure #fff */
+      --muted: #a8aec8;         /* Bumped from #8a8fa8 to clear >4.5:1 on dark surface */
       --tag-bg: #1e2235;
+      --card-accent: var(--accent); /* overridden per-card */
     }
 
     body {
@@ -80,8 +84,12 @@
     }
 
     .card:hover {
-      border-color: var(--accent);
+      border-color: var(--card-accent);
       transform: translateY(-2px);
+    }
+
+    .card:hover .card-title {
+      color: var(--card-accent);
     }
 
     .card-icon {
@@ -107,13 +115,14 @@
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--card-accent);
       background: var(--tag-bg);
-      border: 1px solid var(--border);
+      border: 1px solid var(--card-accent);
       border-radius: 4px;
       padding: 0.15rem 0.5rem;
       margin-top: 0.25rem;
       width: fit-content;
+      opacity: 0.85;
     }
 
     .footer {
@@ -132,16 +141,23 @@
       text-decoration: underline;
     }
 
+    /* Card icon gets a subtle glow on hover matching card accent */
+    .card:hover .card-icon {
+      filter: drop-shadow(0 0 6px var(--card-accent));
+    }
+
     @media (prefers-color-scheme: light) {
       :root {
-        --bg: #f4f5f9;
+        --bg: #f0f4f8;
         --surface: #ffffff;
-        --border: #dde0ea;
-        --accent: #2563eb;
-        --accent-hover: #1d4ed8;
-        --text: #1a1d2e;
-        --muted: #6b7094;
-        --tag-bg: #eef2ff;
+        --border: #d0d7e8;
+        --accent: #0077cc;        /* Darker cyan for light mode contrast */
+        --accent-hover: #005fa3;
+        --accent-amber: #c47e00;  /* Darkened amber for light mode */
+        --accent-green: #1a8000;  /* Darkened green for light mode */
+        --text: #0f1117;
+        --muted: #4a5070;         /* Passes >4.5:1 on light surface */
+        --tag-bg: #e8f4ff;
       }
     }
   </style>
@@ -158,42 +174,42 @@
   </p>
 
   <div class="cards">
-    <a class="card" href="https://scope.chicagooffline.com">
+    <a class="card" href="https://scope.chicagooffline.com" style="--card-accent: #00E5FF">  <!-- Signal Cyan: network/data -->
       <div class="card-icon">📡</div>
       <div class="card-title">Network Scope</div>
       <div class="card-desc">Live packet analyzer and node map for the Chicago MeshCore network.</div>
       <span class="card-tag">scope.chicagooffline.com</span>
     </a>
 
-    <a class="card" href="https://health.chicagooffline.com">
+    <a class="card" href="https://health.chicagooffline.com" style="--card-accent: #FFB300">  <!-- Beacon Amber: action/CTA -->
       <div class="card-icon">🩺</div>
       <div class="card-title">Health Check</div>
       <div class="card-desc">Generate a test code, send it to the health check channel, and see which observer nodes heard it.</div>
       <span class="card-tag">health.chicagooffline.com</span>
     </a>
 
-    <a class="card" href="https://analyzer.letsmesh.net/map?lat=41.96741&long=-87.99225&zoom=9">
+    <a class="card" href="https://analyzer.letsmesh.net/map?lat=41.96741&long=-87.99225&zoom=9" style="--card-accent: #39FF14">  <!-- Mesh Green: map/coverage -->
       <div class="card-icon">🗺️</div>
       <div class="card-title">LetsMesh Map</div>
       <div class="card-desc">Live node map for all MeshCore networks in the Chicagoland area on LetsMesh.</div>
       <span class="card-tag">letsmesh.net</span>
     </a>
 
-    <a class="card" href="https://chgo.meshmapper.net/">
+    <a class="card" href="https://chgo.meshmapper.net/" style="--card-accent: #39FF14">  <!-- Mesh Green: map/coverage -->
       <div class="card-icon">📍</div>
       <div class="card-title">MeshMapper</div>
       <div class="card-desc">Meshtastic node map and coverage data for the Chicago region.</div>
       <span class="card-tag">chgo.meshmapper.net</span>
     </a>
 
-    <a class="card" href="https://aprs.to/?center=42.1176,-87.7972&amp;zoom=9">
+    <a class="card" href="https://aprs.to/?center=42.1176,-87.7972&amp;zoom=9" style="--card-accent: #FFB300">  <!-- Beacon Amber: radio/comms -->
       <div class="card-icon">📻</div>
       <div class="card-title">APRS Map</div>
       <div class="card-desc">Live APRS station and digipeater map for the Chicagoland area.</div>
       <span class="card-tag">aprs.to</span>
     </a>
 
-    <a class="card" href="https://chimesh.org">
+    <a class="card" href="https://chimesh.org" style="--card-accent: #00E5FF">  <!-- Signal Cyan: community -->
       <div class="card-icon">🌐</div>
       <div class="card-title">Chicagoland Mesh</div>
       <div class="card-desc">Community site for Meshtastic, MeshCore, Reticulum, and LoRa enthusiasts in Chicagoland.</div>
