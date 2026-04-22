@@ -51,7 +51,9 @@ jobs:
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "mkdir -p ~/.ssh && echo '${{ secrets.DEPLOY_KEY }}' > ~/.ssh/chimesh_deploy && chmod 600 ~/.ssh/chimesh_deploy"
 
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+          ssh -i ~/.ssh/id_rsa \
+            -o ServerAliveInterval=60 -o ServerAliveCountMax=10 \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             HC_SECRET="$HC_SECRET_B64" RESET_DB="${{ github.event.inputs.reset_db }}" ENVIRONMENT="$ENVIRONMENT" bash -s << 'ENDSSH'
             set -e
             REPO_DIR=$HOME/chimesh-mqtt
