@@ -19,6 +19,11 @@ health.chicagooffline.com, healthcheck.chicagooffline.com {
 
 # === Dev environments ===
 
+dev-landing.chicagooffline.com {
+    root * /srv/dev-landing
+    file_server
+}
+
 dev-scope.chicagooffline.com {
     reverse_proxy corescope-dev:3000
 }

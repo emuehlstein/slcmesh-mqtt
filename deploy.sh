@@ -85,12 +85,13 @@ fi
 docker build -t meshcore-health-check:latest "$HEALTH_DIR"
 
 # Create directories if they don't exist
-mkdir -p ~/corescope-data ~/corescope-dev-data ~/caddy-data ~/landing
+mkdir -p ~/corescope-data ~/corescope-dev-data ~/caddy-data ~/landing ~/dev-landing
 
 # Copy config and static files
 cp config.json ~/corescope-data/config.json
 cp Caddyfile ~/Caddyfile
 cp landing/index.html ~/landing/index.html
+cp dev-landing/index.html ~/dev-landing/index.html
 
 # Copy dev-scope config (theme is now baked into the fork, not overlay-injected)
 cp dev-config.json ~/corescope-dev-data/config.json
@@ -144,6 +145,7 @@ docker run -d --name caddy \
   -v ~/Caddyfile:/etc/caddy/Caddyfile:ro \
   -v ~/caddy-data:/data/caddy \
   -v ~/landing:/srv/landing:ro \
+  -v ~/dev-landing:/srv/dev-landing:ro \
   --network "$NETWORK_NAME" \
   caddy:latest
 
