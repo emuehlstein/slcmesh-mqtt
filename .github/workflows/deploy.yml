@@ -2,21 +2,38 @@ name: Deploy CoreScope
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   workflow_dispatch:
     inputs:
+      environment:
+        description: 'Target environment'
+        required: false
+        default: ''
+        type: choice
+        options: ['', 'production', 'dev']
       reset_db:
-        description: 'Wipe CoreScope database (true/false)'
+        description: 'Wipe CoreScope database'
         required: false
         default: 'false'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production
+    environment: ${{ (github.event.inputs.environment != '' && github.event.inputs.environment) || (github.ref == 'refs/heads/main' && 'production') || 'dev' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Resolve environment name
+        id: env
+        run: |
+          if [ -n "${{ github.event.inputs.environment }}" ]; then
+            echo "name=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "name=production" >> $GITHUB_OUTPUT
+          else
+            echo "name=dev" >> $GITHUB_OUTPUT
+          fi
 
       - name: Setup SSH
         run: |
@@ -28,25 +45,25 @@ jobs:
       - name: Deploy to EC2
         env:
           HC_SECRET_B64: ${{ secrets.CARTOGRAPHER_HEALTHCHECK_KEY }}
+          ENVIRONMENT: ${{ steps.env.outputs.name }}
         run: |
-          # Write deploy key to EC2 temporarily for cloning
+          # Write deploy key to EC2 for git clone
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "mkdir -p ~/.ssh && echo '${{ secrets.DEPLOY_KEY }}' > ~/.ssh/chimesh_deploy && chmod 600 ~/.ssh/chimesh_deploy"
 
-          # Pass secret safely via env var, decoded on the remote side
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            HC_SECRET="$HC_SECRET_B64" RESET_DB="${{ github.event.inputs.reset_db }}" bash -s << 'ENDSSH'
+            HC_SECRET="$HC_SECRET_B64" RESET_DB="${{ github.event.inputs.reset_db }}" ENVIRONMENT="$ENVIRONMENT" bash -s << 'ENDSSH'
             set -e
             REPO_DIR=$HOME/chimesh-mqtt
             export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/chimesh_deploy -o StrictHostKeyChecking=no"
             if [ ! -d "$REPO_DIR/.git" ]; then
               git clone git@github.com:emuehlstein/chimesh-mqtt.git $REPO_DIR
             else
-              git -C $REPO_DIR fetch origin main
+              git -C $REPO_DIR fetch origin
               git -C $REPO_DIR reset --hard origin/main
             fi
             cd $REPO_DIR
-            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" bash deploy.sh
+            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" bash deploy.sh
           ENDSSH
 
       - name: Cleanup

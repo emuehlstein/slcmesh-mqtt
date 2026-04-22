@@ -1,0 +1,8 @@
+dev-scope.chicagooffline.com {
+    reverse_proxy corescope:3000
+}
+
+dev-landing.chicagooffline.com {
+    root * /srv/dev-landing
+    file_server
+}
