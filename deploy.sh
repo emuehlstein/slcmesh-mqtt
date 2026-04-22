@@ -85,20 +85,39 @@ fi
 docker build -t meshcore-health-check:latest "$HEALTH_DIR"
 
 # Create directories if they don't exist
-mkdir -p ~/corescope-data ~/corescope-dev-data ~/caddy-data ~/landing ~/dev-public
+mkdir -p ~/corescope-data ~/corescope-dev-data ~/caddy-data ~/landing
 
 # Copy config and static files
 cp config.json ~/corescope-data/config.json
 cp Caddyfile ~/Caddyfile
 cp landing/index.html ~/landing/index.html
 
-# Copy dev-scope config and custom assets
+# Copy dev-scope config (theme is now baked into the fork, not overlay-injected)
 cp dev-config.json ~/corescope-dev-data/config.json
-cp dev-theme.json ~/corescope-dev-data/theme.json
-cp dev-public/audio-retro-modem.js ~/dev-public/audio-retro-modem.js
-cp dev-public/index.html ~/dev-public/index.html
-cp dev-public/dev-customizations.js ~/dev-public/dev-customizations.js
-cp dev-public/dev-customizations.css ~/dev-public/dev-customizations.css
+
+# --- Build dev CoreScope from chicagooffline fork ---
+DEV_REPO_DIR="$HOME/CoreScope-chicagooffline"
+DEV_BRANCH="deploy/chicagooffline"
+
+echo "📦 Building dev CoreScope from fork ($DEV_BRANCH)..."
+if [ ! -d "$DEV_REPO_DIR/.git" ]; then
+  git clone -b "$DEV_BRANCH" https://github.com/emuehlstein/CoreScope-chicagooffline.git "$DEV_REPO_DIR"
+else
+  git -C "$DEV_REPO_DIR" fetch origin
+  git -C "$DEV_REPO_DIR" checkout "$DEV_BRANCH"
+  git -C "$DEV_REPO_DIR" reset --hard "origin/$DEV_BRANCH"
+fi
+
+DEV_COMMIT=$(git -C "$DEV_REPO_DIR" rev-parse --short HEAD)
+DEV_BUILD_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+docker build -t corescope-chicagooffline:latest \
+  --build-arg APP_VERSION="chicagooffline" \
+  --build-arg GIT_COMMIT="$DEV_COMMIT" \
+  --build-arg BUILD_TIME="$DEV_BUILD_TIME" \
+  "$DEV_REPO_DIR"
+
+echo "✅ Built corescope-chicagooffline:latest (commit $DEV_COMMIT)"
 
 # Start prod CoreScope (internal Caddy disabled)
 docker run -d --name corescope \
@@ -109,15 +128,14 @@ docker run -d --name corescope \
   --network "$NETWORK_NAME" \
   ghcr.io/kpa-clawbot/corescope:latest
 
-# Start dev CoreScope (port 3001, separate DB, custom index.html injected)
+# Start dev CoreScope (built from chicagooffline fork)
 docker run -d --name corescope-dev \
   --restart=unless-stopped \
   -e DISABLE_CADDY=true \
+  -e DISABLE_MOSQUITTO=true \
   -v ~/corescope-dev-data:/app/data \
-  -v ~/dev-public/index.html:/app/public/index.html:ro \
-  -v ~/dev-public/audio-retro-modem.js:/app/public/audio-retro-modem.js:ro \
   --network "$NETWORK_NAME" \
-  ghcr.io/kpa-clawbot/corescope:latest
+  corescope-chicagooffline:latest
 
 # Start external Caddy for TLS termination and routing
 docker run -d --name caddy \
@@ -126,7 +144,6 @@ docker run -d --name caddy \
   -v ~/Caddyfile:/etc/caddy/Caddyfile:ro \
   -v ~/caddy-data:/data/caddy \
   -v ~/landing:/srv/landing:ro \
-  -v ~/dev-public:/srv/dev-public:ro \
   --network "$NETWORK_NAME" \
   caddy:latest
 

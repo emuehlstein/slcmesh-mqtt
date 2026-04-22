@@ -20,15 +20,5 @@ health.chicagooffline.com, healthcheck.chicagooffline.com {
 # === Dev environments ===
 
 dev-scope.chicagooffline.com {
-    # Serve custom JS files (voices, etc.) directly
-    handle /custom/* {
-        root * /srv/dev-public
-        uri strip_prefix /custom
-        file_server
-    }
-
-    # Proxy everything else to dev CoreScope
-    handle {
-        reverse_proxy corescope-dev:3000
-    }
+    reverse_proxy corescope-dev:3000
 }
