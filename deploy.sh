@@ -7,10 +7,12 @@ echo "🚀 Deploying CoreScope [$ENVIRONMENT]..."
 # ── Bootstrap Docker if not installed ────────────────────────────────────────
 if ! command -v docker &>/dev/null; then
   echo "📦 Docker not found — installing..."
-  curl -fsSL https://get.docker.com | sh
+  # Wait for cloud-init to finish (clears apt locks on fresh instances)
+  sudo cloud-init status --wait 2>/dev/null || sleep 30
+  curl -fsSL https://get.docker.com | sudo sh
   sudo usermod -aG docker "$USER"
-  # Apply group without logout (newgrp doesn't work in non-interactive shells)
-  exec sg docker "$0"
+  # Re-exec so docker group membership takes effect
+  exec sudo -u "$USER" -i bash -c "cd $(pwd) && ENVIRONMENT=$ENVIRONMENT TEST_CHANNEL_SECRET=$TEST_CHANNEL_SECRET RESET_DB=$RESET_DB bash $(realpath $0)"
 fi
 
 # ── Environment-specific config ──────────────────────────────────────────────
