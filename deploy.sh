@@ -11,8 +11,8 @@ if ! command -v docker &>/dev/null; then
   sudo cloud-init status --wait 2>/dev/null || sleep 30
   curl -fsSL https://get.docker.com | sudo sh
   sudo usermod -aG docker "$USER"
-  # Re-exec so docker group membership takes effect
-  exec sudo -u "$USER" -i bash -c "cd $(pwd) && ENVIRONMENT=$ENVIRONMENT TEST_CHANNEL_SECRET=$TEST_CHANNEL_SECRET RESET_DB=$RESET_DB bash $(realpath $0)"
+  echo "⚠️  Docker installed but group membership requires logout. Retry deploy or use 'sudo docker' manually."
+  exit 1
 fi
 
 # ── Environment-specific config ──────────────────────────────────────────────
