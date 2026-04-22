@@ -4,27 +4,27 @@
     "tagline": "dev-scope.chicagooffline.com"
   },
   "theme": {
-    "accent": "#d97706",
-    "accentHover": "#f59e0b",
-    "navBg": "#1c1400",
-    "navBg2": "#2d1f00",
-    "navText": "#ffffff",
-    "navTextMuted": "#fcd34d",
-    "background": "#fffbeb",
-    "text": "#1c1400",
-    "textMuted": "#78350f",
-    "border": "#fde68a"
+    "accent": "#0077cc",
+    "accentHover": "#0099ee",
+    "navBg": "#0C0F1A",
+    "navBg2": "#141829",
+    "navText": "#EDF2FF",
+    "navTextMuted": "#A0AABF",
+    "background": "#f0f4f8",
+    "text": "#0f1117",
+    "textMuted": "#4a5070",
+    "border": "#d0d7e8"
   },
   "themeDark": {
-    "accent": "#f59e0b",
-    "accentHover": "#fcd34d",
-    "navBg": "#1c1400",
-    "navBg2": "#2d1f00",
-    "navText": "#ffffff",
-    "navTextMuted": "#fcd34d",
-    "background": "#0f0a00",
-    "text": "#fef3c7",
-    "textMuted": "#d97706",
-    "border": "#44300a"
+    "accent": "#00E5FF",
+    "accentHover": "#33EEFF",
+    "navBg": "#0C0F1A",
+    "navBg2": "#141829",
+    "navText": "#EDF2FF",
+    "navTextMuted": "#A0AABF",
+    "background": "#0C0F1A",
+    "text": "#EDF2FF",
+    "textMuted": "#A0AABF",
+    "border": "#242840"
   }
 }
