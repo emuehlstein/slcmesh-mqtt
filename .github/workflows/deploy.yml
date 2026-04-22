@@ -34,6 +34,13 @@ jobs:
           else
             echo "name=dev" >> $GITHUB_OUTPUT
           fi
+          
+          # Determine which branch to deploy
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "branch=main" >> $GITHUB_OUTPUT
+          else
+            echo "branch=dev" >> $GITHUB_OUTPUT
+          fi
 
       - name: Setup SSH
         run: |
@@ -57,12 +64,13 @@ jobs:
             HC_SECRET="$HC_SECRET_B64" RESET_DB="${{ github.event.inputs.reset_db }}" ENVIRONMENT="$ENVIRONMENT" bash -s << 'ENDSSH'
             set -e
             REPO_DIR=$HOME/chimesh-mqtt
+            BRANCH="${{ steps.env.outputs.branch }}"
             export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/chimesh_deploy -o StrictHostKeyChecking=no"
             if [ ! -d "$REPO_DIR/.git" ]; then
               git clone git@github.com:emuehlstein/chimesh-mqtt.git $REPO_DIR
             else
               git -C $REPO_DIR fetch origin
-              git -C $REPO_DIR reset --hard origin/main
+              git -C $REPO_DIR reset --hard origin/$BRANCH
             fi
             cd $REPO_DIR
             RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" bash deploy.sh
