@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributors – Chicago Offline</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0C0F1A;
+      --surface: #141829;
+      --border: #242840;
+      --accent-cyan: #00E5FF;
+      --accent-amber: #FFB300;
+      --accent-purple: #B565FF;
+      --text: #EDF2FF;
+      --muted: #A0AABF;
+      --divider: #1e2338;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.25rem 2.5rem;
+      line-height: 1.65;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .brand {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 0.7rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--accent-cyan);
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-top: 1.8rem;
+      margin-bottom: 0.7rem;
+      color: var(--text);
+    }
+
+    p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+
+    a:hover {
+      border-bottom-color: var(--accent-cyan);
+    }
+
+    ul, ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--muted);
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    code {
+      font-family: "SF Mono", "Fira Code", "Menlo", monospace;
+      font-size: 0.9em;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.15rem 0.4rem;
+      color: var(--accent-amber);
+    }
+
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+    }
+
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text);
+    }
+
+    .info-box {
+      background: var(--surface);
+      border-left: 3px solid var(--accent-purple);
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--divider);
+      margin: 2.5rem 0;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--divider);
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f0f4f8;
+        --surface: #ffffff;
+        --border: #d0d7e8;
+        --accent-cyan: #0077cc;
+        --accent-amber: #b87000;
+        --accent-purple: #7c3aed;
+        --text: #0f1117;
+        --muted: #4a5070;
+        --divider: #dde2f0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="brand">Chicago Offline</div>
+
+  <h1>Contributors & Infrastructure</h1>
+  <p class="subtitle">Resources for developers and contributors to the Chicago Mesh network.</p>
+
+  <div class="divider"></div>
+
+  <h2>🏗️ Infrastructure</h2>
+
+  <h3>Production Environment</h3>
+  <ul>
+    <li><strong>Instance:</strong> AWS EC2 t3.small (us-east-2)</li>
+    <li><strong>IP:</strong> <code>13.58.181.117</code></li>
+    <li><strong>Services:</strong> CoreScope (packet analyzer), Mosquitto MQTT broker, Mesh Health Check</li>
+    <li><strong>URLs:</strong>
+      <ul>
+        <li><a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a> — Network Scope</li>
+        <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> — Health Check</li>
+        <li><code>mqtt.chicagooffline.com:1883</code> — MQTT Broker</li>
+        <li><a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a> — Tile Server</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Development Environment</h3>
+  <ul>
+    <li><strong>Instance:</strong> AWS EC2 t3.small (us-east-2)</li>
+    <li><strong>IP:</strong> <code>3.141.31.229</code></li>
+    <li><strong>Services:</strong> CoreScope (dev instance, connects to prod MQTT broker)</li>
+    <li><strong>URLs:</strong>
+      <ul>
+        <li><a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a> — Dev Network Scope</li>
+        <li><a href="https://dev-landing.chicagooffline.com">dev-landing.chicagooffline.com</a> — Dev Landing Page</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="info-box">
+    <p><strong>Note:</strong> The dev environment shares the production MQTT broker for packet ingestion. Database is ephemeral and wiped on redeploy.</p>
+  </div>
+
+  <h2>📦 GitHub Repositories</h2>
+
+  <h3>Main Deployment Repo</h3>
+  <ul>
+    <li><strong>Repo:</strong> <a href="https://github.com/emuehlstein/chimesh-mqtt">github.com/emuehlstein/chimesh-mqtt</a></li>
+    <li><strong>Branches:</strong>
+      <ul>
+        <li><code>main</code> — Production deployments</li>
+        <li><code>dev</code> — Development deployments</li>
+      </ul>
+    </li>
+    <li><strong>CI/CD:</strong> GitHub Actions auto-deploys on push to <code>main</code> or <code>dev</code></li>
+  </ul>
+
+  <h3>CoreScope Source (Fork)</h3>
+  <ul>
+    <li><strong>Upstream:</strong> <a href="https://github.com/meshcore-dev/CoreScope">github.com/meshcore-dev/CoreScope</a></li>
+    <li><strong>Fork:</strong> <a href="https://github.com/KPA-Clawbot/CoreScope">github.com/KPA-Clawbot/CoreScope</a> (chicagooffline customizations)</li>
+    <li><strong>Build Mode:</strong> <code>CORESCOPE_IMAGE_MODE=fork</code> in <code>deploy.sh</code></li>
+  </ul>
+
+  <h3>MeshCore Native Observer Firmware</h3>
+  <ul>
+    <li><strong>Repo:</strong> <a href="https://github.com/agessaman/MeshCore">github.com/agessaman/MeshCore</a></li>
+    <li><strong>Branch:</strong> <code>mqtt-bridge-implementation</code> (PR <a href="https://github.com/meshcore-dev/MeshCore/pull/1249">#1249</a>)</li>
+    <li><strong>Firmware:</strong> <code>observer-uplink-native-dev</code> (native WiFi + MQTT, no Pi bridge needed)</li>
+  </ul>
+
+  <h3>Mesh Health Check</h3>
+  <ul>
+    <li><strong>Repo:</strong> <a href="https://github.com/KPA-Clawbot/meshcore-health-check">github.com/KPA-Clawbot/meshcore-health-check</a></li>
+    <li><strong>Live:</strong> <a href="https://health.chicagooffline.com">health.chicagooffline.com</a></li>
+  </ul>
+
+  <h2>🚀 Deployment</h2>
+
+  <h3>Automated (GitHub Actions)</h3>
+  <pre><code># Push to main → deploys to production
+git push origin main
+
+# Push to dev → deploys to development
+git push origin dev
+
+# Manual workflow dispatch with DB reset
+gh workflow run deploy.yml --repo emuehlstein/chimesh-mqtt \
+  --ref dev -f environment=dev -f reset_db=true</code></pre>
+
+  <h3>Manual Deployment</h3>
+  <pre><code># SSH into EC2
+ssh ubuntu@13.58.181.117  # or 3.141.31.229 for dev
+
+# Pull latest changes
+cd ~/chimesh-mqtt
+git pull origin main  # or dev
+
+# Run deploy script
+ENVIRONMENT=production bash deploy.sh  # or ENVIRONMENT=dev</code></pre>
+
+  <h2>🔧 Development Workflow</h2>
+
+  <ol>
+    <li>Make changes to CoreScope fork or config files</li>
+    <li>Commit and push to <code>dev</code> branch</li>
+    <li>GitHub Actions auto-deploys to <a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a></li>
+    <li>Test changes in browser</li>
+    <li>Merge to <code>main</code> when ready for production</li>
+    <li>GitHub Actions auto-deploys to <a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a></li>
+  </ol>
+
+  <h2>📊 Monitoring</h2>
+
+  <h3>Logs (Production)</h3>
+  <pre><code>ssh ubuntu@13.58.181.117
+
+# CoreScope logs
+docker logs -f corescope
+
+# MQTT broker logs
+docker logs -f mosquitto
+
+# Caddy (reverse proxy) logs
+docker logs -f caddy
+
+# Health Check logs
+docker logs -f meshcore-health-check</code></pre>
+
+  <h3>Logs (Development)</h3>
+  <pre><code>ssh ubuntu@3.141.31.229
+
+# CoreScope logs
+docker logs -f corescope
+
+# Caddy logs
+docker logs -f caddy</code></pre>
+
+  <h2>📡 Connecting Observer Nodes</h2>
+
+  <p>Point your observer nodes to:</p>
+  <pre><code>MQTT Broker: mqtt://mqtt.chicagooffline.com:1883
+Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
+
+  <p>For detailed setup instructions, see:</p>
+  <ul>
+    <li><a href="https://github.com/emuehlstein/chimesh-mqtt/blob/main/OBSERVER_SETUP.md">OBSERVER_SETUP.md</a> — MeshCore native observer firmware configuration</li>
+    <li><a href="https://github.com/emuehlstein/chimesh-mqtt/blob/main/BUILD_CUSTOM_OBSERVER.md">BUILD_CUSTOM_OBSERVER.md</a> — Building custom observer firmware</li>
+  </ul>
+
+  <h2>💡 Contributing</h2>
+
+  <p>Interested in contributing to the Chicago Mesh network infrastructure?</p>
+
+  <ul>
+    <li>Join the <a href="https://chimesh.org">Chicagoland Mesh community</a></li>
+    <li>Open issues or PRs on the <a href="https://github.com/emuehlstein/chimesh-mqtt">chimesh-mqtt repo</a></li>
+    <li>Deploy your own observer node and publish to the MQTT broker</li>
+    <li>Help improve CoreScope or the Health Check app</li>
+  </ul>
+
+  <div class="divider"></div>
+
+  <div class="footer">
+    <p>Chicago Mesh &mdash; ORD region &nbsp;·&nbsp; <a href="/">Back to home</a></p>
+  </div>
+
+</div>
+
+</body>
+</html>
