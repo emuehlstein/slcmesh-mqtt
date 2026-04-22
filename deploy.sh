@@ -160,17 +160,17 @@ docker run -d --name "$CORESCOPE_CONTAINER" \
 # ── Start Caddy ───────────────────────────────────────────────────────────────
 CADDY_LANDING_MOUNTS=""
 if [ "$DEV_BANNER" = true ]; then
-  CADDY_LANDING_MOUNTS="-v ~/dev-landing:/srv/dev-landing:ro"
+  CADDY_LANDING_MOUNTS="-v $HOME/dev-landing:/srv/dev-landing:ro"
 else
-  CADDY_LANDING_MOUNTS="-v ~/landing:/srv/landing:ro -v ~/dev-landing:/srv/dev-landing:ro"
+  CADDY_LANDING_MOUNTS="-v $HOME/landing:/srv/landing:ro -v $HOME/dev-landing:/srv/dev-landing:ro"
 fi
 
 docker rm -f caddy 2>/dev/null || true
 docker run -d --name caddy \
   --restart=unless-stopped \
   -p 80:80 -p 443:443 \
-  -v ~/Caddyfile:/etc/caddy/Caddyfile:ro \
-  -v ~/caddy-data:/data/caddy \
+  -v $HOME/Caddyfile:/etc/caddy/Caddyfile:ro \
+  -v $HOME/caddy-data:/data/caddy \
   $CADDY_LANDING_MOUNTS \
   --network "$NETWORK_NAME" \
   caddy:latest
