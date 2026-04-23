@@ -31,7 +31,3 @@ dev-landing.chicagooffline.com {
 dev-scope.chicagooffline.com {
     reverse_proxy corescope-dev:3000
 }
-
-dev-health.chicagooffline.com {
-    reverse_proxy meshcore-health-check-dev:3091
-}
