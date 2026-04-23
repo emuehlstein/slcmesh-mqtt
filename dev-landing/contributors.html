@@ -195,41 +195,52 @@
 
   <h3>Production Environment</h3>
   <ul>
-    <li><strong>Instance:</strong> AWS EC2 t3.small (us-east-2)</li>
-    <li><strong>IP:</strong> <code>13.58.181.117</code></li>
-    <li><strong>Services:</strong> CoreScope (packet analyzer), Mosquitto MQTT broker, Mesh Health Check</li>
+    <li><strong>Instance:</strong> <code>i-03e3d22e2d0ecf096</code> &mdash; AWS EC2 t3.small (us-east-2)</li>
+    <li><strong>IP:</strong> <code>13.58.181.117</code> &mdash; SSH key: <code>chicagooffline-ec2.pem</code></li>
+    <li><strong>Services:</strong>
+      <ul>
+        <li><code>corescope</code> &mdash; CoreScope packet analyzer</li>
+        <li><code>mosquitto</code> &mdash; Standalone Mosquitto MQTT broker (port 1883)</li>
+        <li><code>meshcore-mqtt-broker</code> &mdash; WebSocket MQTT broker with JWT auth</li>
+        <li><code>meshcore-health-check</code> &mdash; Mesh Health Check app</li>
+        <li><code>caddy</code> &mdash; Reverse proxy / TLS termination</li>
+      </ul>
+    </li>
     <li><strong>URLs:</strong>
       <ul>
-        <li><a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a> — Network Scope</li>
-        <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> — Health Check</li>
-        <li><code>mqtt.chicagooffline.com:1883</code> — MQTT Broker</li>
-        <li><a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a> — Tile Server</li>
+        <li><a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a> &mdash; Network Scope</li>
+        <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> &mdash; Health Check</li>
+        <li><code>mqtt.chicagooffline.com:1883</code> &mdash; Plain TCP MQTT</li>
+        <li><code>wss://wsmqtt.chicagooffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
       </ul>
     </li>
   </ul>
 
   <h3>Development Environment</h3>
   <ul>
-    <li><strong>Instance:</strong> AWS EC2 t3.small (us-east-2)</li>
-    <li><strong>IP:</strong> <code>3.141.31.229</code></li>
+    <li><strong>Instance:</strong> <code>i-015964acf101b916d</code> (<code>chimesh-dev</code>) &mdash; AWS EC2 t3.small (us-east-2)</li>
+    <li><strong>IP:</strong> <code>3.141.31.229</code> &mdash; SSH key: <code>chicagooffline-dev.pem</code></li>
     <li><strong>Services:</strong>
       <ul>
-        <li><code>corescope-dev</code> &mdash; CoreScope (dev instance)</li>
-        <li><code>meshcore-mqtt-broker</code> (michaelhart/meshcore-mqtt-broker) &mdash; WebSocket MQTT broker with JWT auth</li>
+        <li><code>corescope-dev</code> &mdash; CoreScope dev instance</li>
+        <li><code>mosquitto</code> &mdash; Standalone Mosquitto MQTT broker</li>
+        <li><code>meshcore-mqtt-broker</code> &mdash; WebSocket MQTT broker with JWT auth</li>
+        <li><code>meshcore-health-check-dev</code> &mdash; Mesh Health Check dev instance</li>
+        <li><code>caddy</code> &mdash; Reverse proxy / TLS termination</li>
       </ul>
     </li>
     <li><strong>URLs:</strong>
       <ul>
-        <li><a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a> — Dev Network Scope</li>
-        <li><a href="https://dev-landing.chicagooffline.com">dev-landing.chicagooffline.com</a> — Dev Landing Page</li>
-        <li><code>wss://wsmqtt-dev.chicagooffline.com/mqtt</code> &mdash; WS MQTT Broker (JWT auth)</li>
+        <li><a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a> &mdash; Dev Network Scope</li>
+        <li><a href="https://dev-health.chicagooffline.com">dev-health.chicagooffline.com</a> &mdash; Dev Health Check</li>
+        <li><a href="https://dev-landing.chicagooffline.com">dev-landing.chicagooffline.com</a> &mdash; Dev Landing Page</li>
+        <li><code>wss://wsmqtt-dev.chicagooffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
       </ul>
     </li>
   </ul>
 
   <div class="info-box">
-    <p><strong>Note:</strong> The dev environment runs its own <code>meshcore-mqtt-broker</code> container for WebSocket+JWT ingestion. CoreScope (<code>corescope-dev</code>) subscribes to <code>wss://wsmqtt-dev.chicagooffline.com/mqtt</code>. Database is ephemeral and wiped on redeploy.</p>
-    <p>Broker subscriber accounts: <code>corescope</code> (read), <code>admin</code> (debug). Passwords stored in GH secrets <code>BROKER_CORESCOPE_PASSWORD</code> and <code>BROKER_ADMIN_PASSWORD</code>.</p>
+    <p><strong>Note:</strong> Both environments run the same stack &mdash; Mosquitto (plain TCP) + <code>meshcore-mqtt-broker</code> (WebSocket+JWT) + CoreScope subscribing to both. Dev and prod are on <strong>separate EC2 instances</strong> and must not share containers. Broker accounts: <code>corescope</code> (read), <code>admin</code> (debug) &mdash; passwords in GH secrets <code>BROKER_CORESCOPE_PASSWORD</code> / <code>BROKER_ADMIN_PASSWORD</code>.</p>
   </div>
 
   <h2>📦 GitHub Repositories</h2>
@@ -249,7 +260,7 @@
   <h3>CoreScope Source (Fork)</h3>
   <ul>
     <li><strong>Upstream:</strong> <a href="https://github.com/meshcore-dev/CoreScope">github.com/meshcore-dev/CoreScope</a></li>
-    <li><strong>Fork:</strong> <a href="https://github.com/KPA-Clawbot/CoreScope">github.com/KPA-Clawbot/CoreScope</a> (chicagooffline customizations)</li>
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/CoreScope-chicagooffline">github.com/emuehlstein/CoreScope-chicagooffline</a> (branch: <code>deploy/chicagooffline</code>)</li>
     <li><strong>Build Mode:</strong> <code>CORESCOPE_IMAGE_MODE=fork</code> in <code>deploy.sh</code></li>
   </ul>
 
@@ -316,7 +327,7 @@ ENVIRONMENT=production bash deploy.sh  # or ENVIRONMENT=dev</code></pre>
   <h2>📊 Monitoring</h2>
 
   <h3>Logs (Production)</h3>
-  <pre><code>ssh ubuntu@13.58.181.117
+  <pre><code>ssh -i chicagooffline-ec2.pem ubuntu@13.58.181.117
 
 # CoreScope logs
 docker logs -f corescope
@@ -331,13 +342,19 @@ docker logs -f caddy
 docker logs -f meshcore-health-check</code></pre>
 
   <h3>Logs (Development)</h3>
-  <pre><code>ssh ubuntu@3.141.31.229
+  <pre><code>ssh -i chicagooffline-dev.pem ubuntu@3.141.31.229
 
 # CoreScope logs
 docker logs -f corescope-dev
 
+# Mosquitto logs
+docker logs -f mosquitto
+
 # WS MQTT broker logs
 docker logs -f meshcore-mqtt-broker
+
+# Health Check logs
+docker logs -f meshcore-health-check-dev
 
 # Caddy logs
 docker logs -f caddy</code></pre>
