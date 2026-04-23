@@ -25,7 +25,7 @@ if [ "$ENVIRONMENT" = "dev" ]; then
   CORESCOPE_CONFIG="dev-config.json"
   WITH_MQTT=true              # standalone Mosquitto container (same as prod)
   WITH_WSMQTT_BROKER=true       # deploy standalone WS broker
-  WITH_HEALTH_CHECK=false
+  WITH_HEALTH_CHECK=true
   WITH_LANDING=true
   DEV_BANNER=true
 else
@@ -49,15 +49,25 @@ if [ "${RESET_DB:-}" = "true" ]; then
 fi
 
 NETWORK_NAME="chicagooffline-net"
-HEALTH_DIR="$HOME/meshcore-health-check"
+if [ "$ENVIRONMENT" = "dev" ]; then
+  HEALTH_CONTAINER="meshcore-health-check-dev"
+  HEALTH_DIR="$HOME/meshcore-health-check-dev"
+  HEALTH_PORT=3091
+  HEALTH_VHOST="dev-health.chicagooffline.com"
+else
+  HEALTH_CONTAINER="meshcore-health-check"
+  HEALTH_DIR="$HOME/meshcore-health-check"
+  HEALTH_PORT=3090
+  HEALTH_VHOST="health.chicagooffline.com"
+fi
 HEALTH_ENV="$HEALTH_DIR/.env"
 
 # ── Stop containers for THIS environment ──────────────────────────────────────
 docker stop "$CORESCOPE_CONTAINER" 2>/dev/null || true
 docker rm   "$CORESCOPE_CONTAINER" 2>/dev/null || true
 if [ "$WITH_HEALTH_CHECK" = true ]; then
-  docker stop meshcore-health-check 2>/dev/null || true
-  docker rm   meshcore-health-check 2>/dev/null || true
+  docker stop "$HEALTH_CONTAINER" 2>/dev/null || true
+  docker rm   "$HEALTH_CONTAINER" 2>/dev/null || true
 fi
 docker stop caddy              2>/dev/null || true
 docker rm   caddy              2>/dev/null || true
@@ -125,9 +135,14 @@ if [ "$WITH_HEALTH_CHECK" = true ]; then
   fi
 
   if [ ! -f "$HEALTH_ENV" ]; then
-    cat > "$HEALTH_ENV" << 'HEALTH_ENV_FILE'
-PORT=3090
-APP_TITLE=Chicago Mesh Health Check
+    if [ "$ENVIRONMENT" = "dev" ]; then
+      HEALTH_APP_TITLE="Chicago Mesh Health Check [dev]"
+    else
+      HEALTH_APP_TITLE="Chicago Mesh Health Check"
+    fi
+    cat > "$HEALTH_ENV" << HEALTH_ENV_FILE
+PORT=${HEALTH_PORT}
+APP_TITLE=${HEALTH_APP_TITLE}
 APP_EYEBROW=Chicago Mesh
 APP_HEADLINE=MeshCore Health Check
 APP_DESCRIPTION=Generate a test code and measure observer coverage in Chicago.
@@ -155,6 +170,8 @@ OBSERVERS_FILE=data/observer.json
 HEALTH_ENV_FILE
   fi
 
+  # Ensure PORT stays correct for this environment
+  sed -i "s|^PORT=.*|PORT=${HEALTH_PORT}|" "$HEALTH_ENV"
   # Ensure MQTT_HOST stays correct (was 'corescope' before Mosquitto split)
   sed -i "s|MQTT_HOST=corescope|MQTT_HOST=mosquitto|" "$HEALTH_ENV"
 
@@ -284,8 +301,8 @@ docker run -d --name caddy \
 
 # ── Start Health Check (prod only) ───────────────────────────────────────────
 if [ "$WITH_HEALTH_CHECK" = true ]; then
-  docker rm -f meshcore-health-check 2>/dev/null || true
-  docker run -d --name meshcore-health-check \
+  docker rm -f "$HEALTH_CONTAINER" 2>/dev/null || true
+  docker run -d --name "$HEALTH_CONTAINER" \
     --restart=unless-stopped \
     --env-file "$HEALTH_ENV" \
     -v "$HEALTH_DIR/data:/app/data" \
@@ -297,8 +314,9 @@ fi
 echo ""
 echo "✅ CoreScope [$ENVIRONMENT] deployed!"
 if [ "$ENVIRONMENT" = "dev" ]; then
-  echo "🔧 Scope:  https://dev-scope.chicagooffline.com"
+  echo "🔧 Scope:   https://dev-scope.chicagooffline.com"
   echo "🔧 Landing: https://dev-landing.chicagooffline.com"
+  echo "🩺 Health:  https://dev-health.chicagooffline.com"
 else
   echo "🌐 Landing: https://chicagooffline.com"
   echo "📡 Scope:   https://scope.chicagooffline.com"

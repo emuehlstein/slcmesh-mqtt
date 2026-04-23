@@ -10,3 +10,7 @@ dev-landing.chicagooffline.com {
 wsmqtt-dev.chicagooffline.com {
     reverse_proxy meshcore-mqtt-broker:8883
 }
+
+dev-health.chicagooffline.com {
+    reverse_proxy meshcore-health-check-dev:3091
+}
