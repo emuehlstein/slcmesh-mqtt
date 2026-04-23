@@ -1,7 +1,7 @@
 # Plan: Split Mosquitto into Standalone Container
 
 **Created:** 2026-04-22
-**Status:** Draft — ready to execute
+**Status:** Implemented — deployed 2026-04-23
 
 ## Problem
 - Mosquitto runs inside the CoreScope container via supervisord

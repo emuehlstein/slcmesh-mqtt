@@ -35,7 +35,7 @@ else
   CORESCOPE_IMAGE_MODE="fork"         # both envs run the fork now
   CORESCOPE_DATA_DIR="$HOME/corescope-data"
   CORESCOPE_CONFIG="config.json"
-  WITH_MQTT=true
+  WITH_MQTT=true              # Run standalone Mosquitto container
   WITH_MQTT_BROKER=false
   WITH_HEALTH_CHECK=true
   WITH_LANDING=true
@@ -223,18 +223,32 @@ if [ "${WITH_MQTT_BROKER:-false}" = true ]; then
   echo "✅ meshcore-mqtt-broker running"
 fi
 
-# ── Start CoreScope ───────────────────────────────────────────────────────────
-MQTT_PORTS=""
+# ── Start Mosquitto (standalone, prod only) ─────────────────────────────────────
 if [ "$WITH_MQTT" = true ]; then
-  MQTT_PORTS="-p 1883:1883"
+  # Only create Mosquitto container if not already running (survives app deploys)
+  if docker inspect mosquitto &>/dev/null && [ "$(docker inspect -f '{{.State.Running}}' mosquitto)" = "true" ]; then
+    echo "✅ Mosquitto already running (not restarting)"
+  else
+    echo "📡 Starting standalone Mosquitto..."
+    mkdir -p ~/mosquitto-data
+    docker rm -f mosquitto 2>/dev/null || true
+    docker run -d --name mosquitto \
+      --restart=unless-stopped \
+      -p 1883:1883 \
+      -v ~/mosquitto-data:/mosquitto/data \
+      -v ~/chimesh-mqtt/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro \
+      --network "$NETWORK_NAME" \
+      eclipse-mosquitto:2
+    echo "✅ Mosquitto running on port 1883"
+  fi
 fi
 
+# ── Start CoreScope ───────────────────────────────────────────────────────────
 docker rm -f "$CORESCOPE_CONTAINER" 2>/dev/null || true
 docker run -d --name "$CORESCOPE_CONTAINER" \
   --restart=unless-stopped \
-  $MQTT_PORTS \
   -e DISABLE_CADDY=true \
-  -e DISABLE_MOSQUITTO=$([ "$WITH_MQTT" = true ] && echo false || echo true) \
+  -e DISABLE_MOSQUITTO=true \
   -v "$CORESCOPE_DATA_DIR:/app/data" \
   --network "$NETWORK_NAME" \
   corescope-chicagooffline:latest

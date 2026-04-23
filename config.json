@@ -1,7 +1,7 @@
 {
   "port": 3000,
   "mqtt": {
-    "broker": "mqtt://localhost:1883",
+    "broker": "mqtt://mosquitto:1883",
     "topic": "meshcore/+/+/packets"
   },
   "mqttSources": [],
