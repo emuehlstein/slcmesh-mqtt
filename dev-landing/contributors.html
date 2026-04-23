@@ -195,8 +195,8 @@
 
   <h3>Production Environment</h3>
   <ul>
-    <li><strong>Instance:</strong> <code>i-03e3d22e2d0ecf096</code> &mdash; AWS EC2 t3.small (us-east-2)</li>
-    <li><strong>IP:</strong> <code>13.58.181.117</code> &mdash; SSH key: <code>chicagooffline-ec2.pem</code></li>
+    <li><strong>Instance:</strong> AWS EC2 t3.small (us-east-2)</li>
+
     <li><strong>Services:</strong>
       <ul>
         <li><code>corescope</code> &mdash; CoreScope packet analyzer</li>
@@ -219,8 +219,8 @@
 
   <h3>Development Environment</h3>
   <ul>
-    <li><strong>Instance:</strong> <code>i-015964acf101b916d</code> (<code>chimesh-dev</code>) &mdash; AWS EC2 t3.small (us-east-2)</li>
-    <li><strong>IP:</strong> <code>3.141.31.229</code> &mdash; SSH key: <code>chicagooffline-dev.pem</code></li>
+    <li><strong>Instance:</strong> AWS EC2 t3.small (us-east-2)</li>
+
     <li><strong>Services:</strong>
       <ul>
         <li><code>corescope-dev</code> &mdash; CoreScope dev instance</li>
@@ -241,7 +241,7 @@
   </ul>
 
   <div class="info-box">
-    <p><strong>Note:</strong> Both environments run the same stack &mdash; Mosquitto (plain TCP) + <code>meshcore-mqtt-broker</code> (WebSocket+JWT) + CoreScope subscribing to both. Dev and prod are on <strong>separate EC2 instances</strong> and must not share containers. Broker accounts: <code>corescope</code> (read), <code>admin</code> (debug) &mdash; passwords in GH secrets <code>BROKER_CORESCOPE_PASSWORD</code> / <code>BROKER_ADMIN_PASSWORD</code>.</p>
+    <p><strong>Note:</strong> Both environments run the same stack &mdash; Mosquitto (plain TCP) + <code>meshcore-mqtt-broker</code> (WebSocket+JWT) + CoreScope subscribing to both. Dev and prod are on <strong>separate EC2 instances</strong> and must not share containers. Broker subscriber accounts: <code>corescope</code> (read), <code>admin</code> (debug).</p>
   </div>
 
   <h2>📦 GitHub Repositories</h2>
@@ -305,7 +305,7 @@ gh workflow run deploy.yml --repo emuehlstein/chimesh-mqtt \
 
   <h3>Manual Deployment</h3>
   <pre><code># SSH into EC2
-ssh ubuntu@13.58.181.117  # or 3.141.31.229 for dev
+ssh ubuntu@&lt;ec2-ip&gt;  # prod or dev IP
 
 # Pull latest changes
 cd ~/chimesh-mqtt
@@ -328,7 +328,7 @@ ENVIRONMENT=production bash deploy.sh  # or ENVIRONMENT=dev</code></pre>
   <h2>📊 Monitoring</h2>
 
   <h3>Logs (Production)</h3>
-  <pre><code>ssh -i chicagooffline-ec2.pem ubuntu@13.58.181.117
+  <pre><code>ssh ubuntu@&lt;prod-ip&gt;
 
 # CoreScope logs
 docker logs -f corescope
@@ -343,7 +343,7 @@ docker logs -f caddy
 docker logs -f meshcore-health-check</code></pre>
 
   <h3>Logs (Development)</h3>
-  <pre><code>ssh -i chicagooffline-dev.pem ubuntu@3.141.31.229
+  <pre><code>ssh ubuntu@&lt;dev-ip&gt;
 
 # CoreScope logs
 docker logs -f corescope-dev
