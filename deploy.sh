@@ -88,7 +88,28 @@ echo "✅ Built corescope-chicagooffline:latest (commit $DEV_COMMIT)"
 # ── Directories and config ────────────────────────────────────────────────────
 mkdir -p "$CORESCOPE_DATA_DIR" ~/caddy-data ~/landing ~/dev-landing
 
-cp "$CORESCOPE_CONFIG" "$CORESCOPE_DATA_DIR/config.json"
+# ── Broker env file (dev only) ───────────────────────────────────────────────
+if [ "$ENVIRONMENT" = "dev" ] && [ -n "${BROKER_CORESCOPE_PASSWORD:-}" ]; then
+  BROKER_ENV="$HOME/meshcore-mqtt-broker.env"
+  echo "📝 Writing $BROKER_ENV from secrets..."
+  cat > "$BROKER_ENV" << BROKER_ENV_FILE
+MQTT_WS_PORT=8883
+MQTT_HOST=0.0.0.0
+AUTH_EXPECTED_AUDIENCE=wsmqtt-dev.chicagooffline.com
+SUBSCRIBER_1=corescope:${BROKER_CORESCOPE_PASSWORD}:2
+SUBSCRIBER_2=admin:${BROKER_ADMIN_PASSWORD:-changeme}:1:5
+ABUSE_ENFORCEMENT_ENABLED=false
+ABUSE_PERSISTENCE_PATH=/data/abuse-detection.db
+BROKER_ENV_FILE
+fi
+
+# Inject broker password into dev-config.json before copying
+if [ "$ENVIRONMENT" = "dev" ] && [ -n "${BROKER_CORESCOPE_PASSWORD:-}" ]; then
+  sed "s/BROKER_CORESCOPE_PASSWORD/${BROKER_CORESCOPE_PASSWORD}/g" "$CORESCOPE_CONFIG" > /tmp/corescope-config-resolved.json
+  cp /tmp/corescope-config-resolved.json "$CORESCOPE_DATA_DIR/config.json"
+else
+  cp "$CORESCOPE_CONFIG" "$CORESCOPE_DATA_DIR/config.json"
+fi
 if [ "$ENVIRONMENT" = "dev" ]; then
   cp Caddyfile.dev ~/Caddyfile
 else
