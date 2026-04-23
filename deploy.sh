@@ -134,7 +134,7 @@ APP_DESCRIPTION=Generate a test code and measure observer coverage in Chicago.
 LOG_LEVEL=info
 TRUST_PROXY=1
 
-MQTT_HOST=corescope
+MQTT_HOST=mosquitto
 MQTT_PORT=1883
 MQTT_TOPIC=meshcore/#
 MQTT_TRANSPORT=tcp
