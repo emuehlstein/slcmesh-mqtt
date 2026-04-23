@@ -6,3 +6,7 @@ dev-landing.chicagooffline.com {
     root * /srv/dev-landing
     file_server
 }
+
+wsmqtt-dev.chicagooffline.com {
+    reverse_proxy meshcore-mqtt-broker:8883
+}
