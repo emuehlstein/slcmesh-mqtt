@@ -24,7 +24,7 @@ if [ "$ENVIRONMENT" = "dev" ]; then
   CORESCOPE_DATA_DIR="$HOME/corescope-dev-data"
   CORESCOPE_CONFIG="dev-config.json"
   WITH_MQTT=false             # dev uses meshcore-mqtt-broker (standalone container) instead of internal Mosquitto
-  WITH_MQTT_BROKER=true       # deploy standalone WS broker
+  WITH_WSMQTT_BROKER=true       # deploy standalone WS broker
   WITH_HEALTH_CHECK=false
   WITH_LANDING=true
   DEV_BANNER=true
@@ -36,7 +36,7 @@ else
   CORESCOPE_DATA_DIR="$HOME/corescope-data"
   CORESCOPE_CONFIG="config.json"
   WITH_MQTT=true              # Run standalone Mosquitto container
-  WITH_MQTT_BROKER=true        # Run WS broker (meshcore-mqtt-broker)
+  WITH_WSMQTT_BROKER=true        # Run WS broker (meshcore-mqtt-broker)
   WITH_HEALTH_CHECK=true
   WITH_LANDING=true
   DEV_BANNER=false
@@ -169,7 +169,7 @@ HEALTH_ENV_FILE
 fi
 
 # ── Start WS MQTT Broker ──────────────────────────────────────────────────────
-if [ "${WITH_MQTT_BROKER:-false}" = true ]; then
+if [ "${WITH_WSMQTT_BROKER:-false}" = true ]; then
   BROKER_DIR="$(pwd)/meshcore-mqtt-broker"
   BROKER_ENV="$HOME/meshcore-mqtt-broker.env"
   BROKER_DATA="$HOME/meshcore-mqtt-broker-data"
