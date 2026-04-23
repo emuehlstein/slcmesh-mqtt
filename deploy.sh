@@ -77,7 +77,7 @@ fi
 DEV_COMMIT=$(git -C "$DEV_REPO_DIR" rev-parse --short HEAD)
 DEV_BUILD_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
-docker build -t corescope-chicagooffline:latest \
+docker build --no-cache -t corescope-chicagooffline:latest \
   --build-arg APP_VERSION="chicagooffline-$ENVIRONMENT" \
   --build-arg GIT_COMMIT="$DEV_COMMIT" \
   --build-arg BUILD_TIME="$DEV_BUILD_TIME" \
