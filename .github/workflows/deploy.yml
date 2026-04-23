@@ -57,13 +57,13 @@ jobs:
           BROKER_ADMIN_PASSWORD: ${{ secrets.BROKER_ADMIN_PASSWORD }}
           DEPLOY_KEY_CONTENT: ${{ secrets.DEPLOY_KEY }}
         run: |
-          # Write deploy key to EC2 for git clone
-          echo "$DEPLOY_KEY_CONTENT" > /tmp/chimesh_deploy_key
-          chmod 600 /tmp/chimesh_deploy_key
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'mkdir -p ~/.ssh'
-          scp -i ~/.ssh/id_rsa /tmp/chimesh_deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/.ssh/chimesh_deploy
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'chmod 600 ~/.ssh/chimesh_deploy'
-          rm -f /tmp/chimesh_deploy_key
+          # Write deploy key to EC2 for git clone (via scp to avoid shell escaping issues)
+          if [ -n "$DEPLOY_KEY_CONTENT" ]; then
+            printf '%s\n' "$DEPLOY_KEY_CONTENT" > /tmp/chimesh_deploy_key
+            chmod 600 /tmp/chimesh_deploy_key
+            scp -i ~/.ssh/id_rsa /tmp/chimesh_deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/.ssh/chimesh_deploy
+            rm -f /tmp/chimesh_deploy_key
+          fi
 
           ssh -i ~/.ssh/id_rsa \
             -o ServerAliveInterval=60 -o ServerAliveCountMax=10 \
