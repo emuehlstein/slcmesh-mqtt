@@ -137,11 +137,13 @@ else
 fi
 
 if [ "$WITH_LANDING" = true ]; then
-  # Always copy both landing dirs (Caddyfile.dev serves all vhosts)
-  cp landing/index.html ~/landing/index.html 2>/dev/null || true
-  cp landing/contributors.html ~/landing/contributors.html 2>/dev/null || true
-  cp dev-landing/index.html ~/dev-landing/index.html 2>/dev/null || true
-  cp dev-landing/contributors.html ~/dev-landing/contributors.html 2>/dev/null || true
+  if [ "$DEV_BANNER" = true ]; then
+    cp dev-landing/index.html ~/dev-landing/index.html
+    cp dev-landing/contributors.html ~/dev-landing/contributors.html
+  else
+    cp landing/index.html ~/landing/index.html
+    cp landing/contributors.html ~/landing/contributors.html
+  fi
 fi
 
 # ── Health check setup (prod only) ───────────────────────────────────────────
@@ -238,8 +240,12 @@ docker run -d --name "$CORESCOPE_CONTAINER" \
   corescope-chicagooffline:latest
 
 # ── Start Caddy ───────────────────────────────────────────────────────────────
-# Both prod and dev landing dirs are always mounted (Caddyfile.dev serves all vhosts)
-CADDY_LANDING_MOUNTS="-v $HOME/landing:/srv/landing:ro -v $HOME/dev-landing:/srv/dev-landing:ro"
+CADDY_LANDING_MOUNTS=""
+if [ "$DEV_BANNER" = true ]; then
+  CADDY_LANDING_MOUNTS="-v $HOME/dev-landing:/srv/dev-landing:ro"
+else
+  CADDY_LANDING_MOUNTS="-v $HOME/landing:/srv/landing:ro -v $HOME/dev-landing:/srv/dev-landing:ro"
+fi
 
 docker rm -f caddy 2>/dev/null || true
 docker run -d --name caddy \
