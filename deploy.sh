@@ -304,7 +304,7 @@ else
 fi
 
 if [ -t 1 ]; then
-  docker logs -f corescope
+  docker logs -f "$CORESCOPE_CONTAINER"
 else
-  docker logs --tail 20 corescope
+  docker logs --tail 20 "$CORESCOPE_CONTAINER"
 fi
