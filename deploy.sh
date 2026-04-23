@@ -19,11 +19,12 @@ fi
 if [ "$ENVIRONMENT" = "dev" ]; then
   SCOPE_VHOST="dev-scope.chicagooffline.com"
   LANDING_VHOST="dev-landing.chicagooffline.com"
-  CORESCOPE_CONTAINER="corescope"
+  CORESCOPE_CONTAINER="corescope-dev"
   CORESCOPE_IMAGE_MODE="fork"         # build from chicagooffline fork
-  CORESCOPE_DATA_DIR="$HOME/corescope-data"
+  CORESCOPE_DATA_DIR="$HOME/corescope-dev-data"
   CORESCOPE_CONFIG="dev-config.json"
   WITH_MQTT=false             # dev uses meshcore-mqtt-broker (standalone container) instead of internal Mosquitto
+  WITH_MQTT_BROKER=true       # deploy standalone WS broker
   WITH_HEALTH_CHECK=false
   WITH_LANDING=true
   DEV_BANNER=true
@@ -35,6 +36,7 @@ else
   CORESCOPE_DATA_DIR="$HOME/corescope-data"
   CORESCOPE_CONFIG="config.json"
   WITH_MQTT=true
+  WITH_MQTT_BROKER=false
   WITH_HEALTH_CHECK=true
   WITH_LANDING=true
   DEV_BANNER=false
@@ -50,11 +52,13 @@ NETWORK_NAME="chicagooffline-net"
 HEALTH_DIR="$HOME/meshcore-health-check"
 HEALTH_ENV="$HEALTH_DIR/.env"
 
-# ── Stop all containers this server manages ───────────────────────────────────
-docker stop corescope          2>/dev/null || true
-docker rm   corescope          2>/dev/null || true
-docker stop meshcore-health-check 2>/dev/null || true
-docker rm   meshcore-health-check 2>/dev/null || true
+# ── Stop containers for THIS environment ──────────────────────────────────────
+docker stop "$CORESCOPE_CONTAINER" 2>/dev/null || true
+docker rm   "$CORESCOPE_CONTAINER" 2>/dev/null || true
+if [ "$WITH_HEALTH_CHECK" = true ]; then
+  docker stop meshcore-health-check 2>/dev/null || true
+  docker rm   meshcore-health-check 2>/dev/null || true
+fi
 docker stop caddy              2>/dev/null || true
 docker rm   caddy              2>/dev/null || true
 
@@ -133,13 +137,11 @@ else
 fi
 
 if [ "$WITH_LANDING" = true ]; then
-  if [ "$DEV_BANNER" = true ]; then
-    cp dev-landing/index.html ~/dev-landing/index.html
-    cp dev-landing/contributors.html ~/dev-landing/contributors.html
-  else
-    cp landing/index.html ~/landing/index.html
-    cp landing/contributors.html ~/landing/contributors.html
-  fi
+  # Always copy both landing dirs (Caddyfile.dev serves all vhosts)
+  cp landing/index.html ~/landing/index.html 2>/dev/null || true
+  cp landing/contributors.html ~/landing/contributors.html 2>/dev/null || true
+  cp dev-landing/index.html ~/dev-landing/index.html 2>/dev/null || true
+  cp dev-landing/contributors.html ~/dev-landing/contributors.html 2>/dev/null || true
 fi
 
 # ── Health check setup (prod only) ───────────────────────────────────────────
@@ -195,6 +197,30 @@ HEALTH_ENV_FILE
   docker build -t meshcore-health-check:latest "$HEALTH_DIR"
 fi
 
+# ── Start WS MQTT Broker (dev only) ───────────────────────────────────────────
+if [ "${WITH_MQTT_BROKER:-false}" = true ]; then
+  echo "🔐 Deploying meshcore-mqtt-broker..."
+  BROKER_DIR="$(pwd)/meshcore-mqtt-broker"
+  BROKER_ENV="$HOME/meshcore-mqtt-broker.env"
+  BROKER_DATA="$HOME/meshcore-mqtt-broker-data"
+  mkdir -p "$BROKER_DATA"
+
+  # Build if image doesn't exist
+  if ! docker image inspect meshcore-mqtt-broker:latest >/dev/null 2>&1; then
+    docker build --no-cache -t meshcore-mqtt-broker:latest "$BROKER_DIR"
+  fi
+
+  docker rm -f meshcore-mqtt-broker 2>/dev/null || true
+  docker run -d \
+    --name meshcore-mqtt-broker \
+    --restart=unless-stopped \
+    --env-file "$BROKER_ENV" \
+    -v "$BROKER_DATA:/data" \
+    --network "$NETWORK_NAME" \
+    meshcore-mqtt-broker:latest
+  echo "✅ meshcore-mqtt-broker running"
+fi
+
 # ── Start CoreScope ───────────────────────────────────────────────────────────
 MQTT_PORTS=""
 if [ "$WITH_MQTT" = true ]; then
@@ -212,12 +238,8 @@ docker run -d --name "$CORESCOPE_CONTAINER" \
   corescope-chicagooffline:latest
 
 # ── Start Caddy ───────────────────────────────────────────────────────────────
-CADDY_LANDING_MOUNTS=""
-if [ "$DEV_BANNER" = true ]; then
-  CADDY_LANDING_MOUNTS="-v $HOME/dev-landing:/srv/dev-landing:ro"
-else
-  CADDY_LANDING_MOUNTS="-v $HOME/landing:/srv/landing:ro -v $HOME/dev-landing:/srv/dev-landing:ro"
-fi
+# Both prod and dev landing dirs are always mounted (Caddyfile.dev serves all vhosts)
+CADDY_LANDING_MOUNTS="-v $HOME/landing:/srv/landing:ro -v $HOME/dev-landing:/srv/dev-landing:ro"
 
 docker rm -f caddy 2>/dev/null || true
 docker run -d --name caddy \
