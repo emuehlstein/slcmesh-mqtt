@@ -55,10 +55,11 @@ jobs:
           ENVIRONMENT: ${{ steps.env.outputs.name }}
           BROKER_CORESCOPE_PASSWORD: ${{ secrets.BROKER_CORESCOPE_PASSWORD }}
           BROKER_ADMIN_PASSWORD: ${{ secrets.BROKER_ADMIN_PASSWORD }}
+          DEPLOY_KEY_CONTENT: ${{ secrets.DEPLOY_KEY }}
         run: |
           # Write deploy key to EC2 for git clone
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "mkdir -p ~/.ssh && echo '${{ secrets.DEPLOY_KEY }}' > ~/.ssh/chimesh_deploy && chmod 600 ~/.ssh/chimesh_deploy"
+          echo "$DEPLOY_KEY_CONTENT" | ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            'mkdir -p ~/.ssh && cat > ~/.ssh/chimesh_deploy && chmod 600 ~/.ssh/chimesh_deploy'
 
           ssh -i ~/.ssh/id_rsa \
             -o ServerAliveInterval=60 -o ServerAliveCountMax=10 \
