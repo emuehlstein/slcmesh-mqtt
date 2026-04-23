@@ -212,17 +212,24 @@
   <ul>
     <li><strong>Instance:</strong> AWS EC2 t3.small (us-east-2)</li>
     <li><strong>IP:</strong> <code>3.141.31.229</code></li>
-    <li><strong>Services:</strong> CoreScope (dev instance, connects to prod MQTT broker)</li>
+    <li><strong>Services:</strong>
+      <ul>
+        <li><code>corescope-dev</code> &mdash; CoreScope (dev instance)</li>
+        <li><code>meshcore-mqtt-broker</code> (michaelhart/meshcore-mqtt-broker) &mdash; WebSocket MQTT broker with JWT auth</li>
+      </ul>
+    </li>
     <li><strong>URLs:</strong>
       <ul>
         <li><a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a> — Dev Network Scope</li>
         <li><a href="https://dev-landing.chicagooffline.com">dev-landing.chicagooffline.com</a> — Dev Landing Page</li>
+        <li><code>wss://wsmqtt-dev.chicagooffline.com/mqtt</code> &mdash; WS MQTT Broker (JWT auth)</li>
       </ul>
     </li>
   </ul>
 
   <div class="info-box">
-    <p><strong>Note:</strong> The dev environment shares the production MQTT broker for packet ingestion. Database is ephemeral and wiped on redeploy.</p>
+    <p><strong>Note:</strong> The dev environment runs its own <code>meshcore-mqtt-broker</code> container for WebSocket+JWT ingestion. CoreScope (<code>corescope-dev</code>) subscribes to <code>wss://wsmqtt-dev.chicagooffline.com/mqtt</code>. Database is ephemeral and wiped on redeploy.</p>
+    <p>Broker subscriber accounts: <code>corescope</code> (read), <code>admin</code> (debug). Passwords stored in GH secrets <code>BROKER_CORESCOPE_PASSWORD</code> and <code>BROKER_ADMIN_PASSWORD</code>.</p>
   </div>
 
   <h2>📦 GitHub Repositories</h2>
@@ -251,6 +258,18 @@
     <li><strong>Repo:</strong> <a href="https://github.com/agessaman/MeshCore">github.com/agessaman/MeshCore</a></li>
     <li><strong>Branch:</strong> <code>mqtt-bridge-implementation</code> (PR <a href="https://github.com/meshcore-dev/MeshCore/pull/1249">#1249</a>)</li>
     <li><strong>Firmware:</strong> <code>observer-uplink-native-dev</code> (native WiFi + MQTT, no Pi bridge needed)</li>
+  </ul>
+
+  <h3>MeshCore Firmware Fork (WS Custom Broker)</h3>
+  <ul>
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/MeshCore">github.com/emuehlstein/MeshCore</a> (from KMusorin/MeshCore)</li>
+    <li><strong>Branch:</strong> <code>feature/ws-custom-broker</code></li>
+    <li><strong>New commands:</strong> <code>set mqtt.ws on|off</code>, <code>set mqtt.tls on|off</code></li>
+    <li><strong>Purpose:</strong> Enables WSS+JWT auth for custom brokers (same pattern as LetsMesh)</li>
+    <li><strong>Pre-built binary (Heltec v3):</strong><br>
+      <a href="https://chicagooffline-firmware.s3.us-east-2.amazonaws.com/meshcore/Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin">Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin</a><br>
+      S3 bucket: <code>chicagooffline-firmware</code> (us-east-2)
+    </li>
   </ul>
 
   <h3>Mesh Health Check</h3>
@@ -315,16 +334,27 @@ docker logs -f meshcore-health-check</code></pre>
   <pre><code>ssh ubuntu@3.141.31.229
 
 # CoreScope logs
-docker logs -f corescope
+docker logs -f corescope-dev
+
+# WS MQTT broker logs
+docker logs -f meshcore-mqtt-broker
 
 # Caddy logs
 docker logs -f caddy</code></pre>
 
   <h2>📡 Connecting Observer Nodes</h2>
 
-  <p>Point your observer nodes to:</p>
+  <p>Two connection methods are supported:</p>
+
+  <h3>Method 1: Plain TCP (Production)</h3>
   <pre><code>MQTT Broker: mqtt://mqtt.chicagooffline.com:1883
 Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
+  <p>No authentication required. Works with any standard firmware or <code>mctomqtt</code>.</p>
+
+  <h3>Method 2: WebSocket + JWT (Dev)</h3>
+  <pre><code>MQTT Broker: wss://wsmqtt-dev.chicagooffline.com/mqtt
+Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
+  <p>Requires WS-capable firmware (see <a href="https://github.com/emuehlstein/MeshCore">emuehlstein/MeshCore</a> <code>feature/ws-custom-broker</code>) or <code>mctomqtt</code> with WS support. JWT auth uses Ed25519 device keys &mdash; username format: <code>v1_{PUBKEY}</code>.</p>
 
   <p>For detailed setup instructions, see:</p>
   <ul>

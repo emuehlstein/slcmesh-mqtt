@@ -13,6 +13,7 @@ MeshCore network analyzer for Chicago (ORD region).
 ### Development
 - **Network Scope:** https://dev-scope.chicagooffline.com
 - **Landing Page:** https://dev-landing.chicagooffline.com
+- **WS MQTT Broker:** wss://wsmqtt-dev.chicagooffline.com/mqtt
 
 ## Infrastructure
 
@@ -30,9 +31,9 @@ MeshCore network analyzer for Chicago (ORD region).
 - **IP:** 3.141.31.229
 - **Services:**
   - External Caddy (TLS/routing)
-  - CoreScope (Go server on port 3000, internal)
-  - **MQTT:** Connects to production broker (mqtt.chicagooffline.com:1883)
-  - **No local MQTT broker** — dev ingests from prod
+  - `corescope-dev` container (Go server on port 3000, internal)
+  - `meshcore-mqtt-broker` container (michaelhart/meshcore-mqtt-broker) — WebSocket MQTT broker
+  - **MQTT:** Dev CoreScope subscribes to local WS broker (`wss://wsmqtt-dev.chicagooffline.com/mqtt`)
   - **No Health Check** — dev is for CoreScope UI/backend testing only
 
 ## Architecture
@@ -58,11 +59,16 @@ chicagooffline.com (EC2 t3.small, 13.58.181.117)
 dev-scope.chicagooffline.com (EC2 t3.small, 3.141.31.229)
 ├── External Caddy Container (TLS + routing)
 │   ├── dev-landing.chicagooffline.com → Landing page
-│   └── dev-scope.chicagooffline.com → CoreScope (:3000)
-├── CoreScope Container
+│   ├── dev-scope.chicagooffline.com → CoreScope (:3000)
+│   └── wsmqtt-dev.chicagooffline.com → meshcore-mqtt-broker (WSS)
+├── corescope-dev Container
 │   ├── Go backend + packet store (port 3000, internal)
-│   ├── MQTT client → mqtt.chicagooffline.com:1883 (prod broker)
+│   ├── MQTT client → wss://wsmqtt-dev.chicagooffline.com/mqtt (local WS broker)
 │   └── SQLite database (ephemeral, wiped on redeploy)
+├── meshcore-mqtt-broker Container (michaelhart/meshcore-mqtt-broker)
+│   ├── WebSocket MQTT over WSS
+│   ├── JWT auth via Ed25519 device keys (v1_{PUBKEY} username format)
+│   └── Subscriber accounts: corescope (read), admin (debug)
 └── Docker network: chicagooffline-net
 ```
 
@@ -79,6 +85,8 @@ dev-scope.chicagooffline.com (EC2 t3.small, 3.141.31.229)
 - `SSH_USER` - `ubuntu`
 - `DEPLOY_KEY` - ed25519 deploy key for git clone
 - `CARTOGRAPHER_HEALTHCHECK_KEY` - Health Check channel secret (prod only)
+- `BROKER_CORESCOPE_PASSWORD` - Password for `corescope` subscriber account (dev only)
+- `BROKER_ADMIN_PASSWORD` - Password for `admin` debug account (dev only)
 
 ### Manual Deployment
 SSH into EC2 and run:
@@ -115,11 +123,16 @@ DEV_BANNER=false            # No "DEV" banner
 SCOPE_VHOST="dev-scope.chicagooffline.com"
 LANDING_VHOST="dev-landing.chicagooffline.com"
 CORESCOPE_CONFIG="dev-config.json"
-WITH_MQTT=true              # Connect to prod MQTT broker (not local)
+WITH_MQTT=true              # Connect to local WS broker
+WITH_MQTT_BROKER=true       # Deploy meshcore-mqtt-broker container
 WITH_HEALTH_CHECK=false     # No health check in dev
 WITH_LANDING=true           # Serve landing page
 DEV_BANNER=true             # Show "DEV" banner in UI
+# Data dir: $HOME/corescope-dev-data
+# Container name: corescope-dev
 ```
+
+> **Standalone broker deploy:** Use `bash deploy-broker.sh` to redeploy only the `meshcore-mqtt-broker` container without touching CoreScope.
 
 ### CoreScope Configs
 
@@ -130,7 +143,8 @@ DEV_BANNER=true             # Show "DEV" banner in UI
 - Map center: Chicago (41.8781, -87.6298)
 
 #### `dev-config.json` (Development)
-- MQTT broker: `mqtt://mqtt.chicagooffline.com:1883` (prod broker)
+- MQTT broker: `wss://wsmqtt-dev.chicagooffline.com/mqtt` (local WS broker)
+- Auth: JWT via Ed25519 device keys (username: `v1_{PUBKEY}`)
 - Channel keys: same as prod
 - Region: `ORD`
 - Map center: Chicago
@@ -165,6 +179,25 @@ topic: meshcore/ORD/<node-pubkey>/packets
 
 No authentication required (for now).
 
+Two methods are supported:
+
+### Method 1: Plain TCP (Production)
+```
+mqtt://mqtt.chicagooffline.com:1883
+topic: meshcore/ORD/<node-pubkey>/packets
+```
+No authentication required. Works with any standard firmware or `mctomqtt`.
+
+### Method 2: WebSocket + JWT (Dev)
+```
+wss://wsmqtt-dev.chicagooffline.com/mqtt
+topic: meshcore/ORD/<node-pubkey>/packets
+```
+Requires WS-capable firmware (see [Firmware Fork](#firmware-fork-ws-custom-broker)) or `mctomqtt` with WS support.
+JWT auth uses Ed25519 device keys — username format: `v1_{PUBKEY}`.
+
+See `OBSERVER_SETUP.md` for detailed per-method configuration.
+
 ## Monitoring
 
 ### Production
@@ -190,14 +223,16 @@ docker restart caddy
 ssh ubuntu@3.141.31.229 -i ~/.ssh/chicagooffline-dev.pem
 
 # View logs
-docker logs -f corescope
+docker logs -f corescope-dev
 docker logs -f caddy
+docker logs -f meshcore-mqtt-broker
 
 # Check status
 docker ps
 
 # Restart
-docker restart corescope
+docker restart corescope-dev
+docker restart meshcore-mqtt-broker
 ```
 
 ## DNS Records (Route 53)
@@ -217,6 +252,7 @@ A    healthcheck.chicagooffline.com    → 13.58.181.117
 ```
 A    dev-scope.chicagooffline.com      → 3.141.31.229
 A    dev-landing.chicagooffline.com    → 3.141.31.229
+A    wsmqtt-dev.chicagooffline.com     → 3.141.31.229
 ```
 
 **TTL:** 60s for all records (allows fast IP updates during troubleshooting)
@@ -246,8 +282,8 @@ gh workflow run deploy.yml --repo emuehlstein/chimesh-mqtt \
 
 # Or manually
 ssh ubuntu@3.141.31.229
-docker exec corescope rm -f /app/data/meshcore.db
-docker restart corescope
+docker exec corescope-dev rm -f /app/data/meshcore.db
+docker restart corescope-dev
 ```
 
 ### Backup Production Database
@@ -260,6 +296,23 @@ scp ubuntu@13.58.181.117:~/corescope-backup-*.tar.gz ~/backups/
 
 ### Add MQTT Authentication (Future)
 Edit `mosquitto.conf` and mount it into the container.
+
+## Firmware Fork: WS Custom Broker
+
+A fork of MeshCore adds WebSocket + JWT auth support for custom brokers.
+
+- **Fork:** [github.com/emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) (from KMusorin/MeshCore)
+- **Branch:** `feature/ws-custom-broker`
+- **New CLI commands:** `set mqtt.ws on|off`, `set mqtt.tls on|off`
+- **Pattern:** Same WSS+JWT auth as LetsMesh
+
+### Pre-Built Binary (Heltec v3 Repeater/Observer)
+```
+https://chicagooffline-firmware.s3.us-east-2.amazonaws.com/meshcore/Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin
+```
+S3 bucket: `chicagooffline-firmware` (us-east-2)
+
+See `OBSERVER_SETUP.md` for flash and configuration instructions.
 
 ## Troubleshooting
 
