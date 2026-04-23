@@ -4,6 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contributors – Chicago Offline</title>
+  
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KX3PSRD0JT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KX3PSRD0JT');
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -194,21 +203,7 @@
         <li><a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a> — Network Scope</li>
         <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> — Health Check</li>
         <li><code>mqtt.chicagooffline.com:1883</code> — MQTT Broker</li>
-      </ul>
-    </li>
-  </ul>
-
-  <h3>Tile Server</h3>
-  <ul>
-    <li><strong>URL:</strong> <a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a></li>
-    <li><strong>Purpose:</strong> Custom map tiles, hillshade layers, and offline mapping resources for ATAK data packages</li>
-    <li><strong>Services:</strong> MapProxy (tile proxy/cache), custom hillshade generation pipeline</li>
-    <li><strong>Use Cases:</strong>
-      <ul>
-        <li>Offline map tiles for ATAK (TAK Server integration)</li>
-        <li>Custom hillshade-3x layers from USGS 3DEP DEMs</li>
-        <li>CalTopo, USGS Topo, NAIP imagery proxying</li>
-        <li>USB bundle generation for field use (no internet required)</li>
+        <li><a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a> — Tile Server</li>
       </ul>
     </li>
   </ul>
