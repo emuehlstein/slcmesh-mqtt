@@ -23,7 +23,7 @@ if [ "$ENVIRONMENT" = "dev" ]; then
   CORESCOPE_IMAGE_MODE="fork"         # build from chicagooffline fork
   CORESCOPE_DATA_DIR="$HOME/corescope-dev-data"
   CORESCOPE_CONFIG="dev-config.json"
-  WITH_MQTT=false             # dev uses meshcore-mqtt-broker (standalone container) instead of internal Mosquitto
+  WITH_MQTT=true              # standalone Mosquitto container (same as prod)
   WITH_WSMQTT_BROKER=true       # deploy standalone WS broker
   WITH_HEALTH_CHECK=false
   WITH_LANDING=true
@@ -231,7 +231,7 @@ BROKER_ENV_FILE
   fi
 fi
 
-# ── Start Mosquitto (standalone, prod only) ─────────────────────────────────────
+# ── Start Mosquitto (standalone) ────────────────────────────────────────────────
 if [ "$WITH_MQTT" = true ]; then
   # Only create Mosquitto container if not already running (survives app deploys)
   if docker inspect mosquitto &>/dev/null && [ "$(docker inspect -f '{{.State.Running}}' mosquitto)" = "true" ]; then

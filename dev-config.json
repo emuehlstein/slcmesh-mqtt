@@ -2,7 +2,12 @@
   "port": 3000,
   "mqttSources": [
     {
-      "name": "meshcore-broker",
+      "name": "mosquitto-tcp",
+      "broker": "mqtt://mosquitto:1883",
+      "topics": ["meshcore/#"]
+    },
+    {
+      "name": "wsmqtt-ws",
       "broker": "ws://meshcore-mqtt-broker:8883",
       "username": "corescope",
       "password": "BROKER_CORESCOPE_PASSWORD",
@@ -18,10 +23,7 @@
   },
   "defaultRegion": "ORD",
   "mapDefaults": {
-    "center": [
-      41.8781,
-      -87.6298
-    ],
+    "center": [41.8781, -87.6298],
     "zoom": 11
   }
 }
