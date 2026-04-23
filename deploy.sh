@@ -155,6 +155,9 @@ OBSERVERS_FILE=data/observer.json
 HEALTH_ENV_FILE
   fi
 
+  # Ensure MQTT_HOST stays correct (was 'corescope' before Mosquitto split)
+  sed -i "s|MQTT_HOST=corescope|MQTT_HOST=mosquitto|" "$HEALTH_ENV"
+
   if [ -n "${TEST_CHANNEL_SECRET:-}" ] && [ "${TEST_CHANNEL_SECRET}" != "CHANGE_ME" ]; then
     sed -i "s|TEST_CHANNEL_SECRET=.*|TEST_CHANNEL_SECRET=${TEST_CHANNEL_SECRET}|" "$HEALTH_ENV"
   fi
