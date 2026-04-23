@@ -36,7 +36,7 @@ else
   CORESCOPE_DATA_DIR="$HOME/corescope-data"
   CORESCOPE_CONFIG="config.json"
   WITH_MQTT=true              # Run standalone Mosquitto container
-  WITH_MQTT_BROKER=false
+  WITH_MQTT_BROKER=true        # Run WS broker (meshcore-mqtt-broker)
   WITH_HEALTH_CHECK=true
   WITH_LANDING=true
   DEV_BANNER=false
@@ -92,39 +92,8 @@ echo "✅ Built corescope-chicagooffline:latest (commit $DEV_COMMIT)"
 # ── Directories and config ────────────────────────────────────────────────────
 mkdir -p "$CORESCOPE_DATA_DIR" ~/caddy-data ~/landing ~/dev-landing
 
-# ── Broker env file (dev only) ───────────────────────────────────────────────
-if [ "$ENVIRONMENT" = "dev" ] && [ -n "${BROKER_CORESCOPE_PASSWORD:-}" ]; then
-  BROKER_ENV="$HOME/meshcore-mqtt-broker.env"
-  echo "📝 Writing $BROKER_ENV from secrets..."
-  cat > "$BROKER_ENV" << BROKER_ENV_FILE
-MQTT_WS_PORT=8883
-MQTT_HOST=0.0.0.0
-AUTH_EXPECTED_AUDIENCE=wsmqtt-dev.chicagooffline.com
-SUBSCRIBER_MAX_CONNECTIONS_DEFAULT=2
-SUBSCRIBER_1=corescope:${BROKER_CORESCOPE_PASSWORD}:2
-SUBSCRIBER_2=admin:${BROKER_ADMIN_PASSWORD:-changeme}:1:5
-ABUSE_ENFORCEMENT_ENABLED=false
-ABUSE_PERSISTENCE_PATH=/data/abuse-detection.db
-ABUSE_DUPLICATE_WINDOW_SIZE=100
-ABUSE_DUPLICATE_WINDOW_MS=300000
-ABUSE_DUPLICATE_THRESHOLD=10
-ABUSE_MAX_DUPLICATES_PER_PACKET=5
-ABUSE_DUPLICATE_RATE_THRESHOLD=0.3
-ABUSE_DUPLICATE_RATE_WINDOW_MS=300000
-ABUSE_BUCKET_CAPACITY=20
-ABUSE_BUCKET_REFILL_RATE=3
-ABUSE_MAX_PACKET_SIZE=255
-ABUSE_MAX_TOPICS_PER_DAY=3
-ABUSE_ANOMALY_THRESHOLD=10
-ABUSE_MAX_IATA_CHANGES_24H=3
-ABUSE_TOPIC_HISTORY_SIZE=50
-ABUSE_TOPIC_HISTORY_WINDOW_MS=86400000
-ABUSE_PERSISTENCE_INTERVAL_MS=300000
-BROKER_ENV_FILE
-fi
-
-# Inject broker password into dev-config.json before copying
-if [ "$ENVIRONMENT" = "dev" ] && [ -n "${BROKER_CORESCOPE_PASSWORD:-}" ]; then
+# Inject broker password into config before copying (both environments use WS broker now)
+if [ -n "${BROKER_CORESCOPE_PASSWORD:-}" ]; then
   sed "s/BROKER_CORESCOPE_PASSWORD/${BROKER_CORESCOPE_PASSWORD}/g" "$CORESCOPE_CONFIG" > /tmp/corescope-config-resolved.json
   cp /tmp/corescope-config-resolved.json "$CORESCOPE_DATA_DIR/config.json"
 else
@@ -199,28 +168,67 @@ HEALTH_ENV_FILE
   docker build -t meshcore-health-check:latest "$HEALTH_DIR"
 fi
 
-# ── Start WS MQTT Broker (dev only) ───────────────────────────────────────────
+# ── Start WS MQTT Broker ──────────────────────────────────────────────────────
 if [ "${WITH_MQTT_BROKER:-false}" = true ]; then
-  echo "🔐 Deploying meshcore-mqtt-broker..."
   BROKER_DIR="$(pwd)/meshcore-mqtt-broker"
   BROKER_ENV="$HOME/meshcore-mqtt-broker.env"
   BROKER_DATA="$HOME/meshcore-mqtt-broker-data"
   mkdir -p "$BROKER_DATA"
+
+  # Dynamic audience based on environment
+  if [ "$ENVIRONMENT" = "dev" ]; then
+    BROKER_AUDIENCE="wsmqtt-dev.chicagooffline.com"
+  else
+    BROKER_AUDIENCE="wsmqtt.chicagooffline.com"
+  fi
+
+  echo "📝 Writing $BROKER_ENV (audience: $BROKER_AUDIENCE)..."
+  cat > "$BROKER_ENV" << BROKER_ENV_FILE
+MQTT_WS_PORT=8883
+MQTT_HOST=0.0.0.0
+AUTH_EXPECTED_AUDIENCE=$BROKER_AUDIENCE
+SUBSCRIBER_MAX_CONNECTIONS_DEFAULT=2
+SUBSCRIBER_1=corescope:${BROKER_CORESCOPE_PASSWORD}:2
+SUBSCRIBER_2=admin:${BROKER_ADMIN_PASSWORD:-changeme}:1:5
+ABUSE_ENFORCEMENT_ENABLED=false
+ABUSE_PERSISTENCE_PATH=/data/abuse-detection.db
+ABUSE_DUPLICATE_WINDOW_SIZE=100
+ABUSE_DUPLICATE_WINDOW_MS=300000
+ABUSE_DUPLICATE_THRESHOLD=10
+ABUSE_MAX_DUPLICATES_PER_PACKET=5
+ABUSE_DUPLICATE_RATE_THRESHOLD=0.3
+ABUSE_DUPLICATE_RATE_WINDOW_MS=300000
+ABUSE_BUCKET_CAPACITY=20
+ABUSE_BUCKET_REFILL_RATE=3
+ABUSE_MAX_PACKET_SIZE=255
+ABUSE_MAX_TOPICS_PER_DAY=3
+ABUSE_ANOMALY_THRESHOLD=10
+ABUSE_MAX_IATA_CHANGES_24H=3
+ABUSE_TOPIC_HISTORY_SIZE=50
+ABUSE_TOPIC_HISTORY_WINDOW_MS=86400000
+ABUSE_PERSISTENCE_INTERVAL_MS=300000
+BROKER_ENV_FILE
 
   # Build if image doesn't exist
   if ! docker image inspect meshcore-mqtt-broker:latest >/dev/null 2>&1; then
     docker build --no-cache -t meshcore-mqtt-broker:latest "$BROKER_DIR"
   fi
 
-  docker rm -f meshcore-mqtt-broker 2>/dev/null || true
-  docker run -d \
-    --name meshcore-mqtt-broker \
-    --restart=unless-stopped \
-    --env-file "$BROKER_ENV" \
-    -v "$BROKER_DATA:/data" \
-    --network "$NETWORK_NAME" \
-    meshcore-mqtt-broker:latest
-  echo "✅ meshcore-mqtt-broker running"
+  # Only create broker container if not already running (survives app deploys)
+  if docker inspect meshcore-mqtt-broker &>/dev/null && [ "$(docker inspect -f '{{.State.Running}}' meshcore-mqtt-broker)" = "true" ]; then
+    echo "✅ meshcore-mqtt-broker already running (not restarting)"
+  else
+    echo "🔐 Starting meshcore-mqtt-broker..."
+    docker rm -f meshcore-mqtt-broker 2>/dev/null || true
+    docker run -d \
+      --name meshcore-mqtt-broker \
+      --restart=unless-stopped \
+      --env-file "$BROKER_ENV" \
+      -v "$BROKER_DATA:/data" \
+      --network "$NETWORK_NAME" \
+      meshcore-mqtt-broker:latest
+    echo "✅ meshcore-mqtt-broker running"
+  fi
 fi
 
 # ── Start Mosquitto (standalone, prod only) ─────────────────────────────────────

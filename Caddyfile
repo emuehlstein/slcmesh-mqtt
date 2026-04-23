@@ -13,6 +13,10 @@ mqtt.chicagooffline.com {
     respond "MQTT broker available on port 1883" 200
 }
 
+wsmqtt.chicagooffline.com {
+    reverse_proxy meshcore-mqtt-broker:8883
+}
+
 health.chicagooffline.com, healthcheck.chicagooffline.com {
     reverse_proxy meshcore-health-check:3090
 }
