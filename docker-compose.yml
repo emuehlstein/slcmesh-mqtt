@@ -1,0 +1,35 @@
+services:
+  corescope:
+    image: ghcr.io/kpa-clawbot/corescope:latest
+    container_name: corescope
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "1883:1883"
+    volumes:
+      - ~/corescope-data:/app/data
+      - ~/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ~/caddy-data:/data/caddy
+      - ~/homepage:/app/homepage:ro
+    networks:
+      - meshcore
+
+  health-check:
+    build: ./health-check
+    container_name: health-check
+    restart: unless-stopped
+    ports:
+      - "3090:3090"
+    volumes:
+      - ./health-check/data:/app/data
+    env_file:
+      - ./health-check/.env
+    networks:
+      - meshcore
+    depends_on:
+      - corescope
+
+networks:
+  meshcore:
+    name: meshcore

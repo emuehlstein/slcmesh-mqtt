@@ -1,4 +1,4 @@
-# Chicago Offline MeshCore MQTT Configuration
+# Chicagoland MeshCore MQTT Configuration
 # Drop this file into /etc/mctomqtt/config.d/
 #
 # Includes: letsmesh (US + EU), chimesh.org, chicagooffline.com (prod + dev)
