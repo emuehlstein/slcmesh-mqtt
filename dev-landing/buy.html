@@ -141,6 +141,28 @@
     }
     .device:hover { border-color: var(--accent-cyan); }
 
+    .device-body {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .device-img {
+      width: 120px;
+      min-width: 120px;
+      height: 120px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: var(--surface2);
+    }
+
+    .device-info { flex: 1; min-width: 0; }
+
+    @media (max-width: 480px) {
+      .device-body { flex-direction: column; }
+      .device-img { width: 100%; height: 160px; min-width: unset; }
+    }
+
     .device-header {
       display: flex;
       justify-content: space-between;
@@ -205,35 +227,6 @@
       margin: 0;
     }
 
-    .buy-link {
-      display: inline-block;
-      color: var(--accent-cyan);
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-decoration: none;
-      margin-top: 0.5rem;
-    }
-    .buy-link:hover { text-decoration: underline; }
-
-    /* ── Where to buy ── */
-    .vendors {
-      list-style: none;
-      margin: 1rem 0;
-    }
-    .vendors li {
-      padding: 0.4rem 0;
-      border-bottom: 1px solid var(--divider);
-      font-size: 0.9rem;
-    }
-    .vendors li:last-child { border: none; }
-    .vendors a {
-      color: var(--accent-cyan);
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .vendors a:hover { text-decoration: underline; }
-    .vendors .desc { color: var(--muted); font-size: 0.8rem; }
-
     .btn-primary {
       display: inline-block;
       background: var(--accent-cyan);
@@ -297,68 +290,84 @@
     <div class="device-grid">
       <div class="device">
         <span class="tag recommended">Recommended — Best starter</span>
-        <div class="device-header">
-          <h3>Meshnology N39 (Heltec V4 Kit)</h3>
-          <span class="price">~$44</span>
+        <div class="device-body">
+          <img class="device-img" src="images/n39.jpg" alt="Meshnology N39" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>Meshnology N39 (Heltec V4 Kit)</h3>
+              <span class="price">~$44</span>
+            </div>
+            <div class="features">
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> High power</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Medium battery</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg> Solar</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5a5 5 0 0 1 7 0"/><path d="M3 6a9 9 0 0 1 12.7 0"/><circle cx="9" cy="12" r="1"/><line x1="15" y1="9" x2="21" y2="3"/><line x1="17" y1="3" x2="21" y2="3"/><line x1="21" y1="3" x2="21" y2="7"/></svg> WiFi</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Enclosed</span>
+            </div>
+            <p class="note">Complete kit — board, battery, case, and antennas included. Higher power output than the V3. Battery life is shorter than the N37, but the transmit power and WiFi make up for it. Ships from US.</p>
+          </div>
         </div>
-        <div class="features">
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> High power</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Medium battery</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg> Solar</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5a5 5 0 0 1 7 0"/><path d="M3 6a9 9 0 0 1 12.7 0"/><circle cx="9" cy="12" r="1"/><line x1="15" y1="9" x2="21" y2="3"/><line x1="17" y1="3" x2="21" y2="3"/><line x1="21" y1="3" x2="21" y2="7"/></svg> WiFi</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Enclosed</span>
-        </div>
-        <p class="note">Complete kit — board, battery, case, and antennas included. Higher power output than the V3. Battery life is shorter than the N37, but the transmit power and WiFi make up for it. Ships from US.</p>
-        <a class="buy-link" href="https://meshnology.com/collections/meshnology-n30/products/meshnology-n39-wifi-lora-32-v4-development-kit-3000mah-battery-863-928mhz-antennas" target="_blank" rel="noopener">Buy from Meshnology →</a>
       </div>
 
       <div class="device">
         <span class="tag recommended">Recommended — Best all-rounder</span>
-        <div class="device-header">
-          <h3>Meshnology N37 (Wio Tracker)</h3>
-          <span class="price">~$47</span>
+        <div class="device-body">
+          <img class="device-img" src="images/n37.jpg" alt="Meshnology N37" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>Meshnology N37 (Wio Tracker)</h3>
+              <span class="price">~$47</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Long battery</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 1.3" OLED</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Enclosed</span>
+            </div>
+            <p class="note">Our favorite. Compact design with GPS, great battery life from the ultra-low-power nRF52840, and a nice screen. Slightly less transmit power, but the battery and GPS make it a great daily carry. Ships from US.</p>
+          </div>
         </div>
-        <div class="features">
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Long battery</span>
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 1.3" OLED</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Enclosed</span>
-        </div>
-        <p class="note">Our favorite. Compact design with GPS, great battery life from the ultra-low-power nRF52840, and a nice screen. Slightly less transmit power, but the battery and GPS make it a great daily carry. Ships from US.</p>
-        <a class="buy-link" href="https://meshnology.com/products/meshnology-n37-wio-tracker-l1-lora-meshtastic-gps-dev-board-with-1-3-oled" target="_blank" rel="noopener">Buy from Meshnology →</a>
       </div>
 
       <div class="device">
         <span class="tag premium">Recommended — Maximum range</span>
-        <div class="device-header">
-          <h3>Station G2</h3>
-          <span class="price">~$109</span>
+        <div class="device-body">
+          <img class="device-img" src="images/station-g2.jpg" alt="Station G2" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>Station G2</h3>
+              <span class="price">~$109</span>
+            </div>
+            <div class="features">
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 4.5W output</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg> Ultra-low noise LNA</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5a5 5 0 0 1 7 0"/><path d="M3 6a9 9 0 0 1 12.7 0"/><circle cx="9" cy="12" r="1"/><line x1="15" y1="9" x2="21" y2="3"/><line x1="17" y1="3" x2="21" y2="3"/><line x1="21" y1="3" x2="21" y2="7"/></svg> WiFi</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Wall power</span>
+            </div>
+            <p class="note">The big gun. Highest power output and best receive sensitivity of any MeshCore device. Ideal for fixed locations — rooftops, attics, high floors. Frequently out of stock. Requires USB-C PD or 9-19V external power.</p>
+          </div>
         </div>
-        <div class="features">
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 4.5W output</span>
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg> Ultra-low noise LNA</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5a5 5 0 0 1 7 0"/><path d="M3 6a9 9 0 0 1 12.7 0"/><circle cx="9" cy="12" r="1"/><line x1="15" y1="9" x2="21" y2="3"/><line x1="17" y1="3" x2="21" y2="3"/><line x1="21" y1="3" x2="21" y2="7"/></svg> WiFi</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Wall power</span>
-        </div>
-        <p class="note">The big gun. Highest power output and best receive sensitivity of any MeshCore device. Ideal for fixed locations — rooftops, attics, high floors. Frequently out of stock. Requires USB-C PD or 9-19V external power.</p>
-        <a class="buy-link" href="https://store.rakwireless.com/products/station-g2" target="_blank" rel="noopener">Buy from RAK →</a>
       </div>
 
       <div class="device">
         <span class="tag recommended">Standalone messenger</span>
-        <div class="device-header">
-          <h3>LilyGo T-Deck</h3>
-          <span class="price">~$50</span>
+        <div class="device-body">
+          <img class="device-img" src="images/t-deck.jpg" alt="LilyGo T-Deck" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>LilyGo T-Deck</h3>
+              <span class="price">~$50</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Medium battery</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 2.8" screen</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M6 16h12"/></svg> Keyboard</span>
+            </div>
+            <p class="note">A full standalone messenger — no phone needed. Type directly on the built-in keyboard. Great for emergencies or camping where you don't want to drain your phone.</p>
+          </div>
         </div>
-        <div class="features">
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Medium battery</span>
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 2.8" screen</span>
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M6 16h12"/></svg> Keyboard</span>
-        </div>
-        <p class="note">A full standalone messenger — no phone needed. Type directly on the built-in keyboard. Great for emergencies or camping where you don't want to drain your phone.</p>
-        <a class="buy-link" href="https://www.lilygo.cc/products/t-deck" target="_blank" rel="noopener">Buy from LilyGo →</a>
       </div>
     </div>
 
@@ -369,98 +378,82 @@
     <div class="device-grid">
       <div class="device">
         <span class="tag advanced">GPS tracking</span>
-        <div class="device-header">
-          <h3>LilyGo T-Beam</h3>
-          <span class="price">~$40</span>
+        <div class="device-body">
+          <img class="device-img" src="images/t-beam.jpg" alt="LilyGo T-Beam" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>LilyGo T-Beam</h3>
+              <span class="price">~$40</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Swappable 18650</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
+            </div>
+            <p class="note">Best for location sharing. The 18650 battery holder means cheap, swappable batteries. Popular with hikers and field ops.</p>
+          </div>
         </div>
-        <div class="features">
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Swappable 18650</span>
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
-        </div>
-        <p class="note">Best for location sharing. The 18650 battery holder means cheap, swappable batteries. Popular with hikers and field ops.</p>
       </div>
 
       <div class="device">
         <span class="tag advanced">Ultra-low power</span>
-        <div class="device-header">
-          <h3>LilyGo T-Echo</h3>
-          <span class="price">~$55</span>
+        <div class="device-body">
+          <img class="device-img" src="images/t-echo.jpg" alt="LilyGo T-Echo" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>LilyGo T-Echo</h3>
+              <span class="price">~$55</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Low power</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Days of battery</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> E-ink</span>
+            </div>
+            <p class="note">E-ink display sips power — days of battery life. Great for solar repeater builds or leave-it-and-forget-it deployments.</p>
+          </div>
         </div>
-        <div class="features">
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Low power</span>
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Days of battery</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> E-ink</span>
-        </div>
-        <p class="note">E-ink display sips power — days of battery life. Great for solar repeater builds or leave-it-and-forget-it deployments.</p>
       </div>
 
       <div class="device">
         <span class="tag advanced">Budget</span>
-        <div class="device-header">
-          <h3>Heltec Wireless Paper</h3>
-          <span class="price">~$18</span>
+        <div class="device-body">
+          <img class="device-img" src="images/wireless-paper.webp" alt="Heltec Wireless Paper" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>Heltec Wireless Paper</h3>
+              <span class="price">~$18</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Medium battery</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> E-ink</span>
+            </div>
+            <p class="note">Cheapest option with a screen. E-ink persists without power. Good for experimenting or deploying many nodes on a budget.</p>
+          </div>
         </div>
-        <div class="features">
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Medium battery</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> E-ink</span>
-        </div>
-        <p class="note">Cheapest option with a screen. E-ink persists without power. Good for experimenting or deploying many nodes on a budget.</p>
       </div>
 
       <div class="device">
         <span class="tag advanced">Compact tracker</span>
-        <div class="device-header">
-          <h3>SenseCAP T1000-E</h3>
-          <span class="price">~$40</span>
+        <div class="device-body">
+          <img class="device-img" src="images/t1000-e.jpg" alt="SenseCAP T1000-E" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>SenseCAP T1000-E</h3>
+              <span class="price">~$40</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Low power</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Long battery</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> IP65</span>
+            </div>
+            <p class="note">Credit-card sized, waterproof, with GPS. Pairs via Bluetooth — no USB flashing. Good for bags, vehicles, or pets.</p>
+          </div>
         </div>
-        <div class="features">
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Low power</span>
-          <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Long battery</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
-          <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> IP65</span>
-        </div>
-        <p class="note">Credit-card sized, waterproof, with GPS. Pairs via Bluetooth — no USB flashing. Good for bags, vehicles, or pets.</p>
       </div>
     </div>
-
-    <!-- ── Where to buy ── -->
-    <div class="section-label">Where to buy</div>
-    <h2>Vendors we trust</h2>
-    <p>These are the manufacturers and authorized sellers. Prices are similar across all of them — buy wherever ships fastest to you.</p>
-
-    <ul class="vendors">
-      <li>
-        <a href="https://meshnology.com" target="_blank" rel="noopener">Meshnology</a> — N39 (Heltec V4), N37 (Wio Tracker), N32, and more complete kits
-        <div class="desc">Ships from US warehouse (California). Board + battery + case bundles ready to go.</div>
-      </li>
-      <li>
-        <a href="https://muzi.works" target="_blank" rel="noopener">Muzi Works</a> — Tuned 915 MHz antennas
-        <div class="desc">The 17cm whip antenna is a huge upgrade over stock stubbies. SMA male, $12.</div>
-      </li>
-      <li>
-        <a href="https://heltec.org" target="_blank" rel="noopener">Heltec</a> — Heltec V3, V4, Wireless Paper, Capsule Sensor
-        <div class="desc">Ships from China. Usually 1-2 weeks to the US.</div>
-      </li>
-      <li>
-        <a href="https://www.lilygo.cc" target="_blank" rel="noopener">LilyGo</a> — T-Beam, T-Deck, T-Deck Plus, T-Echo
-        <div class="desc">Ships from China. Some items on Amazon for faster US delivery.</div>
-      </li>
-      <li>
-        <a href="https://store.rakwireless.com" target="_blank" rel="noopener">RAK Wireless</a> — WisMesh Pocket, WisBlock, WisMesh Tag
-        <div class="desc">Ships from China/US warehouse. Professional quality hardware.</div>
-      </li>
-      <li>
-        <a href="https://www.amazon.com/s?k=heltec+lora32+v3+915" target="_blank" rel="noopener">Amazon</a> — Heltec V3, T-Beam, various LoRa boards
-        <div class="desc">Faster shipping, sometimes slightly higher price. Check for 915 MHz version.</div>
-      </li>
-      <li>
-        <a href="https://www.aliexpress.com/w/wholesale-heltec-lora32-v3.html" target="_blank" rel="noopener">AliExpress</a> — All brands, lowest prices
-        <div class="desc">Cheapest option. 2-4 weeks shipping. Good for bulk orders.</div>
-      </li>
-    </ul>
 
     <div class="important">
       <strong>💡 Don't overthink it.</strong> If you're not sure, get the <strong>Meshnology N37</strong> or <strong>N39</strong>. They're under $50, come with everything you need in the box, and ship from the US. You can always get something fancier later.
