@@ -7,7 +7,8 @@
       "topics": [
         "meshcore/#"
       ],
-      "label": "Legacy"
+      "label": "Legacy",
+      "tier": "local"
     },
     {
       "name": "wsmqtt-ws",
@@ -17,7 +18,8 @@
       "topics": [
         "meshcore/#"
       ],
-      "label": "CO-DEV"
+      "label": "CO-DEV",
+      "tier": "secure"
     },
     {
       "name": "chimesh-org",
@@ -27,7 +29,8 @@
       "password": "CHIMESH_VIEWER_PASSWORD",
       "topics": [
         "meshcore/#"
-      ]
+      ],
+      "tier": "secure"
     }
   ],
   "channelKeys": {
