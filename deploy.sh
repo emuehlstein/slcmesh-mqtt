@@ -371,8 +371,8 @@ if [ "$ENVIRONMENT" = "dev" ]; then
   echo "🔧 Scope:   https://dev-scope.chicagooffline.com"
   echo "🔧 Landing: https://dev-landing.chicagooffline.com"
   echo "🩺 Health:  https://dev-health.chicagooffline.com"
-  echo "🔑 Keygen:  https://keygen.chicagooffline.com"
-  echo "🗺️  LiveMap: https://livemap.chicagooffline.com"
+  echo "🔑 Keygen:  https://dev-keygen.chicagooffline.com"
+  echo "🗺️  LiveMap: https://dev-livemap.chicagooffline.com"
 else
   echo "🌐 Landing: https://chicagooffline.com"
   echo "📡 Scope:   https://scope.chicagooffline.com"
