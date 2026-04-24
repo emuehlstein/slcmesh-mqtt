@@ -345,8 +345,21 @@
     .footer a:hover { text-decoration: underline; }
 
     /* ── Light mode ── */
+    :root.light {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --surface2: #f8faff;
+      --border: #d0d7e8;
+      --accent-cyan: #0077cc;
+      --accent-amber: #b87000;
+      --accent-green: #1a7a00;
+      --accent-purple: #7c3aed;
+      --text: #0f1117;
+      --muted: #4a5070;
+      --divider: #dde2f0;
+    }
     @media (prefers-color-scheme: light) {
-      :root {
+      :root:not(.dark) {
         --bg: #f0f4f8;
         --surface: #ffffff;
         --surface2: #f8faff;
@@ -359,14 +372,45 @@
         --muted: #4a5070;
         --divider: #dde2f0;
       }
-      .dev-banner {
-        background: var(--accent-amber);
-        color: #ffffff;
-      }
-      .btn-primary {
-        color: #ffffff;
-      }
     }
+    .light .dev-banner { background: var(--accent-amber); color: #ffffff; }
+    @media (prefers-color-scheme: light) { :root:not(.dark) .dev-banner { background: var(--accent-amber); color: #ffffff; } }
+    .light .btn-primary { color: #ffffff; }
+    @media (prefers-color-scheme: light) { :root:not(.dark) .btn-primary { color: #ffffff; } }
+
+    /* ── Theme toggle pill ── */
+    .theme-toggle {
+      position: fixed;
+      top: 2.8rem;
+      right: 1.25rem;
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.2rem;
+      gap: 0;
+      z-index: 100;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--accent-cyan); }
+    .theme-toggle button {
+      all: unset;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .theme-toggle button.active {
+      background: var(--accent-cyan);
+    }
+    .theme-toggle button.active .icon { filter: brightness(0); }
   </style>
 </head>
 <body>
@@ -524,6 +568,50 @@
     </div>
 
   </div>
+
+  <!-- Theme toggle pill -->
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button id="theme-light" aria-label="Light mode"><span class="icon">☀️</span></button>
+    <button id="theme-dark" aria-label="Dark mode"><span class="icon">🌙</span></button>
+  </div>
+
+  <script>
+    (function() {
+      var root = document.documentElement;
+      var stored = localStorage.getItem('theme');
+      var lightBtn = document.getElementById('theme-light');
+      var darkBtn = document.getElementById('theme-dark');
+
+      function setTheme(mode) {
+        root.classList.remove('light', 'dark');
+        if (mode === 'light') root.classList.add('light');
+        if (mode === 'dark') root.classList.add('dark');
+        lightBtn.classList.toggle('active', mode === 'light');
+        darkBtn.classList.toggle('active', mode === 'dark');
+        localStorage.setItem('theme', mode);
+      }
+
+      // Init: use stored pref, else detect system
+      if (stored) {
+        setTheme(stored);
+      } else {
+        var isLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        lightBtn.classList.toggle('active', isLight);
+        darkBtn.classList.toggle('active', !isLight);
+      }
+
+      lightBtn.addEventListener('click', function() { setTheme('light'); });
+      darkBtn.addEventListener('click', function() { setTheme('dark'); });
+
+      // Update if system pref changes (and no stored override)
+      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('theme')) {
+          lightBtn.classList.toggle('active', e.matches);
+          darkBtn.classList.toggle('active', !e.matches);
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>
