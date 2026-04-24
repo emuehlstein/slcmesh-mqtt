@@ -2,7 +2,7 @@ name: Deploy CoreScope
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, prod]
   workflow_dispatch:
     inputs:
       environment:
@@ -19,7 +19,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ (github.event.inputs.environment != '' && github.event.inputs.environment) || (github.ref == 'refs/heads/main' && 'production') || 'dev' }}
+    environment: ${{ (github.event.inputs.environment != '' && github.event.inputs.environment) || (github.ref == 'refs/heads/prod' && 'production') || 'dev' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,17 +29,18 @@ jobs:
         run: |
           if [ -n "${{ github.event.inputs.environment }}" ]; then
             echo "name=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          elif [ "${{ github.ref }}" = "refs/heads/prod" ]; then
             echo "name=production" >> $GITHUB_OUTPUT
           else
             echo "name=dev" >> $GITHUB_OUTPUT
           fi
           
-          # Determine which branch to deploy
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "branch=main" >> $GITHUB_OUTPUT
+          # Both environments deploy from the same branch content
+          # prod branch is a promotion of main
+          if [ "${{ github.ref }}" = "refs/heads/prod" ]; then
+            echo "branch=prod" >> $GITHUB_OUTPUT
           else
-            echo "branch=dev" >> $GITHUB_OUTPUT
+            echo "branch=main" >> $GITHUB_OUTPUT
           fi
 
       - name: Setup SSH
