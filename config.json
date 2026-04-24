@@ -4,21 +4,27 @@
     {
       "name": "mosquitto-tcp",
       "broker": "mqtt://mosquitto:1883",
-      "topics": ["meshcore/#"]
+      "topics": [
+        "meshcore/#"
+      ]
     },
     {
       "name": "wsmqtt-ws",
       "broker": "ws://meshcore-mqtt-broker:8883",
       "username": "corescope",
       "password": "BROKER_CORESCOPE_PASSWORD",
-      "topics": ["meshcore/#"]
+      "topics": [
+        "meshcore/#"
+      ]
     },
     {
       "name": "chimesh-org",
       "broker": "wss://mqtt.chimesh.org",
       "username": "viewer",
       "password": "CHIMESH_VIEWER_PASSWORD",
-      "topics": ["meshcore/#"]
+      "topics": [
+        "meshcore/#"
+      ]
     }
   ],
   "channelKeys": {
@@ -31,7 +37,66 @@
   "defaultRegion": "ORD",
   "dbPath": "/app/data/meshcore.db",
   "mapDefaults": {
-    "center": [41.8781, -87.6298],
+    "center": [
+      41.8781,
+      -87.6298
+    ],
     "zoom": 11
+  },
+  "branding": {
+    "siteName": "Chicago Offline",
+    "tagline": "MeshCore LoRa mesh network \u2014 off-grid comms for Chicago"
+  },
+  "theme": {
+    "accent": "#0077cc",
+    "accentHover": "#0099ee",
+    "navBg": "#0C0F1A",
+    "navBg2": "#141829",
+    "navText": "#EDF2FF",
+    "navTextMuted": "#A0AABF",
+    "background": "#f0f4f8",
+    "text": "#0f1117",
+    "textMuted": "#4a5070",
+    "border": "#d0d7e8",
+    "surface1": "#ffffff",
+    "surface2": "#f8faff",
+    "surface3": "#ffffff",
+    "sectionBg": "#eef2ff",
+    "cardBg": "#ffffff",
+    "contentBg": "#f0f4f8",
+    "detailBg": "#ffffff",
+    "inputBg": "#ffffff",
+    "rowStripe": "#f6f8fc",
+    "rowHover": "#e8f0ff",
+    "selectedBg": "#d0e4ff",
+    "statusGreen": "#1a7a00",
+    "statusYellow": "#b87000",
+    "statusRed": "#ef4444"
+  },
+  "themeDark": {
+    "accent": "#00E5FF",
+    "accentHover": "#33EBFF",
+    "navBg": "#0C0F1A",
+    "navBg2": "#141829",
+    "navText": "#EDF2FF",
+    "navTextMuted": "#A0AABF",
+    "background": "#0C0F1A",
+    "text": "#EDF2FF",
+    "textMuted": "#A0AABF",
+    "border": "#1e2a3a",
+    "surface1": "#141829",
+    "surface2": "#1a2035",
+    "surface3": "#202840",
+    "sectionBg": "#141829",
+    "cardBg": "#141829",
+    "contentBg": "#0C0F1A",
+    "detailBg": "#1a2035",
+    "inputBg": "#141829",
+    "rowStripe": "#111727",
+    "rowHover": "#1a2540",
+    "selectedBg": "#0a2a4a",
+    "statusGreen": "#39FF14",
+    "statusYellow": "#FFB300",
+    "statusRed": "#ef4444"
   }
 }
