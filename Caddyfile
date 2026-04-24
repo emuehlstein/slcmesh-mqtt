@@ -1,23 +1,23 @@
-chicagooffline.com {
+chicagooffline.com, chioff.com {
     root * /srv/landing
     file_server
 }
 
-scope.chicagooffline.com {
+scope.chicagooffline.com, scope.chioff.com {
     reverse_proxy corescope:3000
 }
 
-mqtt.chicagooffline.com {
+mqtt.chicagooffline.com, mqtt.chioff.com {
     # MQTT runs on port 1883 (raw TCP)
     # This subdomain is for documentation/future WebSocket MQTT if needed
     respond "MQTT broker available on port 1883" 200
 }
 
-wsmqtt.chicagooffline.com {
+wsmqtt.chicagooffline.com, ws.chioff.com {
     reverse_proxy meshcore-mqtt-broker:8883
 }
 
-health.chicagooffline.com, healthcheck.chicagooffline.com {
+health.chicagooffline.com, healthcheck.chicagooffline.com, health.chioff.com {
     reverse_proxy meshcore-health-check:3090
 }
 
@@ -26,7 +26,7 @@ keygen.chicagooffline.com {
     file_server
 }
 
-livemap.chicagooffline.com {
+livemap.chicagooffline.com, map.chioff.com {
     reverse_proxy meshmap-live:8080
 }
 
