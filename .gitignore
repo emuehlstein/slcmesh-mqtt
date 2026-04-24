@@ -5,3 +5,5 @@
 corescope-data/
 caddy-data/
 corescope-source/
+health-check/
+docker-compose.yml
