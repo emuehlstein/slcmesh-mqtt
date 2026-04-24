@@ -1,0 +1,87 @@
+# docker-compose.dev.yml — Development stack for dev-*.chicagooffline.com
+#
+# Usage:
+#   docker compose -f docker-compose.dev.yml up -d --build
+#   docker compose -f docker-compose.dev.yml logs -f corescope-dev
+#   docker compose -f docker-compose.dev.yml down
+#
+# Secrets: copy .env.example → .env and fill in passwords before first deploy.
+
+x-common: &common
+  restart: unless-stopped
+  networks: [chicagooffline]
+
+services:
+  # ── CoreScope (dev instance) ──────────────────────────────────────────────
+  corescope-dev:
+    <<: *common
+    build:
+      context: ${CORESCOPE_FORK_DIR:-./CoreScope-chicagooffline}
+      args:
+        APP_VERSION: chicagooffline-dev
+    environment:
+      - DISABLE_CADDY=true
+      - DISABLE_MOSQUITTO=true
+    volumes:
+      - corescope-dev-data:/app/data
+      - ./config.resolved.json:/app/data/config.json:ro
+
+  # ── Mosquitto (plain TCP MQTT broker) ─────────────────────────────────────
+  mosquitto:
+    <<: *common
+    image: eclipse-mosquitto:2
+    volumes:
+      - mosquitto-data:/mosquitto/data
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
+  # ── meshcore-mqtt-broker (WebSocket MQTT + JWT auth) ──────────────────────
+  meshcore-mqtt-broker:
+    <<: *common
+    build:
+      context: ./meshcore-mqtt-broker
+    env_file: .env.broker
+    volumes:
+      - broker-data:/data
+
+  # ── Mesh Health Check (dev) ───────────────────────────────────────────────
+  meshcore-health-check-dev:
+    <<: *common
+    build:
+      context: ${HEALTH_CHECK_DIR:-./meshcore-health-check}
+    env_file: .env.healthcheck
+    volumes:
+      - healthcheck-data:/app/data
+
+  # ── Live Map ──────────────────────────────────────────────────────────────
+  meshmap-live:
+    <<: *common
+    build:
+      context: ${LIVEMAP_DIR:-./meshcore-mqtt-live-map}/backend
+    env_file: .env.livemap
+    volumes:
+      - livemap-data:/data
+
+  # ── Caddy (TLS reverse proxy) ────────────────────────────────────────────
+  caddy:
+    <<: *common
+    image: caddy:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.dev:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data/caddy
+      - ./dev-landing:/srv/dev-landing:ro
+      - ${KEYGEN_DIR:-./meshcore-web-keygen}:/srv/keygen:ro
+
+networks:
+  chicagooffline:
+    name: chicagooffline-net
+
+volumes:
+  corescope-dev-data:
+  mosquitto-data:
+  broker-data:
+  caddy-data:
+  healthcheck-data:
+  livemap-data:
