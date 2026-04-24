@@ -196,14 +196,26 @@
   <h3>Production Environment</h3>
   <ul>
     <li><strong>Instance:</strong> AWS EC2 t3.small (us-east-2)</li>
-    <li><strong>IP:</strong> <code>13.58.181.117</code></li>
-    <li><strong>Services:</strong> CoreScope (packet analyzer), Mosquitto MQTT broker, Mesh Health Check</li>
+
+    <li><strong>Services:</strong>
+      <ul>
+        <li><code>corescope</code> &mdash; CoreScope packet analyzer</li>
+        <li><code>mosquitto</code> &mdash; Standalone Mosquitto MQTT broker (port 1883)</li>
+        <li><code>meshcore-mqtt-broker</code> &mdash; WebSocket MQTT broker with JWT auth</li>
+        <li><code>meshcore-health-check</code> &mdash; Mesh Health Check app</li>
+        <li><code>meshmap-live</code> &mdash; Live MQTT node map</li>
+        <li><code>caddy</code> &mdash; Reverse proxy / TLS termination</li>
+      </ul>
+    </li>
     <li><strong>URLs:</strong>
       <ul>
-        <li><a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a> — Network Scope</li>
-        <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> — Health Check</li>
-        <li><code>mqtt.chicagooffline.com:1883</code> — MQTT Broker</li>
-        <li><a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a> — Tile Server</li>
+        <li><a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a> &mdash; Network Scope</li>
+        <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> &mdash; Health Check</li>
+        <li><a href="https://livemap.chicagooffline.com">livemap.chicagooffline.com</a> &mdash; Live Map</li>
+        <li><a href="https://keygen.chicagooffline.com">keygen.chicagooffline.com</a> &mdash; Key Generator</li>
+        <li><code>mqtt.chicagooffline.com:1883</code> &mdash; Plain TCP MQTT</li>
+        <li><code>wss://wsmqtt.chicagooffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
+        <li><a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a> &mdash; Map Tile Server</li>
       </ul>
     </li>
   </ul>
@@ -211,18 +223,31 @@
   <h3>Development Environment</h3>
   <ul>
     <li><strong>Instance:</strong> AWS EC2 t3.small (us-east-2)</li>
-    <li><strong>IP:</strong> <code>3.141.31.229</code></li>
-    <li><strong>Services:</strong> CoreScope (dev instance, connects to prod MQTT broker)</li>
+
+    <li><strong>Services:</strong>
+      <ul>
+        <li><code>corescope-dev</code> &mdash; CoreScope dev instance</li>
+        <li><code>mosquitto</code> &mdash; Standalone Mosquitto MQTT broker</li>
+        <li><code>meshcore-mqtt-broker</code> &mdash; WebSocket MQTT broker with JWT auth</li>
+        <li><code>meshcore-health-check-dev</code> &mdash; Mesh Health Check dev instance</li>
+        <li><code>meshmap-live</code> &mdash; Live MQTT node map (<a href="https://github.com/yellowcooln/meshcore-mqtt-live-map">yellowcooln/meshcore-mqtt-live-map</a>)</li>
+        <li><code>caddy</code> &mdash; Reverse proxy / TLS termination</li>
+      </ul>
+    </li>
     <li><strong>URLs:</strong>
       <ul>
-        <li><a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a> — Dev Network Scope</li>
-        <li><a href="https://dev-landing.chicagooffline.com">dev-landing.chicagooffline.com</a> — Dev Landing Page</li>
+        <li><a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a> &mdash; Dev Network Scope</li>
+        <li><a href="https://dev-health.chicagooffline.com">dev-health.chicagooffline.com</a> &mdash; Dev Health Check</li>
+        <li><a href="https://dev-landing.chicagooffline.com">dev-landing.chicagooffline.com</a> &mdash; Dev Landing Page</li>
+        <li><a href="https://dev-livemap.chicagooffline.com">dev-livemap.chicagooffline.com</a> &mdash; Dev Live Map</li>
+        <li><a href="https://dev-keygen.chicagooffline.com">dev-keygen.chicagooffline.com</a> &mdash; Dev Key Generator</li>
+        <li><code>wss://wsmqtt-dev.chicagooffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
       </ul>
     </li>
   </ul>
 
   <div class="info-box">
-    <p><strong>Note:</strong> The dev environment shares the production MQTT broker for packet ingestion. Database is ephemeral and wiped on redeploy.</p>
+    <p><strong>Note:</strong> Both environments run the same stack &mdash; Mosquitto (plain TCP) + <code>meshcore-mqtt-broker</code> (WebSocket+JWT) + CoreScope subscribing to both. Dev and prod are on <strong>separate EC2 instances</strong> and must not share containers. Broker subscriber accounts: <code>corescope</code> (read), <code>admin</code> (debug).</p>
   </div>
 
   <h2>📦 GitHub Repositories</h2>
@@ -232,17 +257,17 @@
     <li><strong>Repo:</strong> <a href="https://github.com/emuehlstein/chimesh-mqtt">github.com/emuehlstein/chimesh-mqtt</a></li>
     <li><strong>Branches:</strong>
       <ul>
-        <li><code>main</code> — Production deployments</li>
-        <li><code>dev</code> — Development deployments</li>
+        <li><code>main</code> — Development deployments (safe to push freely)</li>
+        <li><code>prod</code> — Production deployments (promote from main)</li>
       </ul>
     </li>
-    <li><strong>CI/CD:</strong> GitHub Actions auto-deploys on push to <code>main</code> or <code>dev</code></li>
+    <li><strong>CI/CD:</strong> GitHub Actions auto-deploys on push to <code>main</code> (dev) or <code>prod</code> (production)</li>
   </ul>
 
   <h3>CoreScope Source (Fork)</h3>
   <ul>
     <li><strong>Upstream:</strong> <a href="https://github.com/meshcore-dev/CoreScope">github.com/meshcore-dev/CoreScope</a></li>
-    <li><strong>Fork:</strong> <a href="https://github.com/KPA-Clawbot/CoreScope">github.com/KPA-Clawbot/CoreScope</a> (chicagooffline customizations)</li>
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/CoreScope-chicagooffline">github.com/emuehlstein/CoreScope-chicagooffline</a> (branch: <code>deploy/chicagooffline</code>)</li>
     <li><strong>Build Mode:</strong> <code>CORESCOPE_IMAGE_MODE=fork</code> in <code>deploy.sh</code></li>
   </ul>
 
@@ -251,6 +276,18 @@
     <li><strong>Repo:</strong> <a href="https://github.com/agessaman/MeshCore">github.com/agessaman/MeshCore</a></li>
     <li><strong>Branch:</strong> <code>mqtt-bridge-implementation</code> (PR <a href="https://github.com/meshcore-dev/MeshCore/pull/1249">#1249</a>)</li>
     <li><strong>Firmware:</strong> <code>observer-uplink-native-dev</code> (native WiFi + MQTT, no Pi bridge needed)</li>
+  </ul>
+
+  <h3>MeshCore Firmware Fork (WS Custom Broker)</h3>
+  <ul>
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/MeshCore">github.com/emuehlstein/MeshCore</a> (from KMusorin/MeshCore)</li>
+    <li><strong>Branch:</strong> <code>feature/ws-custom-broker</code></li>
+    <li><strong>New commands:</strong> <code>set mqtt.ws on|off</code>, <code>set mqtt.tls on|off</code></li>
+    <li><strong>Purpose:</strong> Enables WSS+JWT auth for custom brokers (same pattern as LetsMesh)</li>
+    <li><strong>Pre-built binary (Heltec v3):</strong><br>
+      <a href="https://chicagooffline-firmware.s3.us-east-2.amazonaws.com/meshcore/Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin">Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin</a><br>
+      S3 bucket: <code>chicagooffline-firmware</code> (us-east-2)
+    </li>
   </ul>
 
   <h3>Mesh Health Check</h3>
@@ -262,19 +299,20 @@
   <h2>🚀 Deployment</h2>
 
   <h3>Automated (GitHub Actions)</h3>
-  <pre><code># Push to main → deploys to production
+  <pre><code># Push to main → deploys to dev only
 git push origin main
 
-# Push to dev → deploys to development
-git push origin dev
+# Promote dev → production
+git checkout prod && git merge main && git push && git checkout main
 
-# Manual workflow dispatch with DB reset
-gh workflow run deploy.yml --repo emuehlstein/chimesh-mqtt \
-  --ref dev -f environment=dev -f reset_db=true</code></pre>
+# Manual workflow dispatch
+gh workflow run deploy.yml -f environment=dev
+gh workflow run deploy.yml -f environment=production
+gh workflow run deploy.yml -f environment=dev -f reset_db=true</code></pre>
 
   <h3>Manual Deployment</h3>
   <pre><code># SSH into EC2
-ssh ubuntu@13.58.181.117  # or 3.141.31.229 for dev
+ssh ubuntu@&lt;ec2-ip&gt;  # prod or dev IP
 
 # Pull latest changes
 cd ~/chimesh-mqtt
@@ -287,17 +325,17 @@ ENVIRONMENT=production bash deploy.sh  # or ENVIRONMENT=dev</code></pre>
 
   <ol>
     <li>Make changes to CoreScope fork or config files</li>
-    <li>Commit and push to <code>dev</code> branch</li>
-    <li>GitHub Actions auto-deploys to <a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a></li>
+    <li>Commit and push to <code>main</code> branch</li>
+    <li>GitHub Actions auto-deploys to dev (<a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a>)</li>
     <li>Test changes in browser</li>
-    <li>Merge to <code>main</code> when ready for production</li>
-    <li>GitHub Actions auto-deploys to <a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a></li>
+    <li>Promote to prod: <code>git checkout prod && git merge main && git push && git checkout main</code></li>
+    <li>GitHub Actions auto-deploys to production (<a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a>)</li>
   </ol>
 
   <h2>📊 Monitoring</h2>
 
   <h3>Logs (Production)</h3>
-  <pre><code>ssh ubuntu@13.58.181.117
+  <pre><code>ssh ubuntu@&lt;prod-ip&gt;
 
 # CoreScope logs
 docker logs -f corescope
@@ -312,19 +350,36 @@ docker logs -f caddy
 docker logs -f meshcore-health-check</code></pre>
 
   <h3>Logs (Development)</h3>
-  <pre><code>ssh ubuntu@3.141.31.229
+  <pre><code>ssh ubuntu@&lt;dev-ip&gt;
 
 # CoreScope logs
-docker logs -f corescope
+docker logs -f corescope-dev
+
+# Mosquitto logs
+docker logs -f mosquitto
+
+# WS MQTT broker logs
+docker logs -f meshcore-mqtt-broker
+
+# Health Check logs
+docker logs -f meshcore-health-check-dev
 
 # Caddy logs
 docker logs -f caddy</code></pre>
 
   <h2>📡 Connecting Observer Nodes</h2>
 
-  <p>Point your observer nodes to:</p>
+  <p>Two connection methods are supported:</p>
+
+  <h3>Method 1: Plain TCP (Production)</h3>
   <pre><code>MQTT Broker: mqtt://mqtt.chicagooffline.com:1883
 Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
+  <p>No authentication required. Works with any standard firmware or <code>mctomqtt</code>.</p>
+
+  <h3>Method 2: WebSocket + JWT (Dev)</h3>
+  <pre><code>MQTT Broker: wss://wsmqtt-dev.chicagooffline.com/mqtt
+Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
+  <p>Requires WS-capable firmware (see <a href="https://github.com/emuehlstein/MeshCore">emuehlstein/MeshCore</a> <code>feature/ws-custom-broker</code>) or <code>mctomqtt</code> with WS support. JWT auth uses Ed25519 device keys &mdash; username format: <code>v1_{PUBKEY}</code>.</p>
 
   <p>For detailed setup instructions, see:</p>
   <ul>
