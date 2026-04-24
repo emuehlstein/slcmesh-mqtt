@@ -304,13 +304,19 @@ else
   git -C "$LIVEMAP_DIR" pull --ff-only origin main 2>/dev/null || true
 fi
 
-# Create live-map .env if missing
-if [ ! -f "$LIVEMAP_DIR/.env" ]; then
-  cat > "$LIVEMAP_DIR/.env" << 'LIVEMAP_ENV'
+# Create live-map .env (always regenerate to match environment)
+if [ "$ENVIRONMENT" = "dev" ]; then
+  LIVEMAP_MQTT_HOST="corescope"
+  LIVEMAP_SCOPE_URL="https://dev-scope.chicagooffline.com"
+else
+  LIVEMAP_MQTT_HOST="mosquitto"
+  LIVEMAP_SCOPE_URL="https://scope.chicagooffline.com"
+fi
+cat > "$LIVEMAP_DIR/.env" << LIVEMAP_ENV
 SITE_TITLE=Chicago Mesh Live Map
 SITE_DESCRIPTION=Live view of Chicago MeshCore nodes, message routes, and advert paths.
 SITE_FEED_NOTE=Feed: chicagooffline.com MQTT.
-MQTT_HOST=corescope
+MQTT_HOST=$LIVEMAP_MQTT_HOST
 MQTT_PORT=1883
 MQTT_USERNAME=
 MQTT_PASSWORD=
@@ -321,9 +327,8 @@ MAP_START_LAT=41.8781
 MAP_START_LON=-87.6298
 MAP_START_ZOOM=10
 DISTANCE_UNITS=mi
-PACKET_ANALYZER_URL=https://scope.chicagooffline.com
+PACKET_ANALYZER_URL=$LIVEMAP_SCOPE_URL
 LIVEMAP_ENV
-fi
 
 docker build -t meshmap-live:latest "$LIVEMAP_DIR/backend"
 docker rm -f meshmap-live 2>/dev/null || true
@@ -378,6 +383,8 @@ else
   echo "📡 Scope:   https://scope.chicagooffline.com"
   echo "📻 MQTT:    mqtt://mqtt.chicagooffline.com:1883"
   echo "🩺 Health:  https://health.chicagooffline.com"
+  echo "🔑 Keygen:  https://keygen.chicagooffline.com"
+  echo "🗺️  LiveMap: https://livemap.chicagooffline.com"
 fi
 
 if [ -t 1 ]; then
