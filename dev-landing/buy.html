@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buy a Device — Chicago Offline</title>
+  <meta name="description" content="Recommended MeshCore LoRa devices for the Chicago Offline network. From $20 beginner boards to premium base stations." />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKMJ5XBF62"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WKMJ5XBF62');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0C0F1A;
+      --surface: #141829;
+      --surface2: #1a1f30;
+      --border: #242840;
+      --accent-cyan: #00E5FF;
+      --accent-amber: #FFB300;
+      --accent-green: #39FF14;
+      --text: #EDF2FF;
+      --muted: #A0AABF;
+      --divider: #1e2338;
+    }
+
+    :root.light {
+      --bg: #f0f4f8; --surface: #ffffff; --surface2: #f8faff; --border: #d0d7e8;
+      --accent-cyan: #0077cc; --accent-amber: #b87000; --accent-green: #1a7a00;
+      --text: #0f1117; --muted: #4a5070; --divider: #dde2f0;
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not(.dark) {
+        --bg: #f0f4f8; --surface: #ffffff; --surface2: #f8faff; --border: #d0d7e8;
+        --accent-cyan: #0077cc; --accent-amber: #b87000; --accent-green: #1a7a00;
+        --text: #0f1117; --muted: #4a5070; --divider: #dde2f0;
+      }
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1.25rem 2.5rem;
+      line-height: 1.65;
+    }
+
+    .dev-banner {
+      width: 100vw;
+      background: var(--accent-amber);
+      color: #0C0F1A;
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 0;
+    }
+    .light .dev-banner, :root:not(.dark) .dev-banner { background: var(--accent-amber); color: #ffffff; }
+
+    .page { width: 100%; max-width: 720px; }
+
+    .breadcrumb {
+      padding: 1.5rem 0 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    h1 {
+      font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    p { margin-bottom: 1rem; color: var(--muted); }
+    p strong { color: var(--text); }
+
+    .important {
+      background: var(--surface);
+      border: 1px solid var(--accent-amber);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    .important strong { color: var(--accent-amber); }
+
+    /* ── Device cards ── */
+    .device-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .device {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: border-color 0.15s;
+    }
+    .device:hover { border-color: var(--accent-cyan); }
+
+    .device-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+    }
+
+    .device h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .device .price {
+      color: var(--accent-green);
+      font-weight: 700;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .device .tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+    .tag.recommended { background: var(--accent-cyan); color: var(--bg); }
+    .tag.advanced { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+    .tag.premium { background: var(--accent-amber); color: var(--bg); }
+
+    .device .specs {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 0.5rem 0;
+    }
+
+    .device .specs li {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--surface2);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .device .note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .buy-link {
+      display: inline-block;
+      color: var(--accent-cyan);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 0.5rem;
+    }
+    .buy-link:hover { text-decoration: underline; }
+
+    /* ── Where to buy ── */
+    .vendors {
+      list-style: none;
+      margin: 1rem 0;
+    }
+    .vendors li {
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--divider);
+      font-size: 0.9rem;
+    }
+    .vendors li:last-child { border: none; }
+    .vendors a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .vendors a:hover { text-decoration: underline; }
+    .vendors .desc { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent-cyan);
+      color: var(--bg);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin: 1.5rem 0;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px -4px var(--accent-cyan);
+    }
+    .light .btn-primary { color: #ffffff; }
+    @media (prefers-color-scheme: light) { :root:not(.dark) .btn-primary { color: #ffffff; } }
+
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .footer a { color: var(--accent-cyan); text-decoration: none; }
+
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      position: fixed; top: 2.2rem; right: 1.25rem;
+      display: flex; align-items: center;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+      padding: 0.2rem; z-index: 100; cursor: pointer; transition: border-color 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--accent-cyan); }
+    .theme-toggle button {
+      all: unset; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; font-size: 0.85rem; cursor: pointer; transition: background 0.15s;
+    }
+    .theme-toggle button.active { background: var(--accent-cyan); }
+    .theme-toggle button.active .icon { filter: brightness(0); }
+  </style>
+</head>
+<body>
+  <div class="dev-banner">Development Preview</div>
+
+  <div class="page">
+    <div class="breadcrumb"><a href="/">← Chicago Offline</a> / Buy a Device</div>
+
+    <h1>Buy a device.</h1>
+    <p class="subtitle">Small LoRa radio hardware that connects to the Chicago Offline mesh. No subscription, no account — you own it.</p>
+
+    <div class="important">
+      <strong>⚠️ Get the 915 MHz (US) version.</strong> Devices come in different frequency variants. For Chicago Offline, you need the <strong>915 MHz</strong> version. The 868 MHz (EU) variant won't work with our network.
+    </div>
+
+    <!-- ── Our picks ── -->
+    <div class="section-label">Our picks</div>
+    <h2>Best for most people</h2>
+
+    <div class="device-grid">
+      <div class="device">
+        <span class="tag recommended">Recommended — Best starter</span>
+        <div class="device-header">
+          <h3>Heltec V3</h3>
+          <span class="price">~$25</span>
+        </div>
+        <ul class="specs">
+          <li>ESP32-S3</li>
+          <li>SX1262 LoRa</li>
+          <li>0.96" OLED</li>
+          <li>WiFi + BLE</li>
+          <li>USB-C</li>
+        </ul>
+        <p class="note">The go-to starter board. Cheap, well-supported, plug-and-play. Pair it with the MeshCore app on your phone and you're on the network. Add a small LiPo battery for portable use.</p>
+        <a class="buy-link" href="https://heltec.org/project/wifi-lora-32-v3/" target="_blank" rel="noopener">Buy from Heltec →</a>
+      </div>
+
+      <div class="device">
+        <span class="tag recommended">Recommended — Standalone</span>
+        <div class="device-header">
+          <h3>LilyGo T-Deck</h3>
+          <span class="price">~$50</span>
+        </div>
+        <ul class="specs">
+          <li>QWERTY keyboard</li>
+          <li>2.8" touchscreen</li>
+          <li>Trackball</li>
+          <li>Speaker + mic</li>
+          <li>USB-C</li>
+        </ul>
+        <p class="note">A full standalone messenger — no phone needed. Type messages directly on the built-in keyboard. Great for emergencies or camping where you don't want to drain your phone.</p>
+        <a class="buy-link" href="https://www.lilygo.cc/products/t-deck" target="_blank" rel="noopener">Buy from LilyGo →</a>
+      </div>
+
+      <div class="device">
+        <span class="tag recommended">Recommended — Ready to go</span>
+        <div class="device-header">
+          <h3>RAK WisMesh Pocket</h3>
+          <span class="price">~$89</span>
+        </div>
+        <ul class="specs">
+          <li>Enclosed case</li>
+          <li>3200mAh battery</li>
+          <li>1.3" OLED</li>
+          <li>GPS</li>
+          <li>BLE</li>
+        </ul>
+        <p class="note">Unbox, charge, connect. No flashing, no assembly. Pre-built and ready. Best option if you just want it to work out of the box.</p>
+        <a class="buy-link" href="https://store.rakwireless.com/products/wismesh-pocket" target="_blank" rel="noopener">Buy from RAK →</a>
+      </div>
+    </div>
+
+    <!-- ── More options ── -->
+    <div class="section-label">More options</div>
+    <h2>For specific needs</h2>
+
+    <div class="device-grid">
+      <div class="device">
+        <span class="tag advanced">GPS tracking</span>
+        <div class="device-header">
+          <h3>LilyGo T-Beam</h3>
+          <span class="price">~$40</span>
+        </div>
+        <ul class="specs">
+          <li>Built-in GPS</li>
+          <li>18650 battery</li>
+          <li>ESP32 + SX1262</li>
+          <li>Expandable</li>
+        </ul>
+        <p class="note">Best for location sharing and tracking. The 18650 battery holder means cheap, swappable batteries. Popular with hikers and field ops.</p>
+      </div>
+
+      <div class="device">
+        <span class="tag advanced">Ultra-low power</span>
+        <div class="device-header">
+          <h3>LilyGo T-Echo</h3>
+          <span class="price">~$55</span>
+        </div>
+        <ul class="specs">
+          <li>E-ink display</li>
+          <li>nRF52840</li>
+          <li>GPS</li>
+          <li>NFC</li>
+          <li>Days of battery</li>
+        </ul>
+        <p class="note">E-ink display sips power — days of battery life. Great for solar-powered repeater builds or leave-it-and-forget-it deployments.</p>
+      </div>
+
+      <div class="device">
+        <span class="tag advanced">Budget</span>
+        <div class="device-header">
+          <h3>Heltec Wireless Paper</h3>
+          <span class="price">~$18</span>
+        </div>
+        <ul class="specs">
+          <li>2.13" E-ink</li>
+          <li>ESP32-S3</li>
+          <li>SX1262</li>
+          <li>Ultra-thin</li>
+        </ul>
+        <p class="note">Cheapest option with a screen. E-ink display persists without power. Good for experimenting or deploying many nodes on a budget.</p>
+      </div>
+
+      <div class="device">
+        <span class="tag premium">Base station</span>
+        <div class="device-header">
+          <h3>Station G2</h3>
+          <span class="price">~$109</span>
+        </div>
+        <ul class="specs">
+          <li>4.5W output</li>
+          <li>Ultra-low noise LNA</li>
+          <li>USB-C PD power</li>
+          <li>ESP32-S3</li>
+        </ul>
+        <p class="note">The big gun. Highest power output available — best for fixed locations where you want maximum range. Requires USB-C PD or external power supply.</p>
+      </div>
+
+      <div class="device">
+        <span class="tag advanced">Compact tracker</span>
+        <div class="device-header">
+          <h3>SenseCAP T1000-E</h3>
+          <span class="price">~$40</span>
+        </div>
+        <ul class="specs">
+          <li>Credit card size</li>
+          <li>Waterproof IP65</li>
+          <li>GPS</li>
+          <li>BLE pairing</li>
+        </ul>
+        <p class="note">Tiny, waterproof, with GPS. Pairs via Bluetooth — no USB flashing needed. Good for bags, vehicles, or pets.</p>
+      </div>
+    </div>
+
+    <!-- ── Where to buy ── -->
+    <div class="section-label">Where to buy</div>
+    <h2>Vendors we trust</h2>
+    <p>These are the manufacturers and authorized sellers. Prices are similar across all of them — buy wherever ships fastest to you.</p>
+
+    <ul class="vendors">
+      <li>
+        <a href="https://heltec.org" target="_blank" rel="noopener">Heltec</a> — Heltec V3, V4, Wireless Paper, Capsule Sensor
+        <div class="desc">Ships from China. Usually 1-2 weeks to the US.</div>
+      </li>
+      <li>
+        <a href="https://www.lilygo.cc" target="_blank" rel="noopener">LilyGo</a> — T-Beam, T-Deck, T-Deck Plus, T-Echo
+        <div class="desc">Ships from China. Some items on Amazon for faster US delivery.</div>
+      </li>
+      <li>
+        <a href="https://store.rakwireless.com" target="_blank" rel="noopener">RAK Wireless</a> — WisMesh Pocket, WisBlock, WisMesh Tag
+        <div class="desc">Ships from China/US warehouse. Professional quality hardware.</div>
+      </li>
+      <li>
+        <a href="https://www.amazon.com/s?k=heltec+lora32+v3+915" target="_blank" rel="noopener">Amazon</a> — Heltec V3, T-Beam, various LoRa boards
+        <div class="desc">Faster shipping, sometimes slightly higher price. Check for 915 MHz version.</div>
+      </li>
+      <li>
+        <a href="https://www.aliexpress.com/w/wholesale-heltec-lora32-v3.html" target="_blank" rel="noopener">AliExpress</a> — All brands, lowest prices
+        <div class="desc">Cheapest option. 2-4 weeks shipping. Good for bulk orders.</div>
+      </li>
+    </ul>
+
+    <div class="important">
+      <strong>💡 Don't overthink it.</strong> If you're not sure, get a <strong>Heltec V3</strong>. It's $25, well-documented, and works great. You can always get something fancier later.
+    </div>
+
+    <div style="text-align:center;">
+      <a class="btn-primary" href="setup.html">Set it up →</a>
+    </div>
+
+    <div class="footer">
+      <a href="/">Chicago Offline</a> · ORD region · <a href="https://chimesh.org">Chicagoland Mesh</a>
+    </div>
+  </div>
+
+  <!-- Theme toggle -->
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button id="theme-light" aria-label="Light mode"><span class="icon">☀️</span></button>
+    <button id="theme-dark" aria-label="Dark mode"><span class="icon">🌙</span></button>
+  </div>
+  <script>
+    (function() {
+      var root = document.documentElement;
+      var stored = localStorage.getItem('theme');
+      var lightBtn = document.getElementById('theme-light');
+      var darkBtn = document.getElementById('theme-dark');
+      function setTheme(mode) {
+        root.classList.remove('light', 'dark');
+        if (mode === 'light') root.classList.add('light');
+        if (mode === 'dark') root.classList.add('dark');
+        lightBtn.classList.toggle('active', mode === 'light');
+        darkBtn.classList.toggle('active', mode === 'dark');
+        localStorage.setItem('theme', mode);
+      }
+      if (stored) { setTheme(stored); }
+      else {
+        var isLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        lightBtn.classList.toggle('active', isLight);
+        darkBtn.classList.toggle('active', !isLight);
+      }
+      lightBtn.addEventListener('click', function() { setTheme('light'); });
+      darkBtn.addEventListener('click', function() { setTheme('dark'); });
+    })();
+  </script>
+</body>
+</html>
