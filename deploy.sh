@@ -69,6 +69,8 @@ if [ "$WITH_HEALTH_CHECK" = true ]; then
   docker stop "$HEALTH_CONTAINER" 2>/dev/null || true
   docker rm   "$HEALTH_CONTAINER" 2>/dev/null || true
 fi
+docker stop meshmap-live       2>/dev/null || true
+docker rm   meshmap-live       2>/dev/null || true
 docker stop caddy              2>/dev/null || true
 docker rm   caddy              2>/dev/null || true
 
@@ -281,6 +283,57 @@ docker run -d --name "$CORESCOPE_CONTAINER" \
   --network "$NETWORK_NAME" \
   corescope-chicagooffline:latest
 
+# ── Keygen (static site) ──────────────────────────────────────────────────────
+KEYGEN_DIR="$HOME/meshcore-web-keygen"
+if [ ! -d "$KEYGEN_DIR/.git" ]; then
+  git clone https://github.com/agessaman/meshcore-web-keygen.git "$KEYGEN_DIR"
+else
+  git -C "$KEYGEN_DIR" pull --ff-only origin main 2>/dev/null || true
+fi
+mkdir -p ~/keygen
+cp "$KEYGEN_DIR/index.html" ~/keygen/
+cp "$KEYGEN_DIR/noble-ed25519-offline-simple.js" ~/keygen/
+cp -r "$KEYGEN_DIR/js" ~/keygen/ 2>/dev/null || true
+cp -r "$KEYGEN_DIR/wasm" ~/keygen/ 2>/dev/null || true
+
+# ── Live Map ──────────────────────────────────────────────────────────────────
+LIVEMAP_DIR="$HOME/meshcore-mqtt-live-map"
+if [ ! -d "$LIVEMAP_DIR/.git" ]; then
+  git clone https://github.com/yellowcooln/meshcore-mqtt-live-map.git "$LIVEMAP_DIR"
+else
+  git -C "$LIVEMAP_DIR" pull --ff-only origin main 2>/dev/null || true
+fi
+
+# Create live-map .env if missing
+if [ ! -f "$LIVEMAP_DIR/.env" ]; then
+  cat > "$LIVEMAP_DIR/.env" << 'LIVEMAP_ENV'
+SITE_TITLE=Chicago Mesh Live Map
+SITE_DESCRIPTION=Live view of Chicago MeshCore nodes, message routes, and advert paths.
+SITE_FEED_NOTE=Feed: chicagooffline.com MQTT.
+MQTT_HOST=corescope
+MQTT_PORT=1883
+MQTT_USERNAME=
+MQTT_PASSWORD=
+MQTT_TRANSPORT=tcp
+MQTT_TLS=false
+MQTT_TOPIC=meshcore/#
+MAP_START_LAT=41.8781
+MAP_START_LON=-87.6298
+MAP_START_ZOOM=10
+DISTANCE_UNITS=mi
+PACKET_ANALYZER_URL=https://scope.chicagooffline.com
+LIVEMAP_ENV
+fi
+
+docker build -t meshmap-live:latest "$LIVEMAP_DIR/backend"
+docker rm -f meshmap-live 2>/dev/null || true
+docker run -d --name meshmap-live \
+  --restart=unless-stopped \
+  --env-file "$LIVEMAP_DIR/.env" \
+  -v "$LIVEMAP_DIR/data:/data" \
+  --network "$NETWORK_NAME" \
+  meshmap-live:latest
+
 # ── Start Caddy ───────────────────────────────────────────────────────────────
 CADDY_LANDING_MOUNTS=""
 if [ "$DEV_BANNER" = true ]; then
@@ -296,6 +349,7 @@ docker run -d --name caddy \
   -v $HOME/Caddyfile:/etc/caddy/Caddyfile:ro \
   -v $HOME/caddy-data:/data/caddy \
   $CADDY_LANDING_MOUNTS \
+  -v $HOME/keygen:/srv/keygen:ro \
   --network "$NETWORK_NAME" \
   caddy:latest
 
@@ -317,6 +371,8 @@ if [ "$ENVIRONMENT" = "dev" ]; then
   echo "🔧 Scope:   https://dev-scope.chicagooffline.com"
   echo "🔧 Landing: https://dev-landing.chicagooffline.com"
   echo "🩺 Health:  https://dev-health.chicagooffline.com"
+  echo "🔑 Keygen:  https://keygen.chicagooffline.com"
+  echo "🗺️  LiveMap: https://livemap.chicagooffline.com"
 else
   echo "🌐 Landing: https://chicagooffline.com"
   echo "📡 Scope:   https://scope.chicagooffline.com"
