@@ -24,7 +24,8 @@
 # ============================================================================
 set -e
 
-CONFIG_URL="https://dev-landing.chicagooffline.com/00-chicagooffline.toml"
+CONFIG_TOML="https://dev-landing.chicagooffline.com/00-chicagooffline.toml"
+CONFIG_ENV="https://dev-landing.chicagooffline.com/chicagooffline.env"
 
 # Colors
 RED='\033[0;31m'
@@ -81,12 +82,12 @@ if [ "$NODE_TYPE" = "companion" ]; then
     echo -e "${GREEN}  Installing meshcore-packet-capture (companions)...${NC}"
     echo -e "  ${BLUE}No root required.${NC}"
     echo ""
-    bash <(curl -fsSL https://raw.githubusercontent.com/agessaman/meshcore-packet-capture/main/install.sh) --config "$CONFIG_URL"
+    bash <(curl -fsSL https://raw.githubusercontent.com/agessaman/meshcore-packet-capture/main/install.sh) --config "$CONFIG_ENV"
 else
     echo -e "${GREEN}  Installing mctomqtt (repeaters/room servers)...${NC}"
     echo -e "  ${YELLOW}Root access required -- you may be prompted for your password.${NC}"
     echo ""
-    curl -fsSL https://raw.githubusercontent.com/Cisien/meshcoretomqtt/main/install.sh | sudo bash -s -- --config "$CONFIG_URL"
+    curl -fsSL https://raw.githubusercontent.com/Cisien/meshcoretomqtt/main/install.sh | sudo bash -s -- --config "$CONFIG_TOML"
 fi
 
 echo ""
