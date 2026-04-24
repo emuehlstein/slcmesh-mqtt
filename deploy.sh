@@ -122,11 +122,9 @@ fi
 
 if [ "$WITH_LANDING" = true ]; then
   if [ "$DEV_BANNER" = true ]; then
-    cp dev-landing/index.html ~/dev-landing/index.html
-    cp dev-landing/contributors.html ~/dev-landing/contributors.html
+    cp -r dev-landing/* ~/dev-landing/
   else
-    cp landing/index.html ~/landing/index.html
-    cp landing/contributors.html ~/landing/contributors.html
+    cp -r landing/* ~/landing/
   fi
 fi
 
