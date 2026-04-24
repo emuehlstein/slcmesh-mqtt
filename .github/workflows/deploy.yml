@@ -55,6 +55,7 @@ jobs:
           HC_SECRET_B64: ${{ secrets.CARTOGRAPHER_HEALTHCHECK_KEY }}
           ENVIRONMENT: ${{ steps.env.outputs.name }}
           BROKER_CORESCOPE_PASSWORD: ${{ secrets.BROKER_CORESCOPE_PASSWORD }}
+          CHIMESH_VIEWER_PASSWORD: ${{ secrets.CHIMESH_VIEWER_PASSWORD }}
           BROKER_ADMIN_PASSWORD: ${{ secrets.BROKER_ADMIN_PASSWORD }}
           DEPLOY_KEY_CONTENT: ${{ secrets.DEPLOY_KEY }}
         run: |
@@ -72,6 +73,7 @@ jobs:
           export RESET_DB="${{ github.event.inputs.reset_db }}"
           export ENVIRONMENT="${ENVIRONMENT}"
           export BROKER_CORESCOPE_PASSWORD="${BROKER_CORESCOPE_PASSWORD}"
+          export CHIMESH_VIEWER_PASSWORD="${CHIMESH_VIEWER_PASSWORD}"
           export BROKER_ADMIN_PASSWORD="${BROKER_ADMIN_PASSWORD}"
           ENVEOF
           scp -i ~/.ssh/id_rsa /tmp/deploy-env.sh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/deploy-env.sh
@@ -93,7 +95,7 @@ jobs:
               git -C $REPO_DIR reset --hard origin/$BRANCH
             fi
             cd $REPO_DIR
-            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" BROKER_CORESCOPE_PASSWORD="${BROKER_CORESCOPE_PASSWORD:-}" BROKER_ADMIN_PASSWORD="${BROKER_ADMIN_PASSWORD:-}" bash deploy.sh
+            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" BROKER_CORESCOPE_PASSWORD="${BROKER_CORESCOPE_PASSWORD:-}" BROKER_ADMIN_PASSWORD="${BROKER_ADMIN_PASSWORD:-}" CHIMESH_VIEWER_PASSWORD="${CHIMESH_VIEWER_PASSWORD:-}" bash deploy.sh
           ENDSSH
 
       - name: Cleanup

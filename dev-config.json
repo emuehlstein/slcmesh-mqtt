@@ -12,6 +12,13 @@
       "username": "corescope",
       "password": "BROKER_CORESCOPE_PASSWORD",
       "topics": ["meshcore/#"]
+    },
+    {
+      "name": "chimesh-org",
+      "broker": "wss://mqtt.chimesh.org",
+      "username": "viewer",
+      "password": "CHIMESH_VIEWER_PASSWORD",
+      "topics": ["meshcore/#"]
     }
   ],
   "channelKeys": {

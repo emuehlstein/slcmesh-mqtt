@@ -104,13 +104,16 @@ echo "✅ Built corescope-chicagooffline:latest (commit $DEV_COMMIT)"
 # ── Directories and config ────────────────────────────────────────────────────
 mkdir -p "$CORESCOPE_DATA_DIR" ~/caddy-data ~/landing ~/dev-landing
 
-# Inject broker password into config before copying (both environments use WS broker now)
+# Inject broker passwords into config before copying
+cp "$CORESCOPE_CONFIG" /tmp/corescope-config-resolved.json
 if [ -n "${BROKER_CORESCOPE_PASSWORD:-}" ]; then
-  sed "s/BROKER_CORESCOPE_PASSWORD/${BROKER_CORESCOPE_PASSWORD}/g" "$CORESCOPE_CONFIG" > /tmp/corescope-config-resolved.json
-  cp /tmp/corescope-config-resolved.json "$CORESCOPE_DATA_DIR/config.json"
-else
-  cp "$CORESCOPE_CONFIG" "$CORESCOPE_DATA_DIR/config.json"
+  sed -i "s/BROKER_CORESCOPE_PASSWORD/${BROKER_CORESCOPE_PASSWORD}/g" /tmp/corescope-config-resolved.json
 fi
+if [ -n "${CHIMESH_VIEWER_PASSWORD:-}" ]; then
+  sed -i "s/CHIMESH_VIEWER_PASSWORD/${CHIMESH_VIEWER_PASSWORD}/g" /tmp/corescope-config-resolved.json
+fi
+cp /tmp/corescope-config-resolved.json "$CORESCOPE_DATA_DIR/config.json"
+rm -f /tmp/corescope-config-resolved.json
 if [ "$ENVIRONMENT" = "dev" ]; then
   cp Caddyfile.dev ~/Caddyfile
 else
