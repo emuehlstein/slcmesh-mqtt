@@ -3,29 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chicago Offline</title>
-  
+  <title>Chicago Offline — MeshCore LoRa Mesh Network for Chicago</title>
+  <meta name="description" content="Chicago's off-grid messaging network built on MeshCore and LoRa radio. Text without internet or cell service. 25+ active devices across Chicagoland." />
+  <meta name="keywords" content="MeshCore, LoRa, mesh network, Chicago, off-grid messaging, radio network, emergency communications, MeshCore Chicago, LoRa mesh" />
+
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KX3PSRD0JT"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKMJ5XBF62"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-KX3PSRD0JT');
+    gtag('config', 'G-WKMJ5XBF62');
   </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0C0F1A;           /* Jourdan: cooler/deeper, reduces halos around accents */
+      --bg: #0C0F1A;
       --surface: #141829;
       --surface2: #1a1f30;
       --border: #242840;
       --accent-cyan: #00E5FF;
       --accent-amber: #FFB300;
       --accent-green: #39FF14;
+      --accent-purple: #B565FF;
       --text: #EDF2FF;
-      --muted: #A0AABF;         /* Jourdan: #A0AABF (was #a8aec8) */
+      --muted: #A0AABF;
       --divider: #1e2338;
     }
 
@@ -37,178 +40,300 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 3rem 1.25rem 2.5rem;
+      padding: 0 1.25rem 2.5rem;
+      line-height: 1.65;
     }
 
+    .dev-banner {
+      width: 100vw;
+      background: var(--accent-amber);
+      color: #0C0F1A;
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 0;
+      margin-bottom: 2rem;
+    }
 
-    /* ── Header ── */
-    .brand {
-      font-size: 0.7rem;
+    .page { width: 100%; max-width: 720px; }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 3rem 0 2.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .hero .sub {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 520px;
+      margin: 0 auto 2rem;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent-cyan);
+      color: var(--bg);
       font-weight: 700;
-      letter-spacing: 0.2em;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px -4px var(--accent-cyan);
+    }
+
+    /* ── Sections ── */
+    section {
+      padding: 2rem 0;
+    }
+
+    section + section {
+      border-top: 1px solid var(--divider);
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--accent-cyan);
       margin-bottom: 1rem;
     }
 
-    h1 {
-      font-size: clamp(1.7rem, 4.5vw, 2.6rem);
+    h2 {
+      font-size: 1.5rem;
       font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
-      color: var(--text);
-      text-align: center;
-      max-width: 560px;
-      margin-bottom: 0.9rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
     }
 
-    .subtitle {
+    p {
       color: var(--muted);
-      font-size: 0.95rem;
-      text-align: center;
-      max-width: 480px;
-      line-height: 1.65;
-      margin-bottom: 2.5rem;
+      margin-bottom: 0.75rem;
+      max-width: 600px;
     }
 
-    /* ── Divider ── */
-    .divider {
-      width: 100%;
-      max-width: 800px;
-      height: 1px;
-      background: var(--divider);
-      margin-bottom: 2rem;
-    }
-
-    /* ── Section labels ── */
-    .section-label {
-      width: 100%;
-      max-width: 800px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.85rem;
-      padding-left: 0.1rem;
-    }
-
-    /* ── Card grid ── */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 0.85rem;
-      width: 100%;
-      max-width: 800px;
-      margin-bottom: 1.5rem;
-    }
-
-    .cards-external {
-      margin-bottom: 2.5rem;
-    }
-
-    /* ── Card ── */
-    .card {
-      --ca: var(--accent-cyan);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.4rem 1.4rem 1.2rem;
-      text-decoration: none;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      opacity: 0;
-      box-shadow: inset 0 0 0 1px var(--ca);
-      transition: opacity 0.15s;
-    }
-
-    .card:hover {
-      border-color: var(--ca);
-      box-shadow: 0 0 18px -4px var(--ca);
-      transform: translateY(-2px);
-    }
-
-    .card:hover::before { opacity: 1; }
-
-    /* External cards: slightly muted */
-    .card-external {
-      opacity: 0.85;
-    }
-    .card-external:hover { opacity: 1; }
-
-    /* ── Card icon + title row ── */
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .card-icon {
-      width: 26px;
-      height: 26px;
-      color: var(--ca);
+    /* ── Inline icons ── */
+    .inline-icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.125em;
+      margin-right: 0.2em;
       flex-shrink: 0;
     }
 
-    .card-icon svg {
-      width: 100%;
-      height: 100%;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 1.7;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    /* ── Steps ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
     }
 
-    /* ── Card body ── */
-    .card-title {
-      font-size: 1rem;
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .step-num {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      background: var(--accent-cyan);
+      color: var(--bg);
+      font-weight: 800;
+      font-size: 0.8rem;
+      border-radius: 50%;
+      margin-bottom: 0.6rem;
+    }
+
+    .step h3 {
+      font-size: 0.95rem;
       font-weight: 700;
-      color: var(--text);
-      line-height: 1.25;
+      margin-bottom: 0.3rem;
     }
 
-    .card-desc {
+    .step p {
+      font-size: 0.82rem;
+      margin-bottom: 0;
+    }
+
+    /* ── Live network ── */
+    .live-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin: 1rem 0 1.25rem;
+    }
+
+    .live-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .live-num {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .live-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ── Who it's for ── */
+    .audience {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .audience-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+    }
+
+    .audience-item strong {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+      color: var(--text);
+    }
+
+    .audience-item span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Get started ── */
+    .start-steps {
+      list-style: none;
+      margin: 1rem 0;
+    }
+
+    .start-steps li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--divider);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .start-steps li:last-child { border-bottom: none; }
+
+    .start-steps .num {
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .start-steps a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .start-steps a:hover { text-decoration: underline; }
+
+    .reassure {
       font-size: 0.82rem;
       color: var(--muted);
-      line-height: 1.55;
-      flex: 1;
-      margin-bottom: 1rem;
+      font-style: italic;
+      margin-top: 0.5rem;
     }
 
-    /* ── CTA pill button ── */
-    .card-cta {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 700;
-      font-family: "SF Mono", "Fira Code", "Menlo", monospace;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--ca);
-      border: 1px solid var(--ca);
-      border-radius: 999px;
-      padding: 0.3rem 0.85rem;
-      width: fit-content;
-      opacity: 0.8;
-      transition: opacity 0.15s, background 0.15s;
+    /* ── Final CTA ── */
+    .final-cta {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-top: 1px solid var(--divider);
     }
 
-    .card:hover .card-cta {
-      opacity: 1;
-      background: color-mix(in srgb, var(--ca) 10%, transparent);
+    .final-cta h2 {
+      max-width: 480px;
+      margin: 0 auto 1.25rem;
+    }
+
+    /* ── Tool cards ── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+
+    .tool-card:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 14px -4px var(--accent-cyan);
+      transform: translateY(-1px);
+    }
+
+    .tool-card strong {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .tool-card span {
+      font-size: 0.78rem;
+      color: var(--muted);
     }
 
     /* ── Footer ── */
@@ -216,6 +341,9 @@
       color: var(--muted);
       font-size: 0.78rem;
       text-align: center;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--divider);
+      margin-top: 1rem;
     }
 
     .footer a {
@@ -226,8 +354,21 @@
     .footer a:hover { text-decoration: underline; }
 
     /* ── Light mode ── */
+    :root.light {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --surface2: #f8faff;
+      --border: #d0d7e8;
+      --accent-cyan: #0077cc;
+      --accent-amber: #b87000;
+      --accent-green: #1a7a00;
+      --accent-purple: #7c3aed;
+      --text: #0f1117;
+      --muted: #4a5070;
+      --divider: #dde2f0;
+    }
     @media (prefers-color-scheme: light) {
-      :root {
+      :root:not(.dark) {
         --bg: #f0f4f8;
         --surface: #ffffff;
         --surface2: #f8faff;
@@ -235,163 +376,326 @@
         --accent-cyan: #0077cc;
         --accent-amber: #b87000;
         --accent-green: #1a7a00;
+        --accent-purple: #7c3aed;
         --text: #0f1117;
         --muted: #4a5070;
         --divider: #dde2f0;
       }
     }
+    .light .dev-banner { background: var(--accent-amber); color: #ffffff; }
+    @media (prefers-color-scheme: light) { :root:not(.dark) .dev-banner { background: var(--accent-amber); color: #ffffff; } }
+    .light .btn-primary { color: #ffffff; }
+    @media (prefers-color-scheme: light) { :root:not(.dark) .btn-primary { color: #ffffff; } }
+
+    /* ── Top nav ── */
+    .top-nav {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 0.25rem;
+      padding: 0.5rem 1rem;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--divider);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .top-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      transition: color 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+
+    .top-nav a:hover {
+      color: var(--accent-cyan);
+      background: var(--surface);
+    }
+
+    .top-nav a svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 480px) {
+      .top-nav a span.nav-label { display: none; }
+      .top-nav a svg { width: 18px; height: 18px; }
+      .top-nav { gap: 0.5rem; }
+    }
+
+    /* ── Theme toggle pill ── */
+    .theme-toggle {
+      position: fixed;
+      top: 2.8rem;
+      right: 1.25rem;
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.2rem;
+      gap: 0;
+      z-index: 100;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--accent-cyan); }
+    .theme-toggle button {
+      all: unset;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .theme-toggle button.active {
+      background: var(--accent-cyan);
+    }
+    .theme-toggle button.active .icon { filter: brightness(0); }
   </style>
 </head>
 <body>
 
+  
 
-  <div class="brand">Chicago Offline</div>
-
-  <h1>Off-grid communications for Chicagoland</h1>
-
-  <p class="subtitle">
-    A community MeshCore network covering the ORD region.
-    Monitor the network, check observer coverage, or connect with the Chicagoland Mesh community.
-  </p>
-
-  <div class="divider"></div>
-
-  <!-- ── Hosted tools ── -->
-  <div class="section-label">Hosted by Chicago Mesh</div>
-
-  <div class="cards">
-
-    <a class="card" href="https://scope.chicagooffline.com" style="--ca: #00E5FF">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><!-- radio signal / scope -->
-            <circle cx="12" cy="12" r="2"/>
-            <path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/>
-            <path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/>
-          </svg>
-        </div>
-        <div class="card-title">Network Scope</div>
-      </div>
-      <div class="card-desc">Live packet analyzer and node map for the Chicago MeshCore network.</div>
-      <span class="card-cta">scope.chicagooffline.com</span>
+  <nav class="top-nav">
+    <a href="https://dev-scope.chicagooffline.com">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+      <span class="nav-label">Scope</span>
     </a>
-
-    <a class="card" href="https://health.chicagooffline.com" style="--ca: #FFB300">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><!-- heartbeat / health -->
-            <polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/>
-          </svg>
-        </div>
-        <div class="card-title">Health Check</div>
-      </div>
-      <div class="card-desc">Generate a test code, send it to the health channel, and see which observer nodes heard it.</div>
-      <span class="card-cta">health.chicagooffline.com</span>
+    <a href="https://dev-health.chicagooffline.com">
+      <svg viewBox="0 0 24 24"><polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/></svg>
+      <span class="nav-label">Health Check</span>
     </a>
-
-    <a class="card" href="https://livemap.chicagooffline.com" style="--ca: #39FF14">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><!-- map / live -->
-            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
-            <line x1="8" y1="2" x2="8" y2="18"/>
-            <line x1="16" y1="6" x2="16" y2="22"/>
-          </svg>
-        </div>
-        <div class="card-title">Live Map</div>
-      </div>
-      <div class="card-desc">Real-time node map with message routes, advert paths, weather radar, and line-of-sight analysis.</div>
-      <span class="card-cta">livemap.chicagooffline.com</span>
+    <a href="https://dev-livemap.chicagooffline.com">
+      <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      <span class="nav-label">Live Map</span>
     </a>
-
-    <a class="card" href="https://keygen.chicagooffline.com" style="--ca: #B565FF">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><!-- key -->
-            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
-          </svg>
-        </div>
-        <div class="card-title">Key Generator</div>
-      </div>
-      <div class="card-desc">Generate MeshCore Ed25519 vanity keys with custom hex prefixes. Runs entirely in your browser.</div>
-      <span class="card-cta">keygen.chicagooffline.com</span>
+    <a href="https://dev-keygen.chicagooffline.com">
+      <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+      <span class="nav-label">Keygen</span>
     </a>
-
-    <a class="card" href="https://chimesh.org" style="--ca: #00E5FF">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><!-- community / globe -->
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/>
-            <line x1="3" y1="9" x2="21" y2="9"/>
-            <line x1="3" y1="15" x2="21" y2="15"/>
-          </svg>
-        </div>
-        <div class="card-title">Chicagoland Mesh</div>
-      </div>
-      <div class="card-desc">Community site for Meshtastic, MeshCore, Reticulum, and LoRa enthusiasts in Chicagoland.</div>
-      <span class="card-cta">chimesh.org</span>
+    <a href="https://chimesh.org">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+      <span class="nav-label">Community</span>
     </a>
+  </nav>
+
+  <div class="page">
+
+    <!-- ── Hero ── -->
+    <div class="hero">
+      <h1>Text when the internet&nbsp;is&nbsp;down.</h1>
+      <p class="sub">A local messaging network for Chicago built on long-range radio — no internet, no cell towers, no monthly bill.</p>
+      <a class="btn-primary" href="#get-started">Join the Network</a>
+    </div>
+
+    <!-- ── Why ── -->
+    <section>
+      <div class="section-label">Why this exists</div>
+      <h2>When the grid goes down, you're not&nbsp;alone.</h2>
+      <p>Power outages. Storms. Overcrowded events where cell service grinds to a halt. Or you're camping outside coverage and want to stay connected to your group.</p>
+      <p>Chicago Offline is a messaging network built on <strong style="color:var(--text)">MeshCore</strong> and <strong style="color:var(--text)">LoRa radio</strong>. Small devices talk to each other over long-range radio waves — up to several miles — forming a mesh that works when nothing else does.</p>
+    </section>
+
+    <!-- ── How it works ── -->
+    <section>
+      <div class="section-label">How it works</div>
+      <h2>Three steps. No tech degree required.</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Get a LoRa radio device</h3>
+          <p>Small, affordable hardware. About $35.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Flash MeshCore firmware</h3>
+          <p>One-click setup. Connects to the mesh automatically.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Start messaging</h3>
+          <p>Pair with the app. No account needed.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Live network ── -->
+    <section>
+      <div class="section-label">Live network</div>
+      <h2>The network is live right now.</h2>
+      <p>Real MeshCore devices across Chicago, relaying messages over LoRa radio every day. This isn't a concept — it's running.</p>
+      <video autoplay loop muted playsinline style="width:100%;border-radius:12px;border:1px solid var(--border);margin:1rem 0" poster="network-hero.png">
+        <source src="network-live.mp4" type="video/mp4" />
+        <img src="network-live.gif" alt="Live map of Chicago Offline MeshCore network showing active nodes across Chicagoland" style="width:100%;border-radius:12px" />
+      </video>
+      <div class="live-bar">
+        <div class="live-stat">
+          <span class="live-dot"></span>
+          <span class="live-num">—</span>
+          <span class="live-label">active devices</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-num">—</span>
+          <span class="live-label">messages today</span>
+        </div>
+        <div class="live-stat">
+          <span class="live-num">—</span>
+          <span class="live-label">coverage area</span>
+        </div>
+      </div>
+      <div class="tools-grid">
+        <a class="tool-card" href="https://dev-scope.chicagooffline.com">
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg> Network Scope</strong>
+          <span>Live packet analyzer and node map</span>
+        </a>
+        <a class="tool-card" href="https://dev-livemap.chicagooffline.com">
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> Live Map</strong>
+          <span>Real-time node map with routes and weather</span>
+        </a>
+        <a class="tool-card" href="https://dev-health.chicagooffline.com">
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/></svg> Health Check</strong>
+          <span>Test which devices hear your signal</span>
+        </a>
+        <a class="tool-card" href="https://dev-keygen.chicagooffline.com">
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Key Generator</strong>
+          <span>Create a custom device identity</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── Who it's for ── -->
+    <section>
+      <div class="section-label">Who it's for</div>
+      <h2>You don't have to be technical.</h2>
+      <div class="audience">
+        <div class="audience-item">
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Curious people</strong>
+          <span>You saw this and thought "wait, that's a thing?" It is.</span>
+        </div>
+        <div class="audience-item">
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 22h20L12 2z"/><path d="M12 12v4"/><path d="M7.5 22l4.5-7 4.5 7"/></svg> Outdoors / camping</strong>
+          <span>Stay connected with your group, miles from cell service.</span>
+        </div>
+        <div class="audience-item">
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/><line x1="12" y1="7" x2="12" y2="11"/></svg> Neighborhoods</strong>
+          <span>A block-level network that doesn't need Comcast.</span>
+        </div>
+        <div class="audience-item">
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="12" y1="2" x2="12" y2="4"/></svg> Emergency prep</strong>
+          <span>When the grid fails, radio still works.</span>
+        </div>
+        <div class="audience-item">
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Event crews</strong>
+          <span>Coordinate at festivals, races, or markets without fighting for bandwidth.</span>
+        </div>
+        <div class="audience-item">
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M17 2l-5 5-5-5"/><circle cx="8" cy="16" r="2"/><line x1="14" y1="12" x2="20" y2="12"/><line x1="14" y1="16" x2="20" y2="16"/></svg> Radio &amp; MeshCore enthusiasts</strong>
+          <span>LoRa mesh networking. A new reason to build and experiment.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Get started ── -->
+    <section id="get-started">
+      <div class="section-label">Get started</div>
+      <h2>Up and running in minutes.</h2>
+      <ol class="start-steps">
+        <li>
+          <span class="num">1</span>
+          <span><a href="buy.html">Buy a device →</a> Small, affordable radio hardware.</span>
+        </li>
+        <li>
+          <span class="num">2</span>
+          <span><a href="setup.html">Set it up →</a> Quick start guide. Takes five&nbsp;minutes.</span>
+        </li>
+        <li>
+          <span class="num">3</span>
+          <span><strong>You're on the network.</strong> Start messaging.</span>
+        </li>
+      </ol>
+      <p class="reassure">No subscription. No account. The device is yours.</p>
+    </section>
+
+    <!-- ── Final CTA ── -->
+    <div class="final-cta">
+      <h2>Chicago already has a network that works without the&nbsp;internet.</h2>
+      <a class="btn-primary" href="#get-started">Join the Network</a>
+    </div>
+
+    <!-- ── Footer ── -->
+    <div class="footer">
+      Chicago Offline &mdash; ORD region &nbsp;·&nbsp;
+      <a href="https://chimesh.org">Chicagoland Mesh</a> &nbsp;·&nbsp;
+      <a href="/contributors.html">Contributors</a>
+    </div>
 
   </div>
 
-  <!-- ── External resources ── -->
-  <div class="section-label">External Resources</div>
-
-  <div class="cards cards-external">
-
-    <a class="card card-external" href="https://analyzer.letsmesh.net/map?lat=41.96741&long=-87.99225&zoom=9" style="--ca: #39FF14">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><!-- map pin / location -->
-            <path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
-        </div>
-        <div class="card-title">LetsMesh Map</div>
-      </div>
-      <div class="card-desc">Live node map for all MeshCore networks in the Chicagoland area on LetsMesh.</div>
-      <span class="card-cta">letsmesh.net</span>
-    </a>
-
-    <a class="card card-external" href="https://chgo.meshmapper.net/" style="--ca: #39FF14">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><!-- layers / coverage -->
-            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-            <polyline points="2 17 12 22 22 17"/>
-            <polyline points="2 12 12 17 22 12"/>
-          </svg>
-        </div>
-        <div class="card-title">MeshMapper</div>
-      </div>
-      <div class="card-desc">Meshtastic node map and coverage data for the Chicago region.</div>
-      <span class="card-cta">chgo.meshmapper.net</span>
-    </a>
-
-    <a class="card card-external" href="https://aprs.to/?center=42.1176,-87.7972&zoom=9" style="--ca: #FFB300">
-      <div class="card-header">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24"><!-- radio tower / broadcast -->
-            <line x1="12" y1="22" x2="12" y2="11"/>
-            <path d="M5 12a7 7 0 0 1 14 0"/>
-            <path d="M1 9a11 11 0 0 1 22 0"/>
-            <circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/>
-          </svg>
-        </div>
-        <div class="card-title">APRS Map</div>
-      </div>
-      <div class="card-desc">Live APRS station and digipeater map for the Chicagoland area.</div>
-      <span class="card-cta">aprs.to</span>
-    </a>
-
+  <!-- Theme toggle pill -->
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button id="theme-light" aria-label="Light mode"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span></button>
+    <button id="theme-dark" aria-label="Dark mode"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button>
   </div>
 
-  <div class="footer">
-    Chicago Mesh &mdash; ORD region &nbsp;·&nbsp;
-    <a href="https://chimesh.org">Chicagoland Mesh community</a> &nbsp;·&nbsp;
-    <a href="/contributors.html">Contributors & Infrastructure</a>
-  </div>
+  <script>
+    (function() {
+      var root = document.documentElement;
+      var stored = localStorage.getItem('theme');
+      var lightBtn = document.getElementById('theme-light');
+      var darkBtn = document.getElementById('theme-dark');
+
+      function setTheme(mode) {
+        root.classList.remove('light', 'dark');
+        if (mode === 'light') root.classList.add('light');
+        if (mode === 'dark') root.classList.add('dark');
+        lightBtn.classList.toggle('active', mode === 'light');
+        darkBtn.classList.toggle('active', mode === 'dark');
+        localStorage.setItem('theme', mode);
+      }
+
+      // Init: use stored pref, else detect system
+      if (stored) {
+        setTheme(stored);
+      } else {
+        var isLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        lightBtn.classList.toggle('active', isLight);
+        darkBtn.classList.toggle('active', !isLight);
+      }
+
+      lightBtn.addEventListener('click', function() { setTheme('light'); });
+      darkBtn.addEventListener('click', function() { setTheme('dark'); });
+
+      // Update if system pref changes (and no stored override)
+      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('theme')) {
+          lightBtn.classList.toggle('active', e.matches);
+          darkBtn.classList.toggle('active', !e.matches);
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>

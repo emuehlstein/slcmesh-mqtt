@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buy a Device — Chicago Offline</title>
+  <meta name="description" content="Recommended MeshCore LoRa devices for the Chicago Offline network. From $20 beginner boards to premium base stations." />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKMJ5XBF62"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WKMJ5XBF62');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0C0F1A;
+      --surface: #141829;
+      --surface2: #1a1f30;
+      --border: #242840;
+      --accent-cyan: #00E5FF;
+      --accent-amber: #FFB300;
+      --accent-green: #39FF14;
+      --text: #EDF2FF;
+      --muted: #A0AABF;
+      --divider: #1e2338;
+    }
+
+    :root.light {
+      --bg: #f0f4f8; --surface: #ffffff; --surface2: #f8faff; --border: #d0d7e8;
+      --accent-cyan: #0077cc; --accent-amber: #b87000; --accent-green: #1a7a00;
+      --text: #0f1117; --muted: #4a5070; --divider: #dde2f0;
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not(.dark) {
+        --bg: #f0f4f8; --surface: #ffffff; --surface2: #f8faff; --border: #d0d7e8;
+        --accent-cyan: #0077cc; --accent-amber: #b87000; --accent-green: #1a7a00;
+        --text: #0f1117; --muted: #4a5070; --divider: #dde2f0;
+      }
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1.25rem 2.5rem;
+      line-height: 1.65;
+    }
+
+    .dev-banner {
+      width: 100vw;
+      background: var(--accent-amber);
+      color: #0C0F1A;
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 0;
+    }
+    .light .dev-banner, :root:not(.dark) .dev-banner { background: var(--accent-amber); color: #ffffff; }
+
+    .page { width: 100%; max-width: 720px; }
+
+    .breadcrumb {
+      padding: 1.5rem 0 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .breadcrumb a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    h1 {
+      font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    p { margin-bottom: 1rem; color: var(--muted); }
+    p strong { color: var(--text); }
+
+    .important {
+      background: var(--surface);
+      border: 1px solid var(--accent-amber);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    .important strong { color: var(--accent-amber); }
+
+    /* ── Device cards ── */
+    .device-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .device {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: border-color 0.15s;
+    }
+    .device:hover { border-color: var(--accent-cyan); }
+
+    .device-body {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .device-img {
+      width: 120px;
+      min-width: 120px;
+      height: 120px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: var(--surface2);
+    }
+
+    .device-info { flex: 1; min-width: 0; }
+
+    @media (max-width: 480px) {
+      .device-body { flex-direction: column; }
+      .device-img { width: 100%; height: 160px; min-width: unset; }
+    }
+
+    .device-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+    }
+
+    .device h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .device .price {
+      color: var(--accent-green);
+      font-weight: 700;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .device .tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+    .tag.recommended { background: var(--accent-cyan); color: var(--bg); }
+    .tag.advanced { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+    .tag.premium { background: var(--accent-amber); color: var(--bg); }
+
+    .device .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 0.5rem 0 0.75rem;
+    }
+
+    .device .feat {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .device .feat svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      stroke: var(--accent-cyan);
+    }
+
+    .device .feat.strong svg { stroke: var(--accent-green); }
+    .device .feat.strong { color: var(--text); }
+
+    .device .note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent-cyan);
+      color: var(--bg);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin: 1.5rem 0;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px -4px var(--accent-cyan);
+    }
+    .light .btn-primary { color: #ffffff; }
+    @media (prefers-color-scheme: light) { :root:not(.dark) .btn-primary { color: #ffffff; } }
+
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .footer a { color: var(--accent-cyan); text-decoration: none; }
+
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      position: fixed; top: 2.2rem; right: 1.25rem;
+      display: flex; align-items: center;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+      padding: 0.2rem; z-index: 100; cursor: pointer; transition: border-color 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--accent-cyan); }
+    .theme-toggle button {
+      all: unset; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; font-size: 0.85rem; cursor: pointer; transition: background 0.15s;
+    }
+    .theme-toggle button.active { background: var(--accent-cyan); }
+    .theme-toggle button.active .icon { filter: brightness(0); }
+  </style>
+</head>
+<body>
+  
+
+  <div class="page">
+    <div class="breadcrumb"><a href="/">← Chicago Offline</a> / Buy a Device</div>
+
+    <h1>Buy a device.</h1>
+    <p class="subtitle">Small LoRa radio hardware that connects to the Chicago Offline mesh. No subscription, no account — you own it.</p>
+
+    <div class="important">
+      <strong>⚠️ Get the 915 MHz (US) version.</strong> Devices come in different frequency variants. For Chicago Offline, you need the <strong>915 MHz</strong> version. The 868 MHz (EU) variant won't work with our network.
+    </div>
+
+    <!-- ── Our picks ── -->
+    <div class="section-label">Our picks</div>
+    <h2>Best for most people</h2>
+
+    <div class="device-grid">
+      <div class="device">
+        <span class="tag recommended">Recommended — Best starter</span>
+        <div class="device-body">
+          <img class="device-img" src="images/n39.jpg" alt="Meshnology N39" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>Meshnology N39 (Heltec V4 Kit)</h3>
+              <span class="price">~$44</span>
+            </div>
+            <div class="features">
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> High power</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Medium battery</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg> Solar</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5a5 5 0 0 1 7 0"/><path d="M3 6a9 9 0 0 1 12.7 0"/><circle cx="9" cy="12" r="1"/><line x1="15" y1="9" x2="21" y2="3"/><line x1="17" y1="3" x2="21" y2="3"/><line x1="21" y1="3" x2="21" y2="7"/></svg> WiFi</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Enclosed</span>
+            </div>
+            <p class="note">Complete kit — board, battery, case, and antennas included. Higher power output than the V3. Battery life is shorter than the N37, but the transmit power and WiFi make up for it. Ships from US.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <span class="tag recommended">Recommended — Best all-rounder</span>
+        <div class="device-body">
+          <img class="device-img" src="images/n37.jpg" alt="Meshnology N37" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>Meshnology N37 (Wio Tracker)</h3>
+              <span class="price">~$47</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Long battery</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 1.3" OLED</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Enclosed</span>
+            </div>
+            <p class="note">Our favorite. Compact design with GPS, great battery life from the ultra-low-power nRF52840, and a nice screen. Slightly less transmit power, but the battery and GPS make it a great daily carry. Ships from US.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <span class="tag premium">Recommended — Maximum range</span>
+        <div class="device-body">
+          <img class="device-img" src="images/station-g2.jpg" alt="Station G2" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>Station G2</h3>
+              <span class="price">~$109</span>
+            </div>
+            <div class="features">
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> 4.5W output</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg> Ultra-low noise LNA</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5a5 5 0 0 1 7 0"/><path d="M3 6a9 9 0 0 1 12.7 0"/><circle cx="9" cy="12" r="1"/><line x1="15" y1="9" x2="21" y2="3"/><line x1="17" y1="3" x2="21" y2="3"/><line x1="21" y1="3" x2="21" y2="7"/></svg> WiFi</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Wall power</span>
+            </div>
+            <p class="note">The big gun. Highest power output and best receive sensitivity of any MeshCore device. Ideal for fixed locations — rooftops, attics, high floors. Frequently out of stock. Requires USB-C PD or 9-19V external power.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <span class="tag recommended">Standalone messenger</span>
+        <div class="device-body">
+          <img class="device-img" src="images/t-deck.jpg" alt="LilyGo T-Deck" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>LilyGo T-Deck</h3>
+              <span class="price">~$50</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Medium battery</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 2.8" screen</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M6 16h12"/></svg> Keyboard</span>
+            </div>
+            <p class="note">A full standalone messenger — no phone needed. Type directly on the built-in keyboard. Great for emergencies or camping where you don't want to drain your phone.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── More options ── -->
+    <div class="section-label">More options</div>
+    <h2>For specific needs</h2>
+
+    <div class="device-grid">
+      <div class="device">
+        <span class="tag advanced">GPS tracking</span>
+        <div class="device-body">
+          <img class="device-img" src="images/t-beam.jpg" alt="LilyGo T-Beam" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>LilyGo T-Beam</h3>
+              <span class="price">~$40</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Swappable 18650</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
+            </div>
+            <p class="note">Best for location sharing. The 18650 battery holder means cheap, swappable batteries. Popular with hikers and field ops.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <span class="tag advanced">Ultra-low power</span>
+        <div class="device-body">
+          <img class="device-img" src="images/t-echo.jpg" alt="LilyGo T-Echo" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>LilyGo T-Echo</h3>
+              <span class="price">~$55</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Low power</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Days of battery</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> E-ink</span>
+            </div>
+            <p class="note">E-ink display sips power — days of battery life. Great for solar repeater builds or leave-it-and-forget-it deployments.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <span class="tag advanced">Budget</span>
+        <div class="device-body">
+          <img class="device-img" src="images/wireless-paper.webp" alt="Heltec Wireless Paper" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>Heltec Wireless Paper</h3>
+              <span class="price">~$18</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Standard power</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Medium battery</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> E-ink</span>
+            </div>
+            <p class="note">Cheapest option with a screen. E-ink persists without power. Good for experimenting or deploying many nodes on a budget.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="device">
+        <span class="tag advanced">Compact tracker</span>
+        <div class="device-body">
+          <img class="device-img" src="images/t1000-e.jpg" alt="SenseCAP T1000-E" loading="lazy" />
+          <div class="device-info">
+            <div class="device-header">
+              <h3>SenseCAP T1000-E</h3>
+              <span class="price">~$40</span>
+            </div>
+            <div class="features">
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Low power</span>
+              <span class="feat strong"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Long battery</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg> GPS</span>
+              <span class="feat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> IP65</span>
+            </div>
+            <p class="note">Credit-card sized, waterproof, with GPS. Pairs via Bluetooth — no USB flashing. Good for bags, vehicles, or pets.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="important">
+      <strong>💡 Don't overthink it.</strong> If you're not sure, get the <strong>Meshnology N37</strong> or <strong>N39</strong>. They're under $50, come with everything you need in the box, and ship from the US. You can always get something fancier later.
+    </div>
+
+    <div style="text-align:center;">
+      <a class="btn-primary" href="setup.html">Set it up →</a>
+    </div>
+
+    <div class="footer">
+      <a href="/">Chicago Offline</a> · ORD region · <a href="https://chimesh.org">Chicagoland Mesh</a>
+    </div>
+  </div>
+
+  <!-- Theme toggle -->
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button id="theme-light" aria-label="Light mode"><span class="icon">☀️</span></button>
+    <button id="theme-dark" aria-label="Dark mode"><span class="icon">🌙</span></button>
+  </div>
+  <script>
+    (function() {
+      var root = document.documentElement;
+      var stored = localStorage.getItem('theme');
+      var lightBtn = document.getElementById('theme-light');
+      var darkBtn = document.getElementById('theme-dark');
+      function setTheme(mode) {
+        root.classList.remove('light', 'dark');
+        if (mode === 'light') root.classList.add('light');
+        if (mode === 'dark') root.classList.add('dark');
+        lightBtn.classList.toggle('active', mode === 'light');
+        darkBtn.classList.toggle('active', mode === 'dark');
+        localStorage.setItem('theme', mode);
+      }
+      if (stored) { setTheme(stored); }
+      else {
+        var isLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        lightBtn.classList.toggle('active', isLight);
+        darkBtn.classList.toggle('active', !isLight);
+      }
+      lightBtn.addEventListener('click', function() { setTheme('light'); });
+      darkBtn.addEventListener('click', function() { setTheme('dark'); });
+    })();
+  </script>
+</body>
+</html>

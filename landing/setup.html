@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Set It Up — Chicago Offline</title>
+  <meta name="description" content="Flash MeshCore firmware and connect to the Chicago Offline mesh network. Takes about five minutes." />
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKMJ5XBF62"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WKMJ5XBF62');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0C0F1A;
+      --surface: #141829;
+      --surface2: #1a1f30;
+      --border: #242840;
+      --accent-cyan: #00E5FF;
+      --accent-amber: #FFB300;
+      --accent-green: #39FF14;
+      --text: #EDF2FF;
+      --muted: #A0AABF;
+      --divider: #1e2338;
+    }
+
+    :root.light {
+      --bg: #f0f4f8; --surface: #ffffff; --surface2: #f8faff; --border: #d0d7e8;
+      --accent-cyan: #0077cc; --accent-amber: #b87000; --accent-green: #1a7a00;
+      --text: #0f1117; --muted: #4a5070; --divider: #dde2f0;
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not(.dark) {
+        --bg: #f0f4f8; --surface: #ffffff; --surface2: #f8faff; --border: #d0d7e8;
+        --accent-cyan: #0077cc; --accent-amber: #b87000; --accent-green: #1a7a00;
+        --text: #0f1117; --muted: #4a5070; --divider: #dde2f0;
+      }
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1.25rem 2.5rem;
+      line-height: 1.65;
+    }
+
+    .dev-banner {
+      width: 100vw;
+      background: var(--accent-amber);
+      color: #0C0F1A;
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 0;
+    }
+    .light .dev-banner, :root:not(.dark) .dev-banner { background: var(--accent-amber); color: #ffffff; }
+
+    .page { width: 100%; max-width: 720px; }
+
+    .breadcrumb {
+      padding: 1.5rem 0 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .breadcrumb a { color: var(--accent-cyan); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    h1 {
+      font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 2rem; }
+
+    .section-label {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent-cyan);
+      margin-bottom: 0.75rem; margin-top: 2.5rem;
+    }
+
+    h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; }
+
+    p { margin-bottom: 1rem; color: var(--muted); }
+    p strong { color: var(--text); }
+
+    a { color: var(--accent-cyan); }
+
+    .important {
+      background: var(--surface);
+      border: 1px solid var(--accent-amber);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    .important strong { color: var(--accent-amber); }
+
+    .tip {
+      background: var(--surface);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+    }
+    .tip strong { color: var(--accent-cyan); }
+
+    /* ── Steps ── */
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1.25rem 0;
+      position: relative;
+      transition: border-color 0.15s;
+    }
+    .step:hover { border-color: var(--accent-cyan); }
+
+    .step-num {
+      position: absolute;
+      top: -0.6rem;
+      left: 1.25rem;
+      background: var(--accent-cyan);
+      color: var(--bg);
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .step p { font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .step p:last-child { margin-bottom: 0; }
+
+    .step ul {
+      list-style: none;
+      margin: 0.5rem 0;
+    }
+    .step ul li {
+      padding: 0.25rem 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .step ul li::before {
+      content: "→ ";
+      color: var(--accent-cyan);
+    }
+
+    /* ── App buttons ── */
+    .app-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .app-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: border-color 0.15s;
+    }
+    .app-link:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+
+    /* ── Troubleshooting ── */
+    .faq { margin: 1.5rem 0; }
+    .faq-item {
+      border-bottom: 1px solid var(--divider);
+      padding: 0.75rem 0;
+    }
+    .faq-item:last-child { border: none; }
+    .faq-item summary {
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .faq-item summary:hover { color: var(--accent-cyan); }
+    .faq-item p {
+      font-size: 0.85rem;
+      margin: 0.5rem 0 0;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent-cyan);
+      color: var(--bg);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin: 1.5rem 0;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px -4px var(--accent-cyan);
+    }
+    .light .btn-primary { color: #ffffff; }
+    @media (prefers-color-scheme: light) { :root:not(.dark) .btn-primary { color: #ffffff; } }
+
+    .footer {
+      margin-top: 3rem; font-size: 0.75rem; color: var(--muted); text-align: center;
+    }
+    .footer a { color: var(--accent-cyan); text-decoration: none; }
+
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      position: fixed; top: 2.2rem; right: 1.25rem;
+      display: flex; align-items: center;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+      padding: 0.2rem; z-index: 100; cursor: pointer; transition: border-color 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--accent-cyan); }
+    .theme-toggle button {
+      all: unset; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; font-size: 0.85rem; cursor: pointer; transition: background 0.15s;
+    }
+    .theme-toggle button.active { background: var(--accent-cyan); }
+    .theme-toggle button.active .icon { filter: brightness(0); }
+  </style>
+</head>
+<body>
+  
+
+  <div class="page">
+    <div class="breadcrumb"><a href="/">← Chicago Offline</a> / Set It Up</div>
+
+    <h1>Set it up.</h1>
+    <p class="subtitle">Flash MeshCore firmware and join the Chicago Offline network. About five minutes, no coding required.</p>
+
+    <div class="important">
+      <strong>⚠️ You'll need a Chrome or Edge browser.</strong> The web flasher uses WebSerial, which only works in Chromium-based browsers. Firefox and Safari won't work for the flashing step.
+    </div>
+
+    <!-- ── Step 1: Flash ── -->
+    <div class="section-label">Step 1</div>
+    <h2>Flash MeshCore firmware</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Open the MeshCore Web Flasher</h3>
+      <p>Go to <a href="https://flasher.meshcore.io" target="_blank" rel="noopener"><strong>flasher.meshcore.io</strong></a> in Chrome or Edge.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Connect your device via USB</h3>
+      <p>Plug your LoRa device into your computer with a USB cable. Most devices use USB-C.</p>
+      <ul>
+        <li><strong>Heltec V3/V4:</strong> Just plug in. No drivers needed on most systems.</li>
+        <li><strong>T-Beam / T-Deck:</strong> USB-C direct connection.</li>
+        <li><strong>T-Echo / RAK:</strong> Double-tap the reset button to enter bootloader mode.</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Select your device and flash</h3>
+      <p>The flasher will detect your device. Select it from the list and choose <strong>"Companion"</strong> as the firmware type — that's what you want for a phone-paired messenger node.</p>
+      <ul>
+        <li><strong>Companion</strong> — Pairs with your phone via BLE. Most people want this.</li>
+        <li><strong>Repeater</strong> — Relays messages for the network. No phone pairing.</li>
+        <li><strong>Room Server</strong> — Hosts chat rooms on the mesh.</li>
+      </ul>
+      <p>Click <strong>Flash</strong> and wait about 30 seconds. Done.</p>
+    </div>
+
+    <div class="tip">
+      <strong>💡 Already have MeshCore firmware?</strong> If you bought a pre-flashed device (like the RAK WisMesh Pocket), skip this step entirely. Go straight to Step 2.
+    </div>
+
+    <!-- ── Step 2: Get the app ── -->
+    <div class="section-label">Step 2</div>
+    <h2>Get the MeshCore app</h2>
+
+    <p>Download the free companion app for your phone or computer. This is how you'll send and receive messages.</p>
+
+    <div class="app-links">
+      <a class="app-link" href="https://play.google.com/store/apps/details?id=com.liamcottle.meshcore.android" target="_blank" rel="noopener">
+        📱 Android
+      </a>
+      <a class="app-link" href="https://apps.apple.com/app/meshcore/id6720710339" target="_blank" rel="noopener">
+        🍎 iOS
+      </a>
+      <a class="app-link" href="https://meshcore.io" target="_blank" rel="noopener">
+        🌐 Web App
+      </a>
+      <a class="app-link" href="https://meshcore.io" target="_blank" rel="noopener">
+        💻 Desktop
+      </a>
+    </div>
+
+    <p>The official app is by <strong>Liam Cottle</strong>. There's also <a href="https://meshcore.co.uk" target="_blank" rel="noopener">MeshCore Open</a>, a free open-source alternative that works on all platforms.</p>
+
+    <!-- ── Step 3: Pair ── -->
+    <div class="section-label">Step 3</div>
+    <h2>Pair and connect</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Turn on Bluetooth</h3>
+      <p>Make sure Bluetooth is enabled on your phone.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Open the app and scan</h3>
+      <p>The app will scan for nearby MeshCore devices. Your device should appear in the list — tap it to pair.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>You're on the network</h3>
+      <p>Once paired, you'll start seeing other nodes on the Chicago Offline mesh. Your device automatically discovers nearby nodes and relays messages through the network.</p>
+      <p>Try sending a message to the <strong>#public</strong> channel — if anyone's in range, they'll see it.</p>
+    </div>
+
+    <div class="tip">
+      <strong>💡 Range depends on location.</strong> In Chicago, line-of-sight between rooftop antennas can reach 5+ miles. Street-level is more like 0.5-2 miles depending on buildings. The mesh fills in the gaps — your message hops through repeaters to reach further.
+    </div>
+
+    <!-- ── Optional: boost ── -->
+    <div class="section-label">Optional</div>
+    <h2>Improve your range</h2>
+
+    <p>The stock antenna works, but a better antenna makes a big difference. If you want to reach more of the network:</p>
+
+    <div class="step">
+      <h3>Upgrade your antenna</h3>
+      <p>Replace the stock stubby antenna with a tuned whip antenna. The <a href="https://muzi.works/products/whip-antenna-17cm" target="_blank" rel="noopener"><strong>Muzi Works 17cm Whip</strong></a> (~$12) is a great upgrade — 98% transmission efficiency (SWR 1.3) vs the stock stubby at 69% (SWR 3.5). SMA male connector, fits most boards directly.</p>
+    </div>
+
+    <div class="step">
+      <h3>Get it up high</h3>
+      <p>LoRa loves altitude. A device in a window works okay. A device on a roof works great. Even moving from a first-floor desk to a third-floor window can make a noticeable difference.</p>
+    </div>
+
+    <div class="step">
+      <h3>Run a repeater</h3>
+      <p>Got an extra device? Flash it as a <strong>Repeater</strong> instead of Companion and put it somewhere high. You'll extend the network for everyone. Solar-powered repeaters are a popular build — a $30 board + small solar panel = permanent infrastructure.</p>
+    </div>
+
+    <!-- ── Troubleshooting ── -->
+    <div class="section-label">Troubleshooting</div>
+    <h2>Common issues</h2>
+
+    <div class="faq">
+      <details class="faq-item">
+        <summary>The web flasher doesn't see my device</summary>
+        <p>Make sure you're using <strong>Chrome or Edge</strong> (not Firefox/Safari). Try a different USB cable — some cables are charge-only and don't carry data. For Heltec V3, try holding the BOOT button while plugging in.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>The app doesn't find my device via Bluetooth</summary>
+        <p>Make sure Bluetooth is on and location permissions are granted (Android requires this for BLE scanning). Try power-cycling the device. If you just flashed it, give it a few seconds to boot up.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>I can't see any other nodes</summary>
+        <p>This is normal if there are no other MeshCore devices in range. Chicago Offline coverage is growing but not everywhere yet. Check the <a href="https://scope.chicagooffline.com" target="_blank" rel="noopener">Network Scope</a> to see where active nodes are. Try different locations — even moving to a window can help.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>My device shows "No contacts" or no channels</summary>
+        <p>It takes a moment for the device to discover the mesh. Walk around, wait a few minutes, or try sending a broadcast to <strong>#public</strong>. Repeaters in range will relay your message even if you don't see them as contacts yet.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Which firmware type should I pick?</summary>
+        <p><strong>Companion</strong> = pairs with your phone for messaging (most people). <strong>Repeater</strong> = relays messages, no phone needed (put it somewhere high). <strong>Room Server</strong> = hosts chat rooms for the mesh (advanced).</p>
+      </details>
+    </div>
+
+    <!-- ── CTA ── -->
+    <div style="text-align:center; margin-top: 2rem;">
+      <p><strong style="color:var(--text)">That's it.</strong> You're on the mesh.</p>
+      <a class="btn-primary" href="/">← Back to Chicago Offline</a>
+    </div>
+
+    <div class="footer">
+      <a href="/">Chicago Offline</a> · ORD region · <a href="https://chimesh.org">Chicagoland Mesh</a> · <a href="https://discord.gg/chimesh">Discord</a>
+    </div>
+  </div>
+
+  <!-- Theme toggle -->
+  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
+    <button id="theme-light" aria-label="Light mode"><span class="icon">☀️</span></button>
+    <button id="theme-dark" aria-label="Dark mode"><span class="icon">🌙</span></button>
+  </div>
+  <script>
+    (function() {
+      var root = document.documentElement;
+      var stored = localStorage.getItem('theme');
+      var lightBtn = document.getElementById('theme-light');
+      var darkBtn = document.getElementById('theme-dark');
+      function setTheme(mode) {
+        root.classList.remove('light', 'dark');
+        if (mode === 'light') root.classList.add('light');
+        if (mode === 'dark') root.classList.add('dark');
+        lightBtn.classList.toggle('active', mode === 'light');
+        darkBtn.classList.toggle('active', mode === 'dark');
+        localStorage.setItem('theme', mode);
+      }
+      if (stored) { setTheme(stored); }
+      else {
+        var isLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        lightBtn.classList.toggle('active', isLight);
+        darkBtn.classList.toggle('active', !isLight);
+      }
+      lightBtn.addEventListener('click', function() { setTheme('light'); });
+      darkBtn.addEventListener('click', function() { setTheme('dark'); });
+    })();
+  </script>
+</body>
+</html>
