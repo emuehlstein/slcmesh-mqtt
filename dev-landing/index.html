@@ -128,6 +128,15 @@
       max-width: 600px;
     }
 
+    /* ── Inline icons ── */
+    .inline-icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.125em;
+      margin-right: 0.2em;
+      flex-shrink: 0;
+    }
+
     /* ── Steps ── */
     .steps {
       display: grid;
@@ -558,19 +567,19 @@
       </div>
       <div class="tools-grid">
         <a class="tool-card" href="https://dev-scope.chicagooffline.com">
-          <strong>📡 Network Scope</strong>
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg> Network Scope</strong>
           <span>Live packet analyzer and node map</span>
         </a>
         <a class="tool-card" href="https://dev-livemap.chicagooffline.com">
-          <strong>🗺️ Live Map</strong>
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> Live Map</strong>
           <span>Real-time node map with routes and weather</span>
         </a>
         <a class="tool-card" href="https://dev-health.chicagooffline.com">
-          <strong>💓 Health Check</strong>
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/></svg> Health Check</strong>
           <span>Test which devices hear your signal</span>
         </a>
         <a class="tool-card" href="https://dev-keygen.chicagooffline.com">
-          <strong>🔑 Key Generator</strong>
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Key Generator</strong>
           <span>Create a custom device identity</span>
         </a>
       </div>
@@ -582,27 +591,27 @@
       <h2>You don't have to be technical.</h2>
       <div class="audience">
         <div class="audience-item">
-          <strong>🧐 Curious people</strong>
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Curious people</strong>
           <span>You saw this and thought "wait, that's a thing?" It is.</span>
         </div>
         <div class="audience-item">
-          <strong>🏕️ Outdoors / camping</strong>
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 22h20L12 2z"/><path d="M12 12v4"/><path d="M7.5 22l4.5-7 4.5 7"/></svg> Outdoors / camping</strong>
           <span>Stay connected with your group, miles from cell service.</span>
         </div>
         <div class="audience-item">
-          <strong>🏘️ Neighborhoods</strong>
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/><line x1="12" y1="7" x2="12" y2="11"/></svg> Neighborhoods</strong>
           <span>A block-level network that doesn't need Comcast.</span>
         </div>
         <div class="audience-item">
-          <strong>🔦 Emergency prep</strong>
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="12" y1="2" x2="12" y2="4"/></svg> Emergency prep</strong>
           <span>When the grid fails, radio still works.</span>
         </div>
         <div class="audience-item">
-          <strong>🎪 Event crews</strong>
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Event crews</strong>
           <span>Coordinate at festivals, races, or markets without fighting for bandwidth.</span>
         </div>
         <div class="audience-item">
-          <strong>📻 Radio &amp; MeshCore enthusiasts</strong>
+          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M17 2l-5 5-5-5"/><circle cx="8" cy="16" r="2"/><line x1="14" y1="12" x2="20" y2="12"/><line x1="14" y1="16" x2="20" y2="16"/></svg> Radio &amp; MeshCore enthusiasts</strong>
           <span>LoRa mesh networking. A new reason to build and experiment.</span>
         </div>
       </div>
@@ -646,8 +655,8 @@
 
   <!-- Theme toggle pill -->
   <div class="theme-toggle" role="radiogroup" aria-label="Theme">
-    <button id="theme-light" aria-label="Light mode"><span class="icon">☀️</span></button>
-    <button id="theme-dark" aria-label="Dark mode"><span class="icon">🌙</span></button>
+    <button id="theme-light" aria-label="Light mode"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span></button>
+    <button id="theme-dark" aria-label="Dark mode"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button>
   </div>
 
   <script>
