@@ -4,21 +4,18 @@
     {
       "name": "mosquitto-tcp",
       "broker": "mqtt://mosquitto:1883",
-      "topics": ["meshcore/#"]
+      "topics": [
+        "meshcore/#"
+      ]
     },
     {
       "name": "wsmqtt-ws",
       "broker": "ws://meshcore-mqtt-broker:8883",
       "username": "corescope",
       "password": "BROKER_CORESCOPE_PASSWORD",
-      "topics": ["meshcore/#"]
-    },
-    {
-      "name": "chimesh-org",
-      "broker": "wss://mqtt.chimesh.org",
-      "username": "viewer",
-      "password": "CHIMESH_VIEWER_PASSWORD",
-      "topics": ["meshcore/#"]
+      "topics": [
+        "meshcore/#"
+      ]
     }
   ],
   "channelKeys": {
@@ -30,12 +27,15 @@
   },
   "defaultRegion": "ORD",
   "mapDefaults": {
-    "center": [41.8781, -87.6298],
+    "center": [
+      41.8781,
+      -87.6298
+    ],
     "zoom": 11
   },
   "branding": {
     "siteName": "Chicago Offline",
-    "tagline": "MeshCore LoRa mesh network — off-grid comms for Chicago"
+    "tagline": "MeshCore LoRa mesh network \u2014 off-grid comms for Chicago"
   },
   "theme": {
     "accent": "#0077cc",
