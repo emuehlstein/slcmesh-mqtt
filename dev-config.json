@@ -6,7 +6,8 @@
       "broker": "mqtt://mosquitto:1883",
       "topics": [
         "meshcore/#"
-      ]
+      ],
+      "label": "Legacy"
     },
     {
       "name": "wsmqtt-ws",
@@ -15,7 +16,8 @@
       "password": "BROKER_CORESCOPE_PASSWORD",
       "topics": [
         "meshcore/#"
-      ]
+      ],
+      "label": "CO-DEV"
     }
   ],
   "channelKeys": {
