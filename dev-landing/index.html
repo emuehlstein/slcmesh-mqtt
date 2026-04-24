@@ -378,6 +378,58 @@
     .light .btn-primary { color: #ffffff; }
     @media (prefers-color-scheme: light) { :root:not(.dark) .btn-primary { color: #ffffff; } }
 
+    /* ── Top nav ── */
+    .top-nav {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 0.25rem;
+      padding: 0.5rem 1rem;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--divider);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .top-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      transition: color 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+
+    .top-nav a:hover {
+      color: var(--accent-cyan);
+      background: var(--surface);
+    }
+
+    .top-nav a svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 480px) {
+      .top-nav a span.nav-label { display: none; }
+      .top-nav a svg { width: 18px; height: 18px; }
+      .top-nav { gap: 0.5rem; }
+    }
+
     /* ── Theme toggle pill ── */
     .theme-toggle {
       position: fixed;
@@ -416,6 +468,29 @@
 <body>
 
   <div class="dev-banner">Development Preview</div>
+
+  <nav class="top-nav">
+    <a href="https://dev-scope.chicagooffline.com">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+      <span class="nav-label">Scope</span>
+    </a>
+    <a href="https://dev-health.chicagooffline.com">
+      <svg viewBox="0 0 24 24"><polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/></svg>
+      <span class="nav-label">Health Check</span>
+    </a>
+    <a href="https://dev-livemap.chicagooffline.com">
+      <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      <span class="nav-label">Live Map</span>
+    </a>
+    <a href="https://dev-keygen.chicagooffline.com">
+      <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+      <span class="nav-label">Keygen</span>
+    </a>
+    <a href="https://chimesh.org">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+      <span class="nav-label">Community</span>
+    </a>
+  </nav>
 
   <div class="page">
 
