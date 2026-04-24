@@ -93,6 +93,25 @@ verify = true
 method = "token"
 audience = "wsmqtt.chicagooffline.com"
 
+# -- rflab.io ---------------------------------------------------------------
+[[broker]]
+name = "rflab.io"
+enabled = true
+server = "mqtt.rflab.io"
+port = 443
+transport = "websockets"
+keepalive = 60
+qos = 0
+retain = true
+
+[broker.tls]
+enabled = true
+verify = true
+
+[broker.auth]
+method = "token"
+audience = "mqtt.rflab.io"
+
 # -- chicagooffline.com (dev) ----------------------------------------------
 [[broker]]
 name = "chioff-dev"

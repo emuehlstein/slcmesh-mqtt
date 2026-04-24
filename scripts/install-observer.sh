@@ -17,6 +17,7 @@
 #   - LetsMesh US  (mqtt-us-v1.letsmesh.net)
 #   - LetsMesh EU  (mqtt-eu-v1.letsmesh.net)
 #   - chimesh.org  (mqtt.chimesh.org)
+#   - rflab.io     (mqtt.rflab.io)
 #   - Chicago Offline prod (ws.chioff.com)
 #   - Chicago Offline dev  (wsmqtt-dev.chicagooffline.com)
 #
@@ -43,6 +44,7 @@ echo "  This will install an MQTT observer and configure it to report to:"
 echo "    - LetsMesh US  (mqtt-us-v1.letsmesh.net)"
 echo "    - LetsMesh EU  (mqtt-eu-v1.letsmesh.net)"
 echo "    - chimesh.org  (mqtt.chimesh.org)"
+echo "    - rflab.io     (mqtt.rflab.io)"
 echo "    - Chicago Offline prod (ws.chioff.com)"
 echo "    - Chicago Offline dev  (wsmqtt-dev.chicagooffline.com)"
 echo ""
