@@ -1,389 +1,247 @@
-# chicagooffline.com - CoreScope Deployment
+# chicagooffline.com — MeshCore Infrastructure
 
-MeshCore network analyzer for Chicago (ORD region).
+MeshCore network tools for the Chicago (ORD) region.
 
 ## URLs
 
-### Production
-- **Landing Page:** https://chicagooffline.com
-- **Network Scope:** https://scope.chicagooffline.com
-- **MQTT Broker:** mqtt://mqtt.chicagooffline.com:1883
-- **Health Check:** https://health.chicagooffline.com | https://healthcheck.chicagooffline.com
+### Production (EC2: `13.58.181.117`)
+| Service | URL |
+|---------|-----|
+| Landing Page | https://chicagooffline.com |
+| Network Scope | https://scope.chicagooffline.com |
+| Health Check | https://health.chicagooffline.com |
+| MQTT Broker | `mqtt://mqtt.chicagooffline.com:1883` |
+| WS MQTT Broker | `wss://wsmqtt.chicagooffline.com/mqtt` |
 
-### Development
-- **Network Scope:** https://dev-scope.chicagooffline.com
-- **Landing Page:** https://dev-landing.chicagooffline.com
-- **WS MQTT Broker:** wss://wsmqtt-dev.chicagooffline.com/mqtt
+### Development (EC2: `3.141.31.229`)
+| Service | URL |
+|---------|-----|
+| Landing Page | https://dev-landing.chicagooffline.com |
+| Network Scope | https://dev-scope.chicagooffline.com |
+| Health Check | https://dev-health.chicagooffline.com |
+| Live Map | https://dev-livemap.chicagooffline.com |
+| Keygen | https://dev-keygen.chicagooffline.com |
+| WS MQTT Broker | `wss://wsmqtt-dev.chicagooffline.com/mqtt` |
 
-## Infrastructure
-
-### Production Environment
-- **Instance:** t3.small (us-east-2)
-- **IP:** 13.58.181.117
-- **Services:**
-  - External Caddy (TLS/routing)
-  - CoreScope (Go server on port 3000, internal)
-  - Mosquitto MQTT broker (port 1883)
-  - Mesh Health Check (port 3090, internal)
-
-### Development Environment
-- **Instance:** t3.small (us-east-2)
-- **IP:** 3.141.31.229
-- **Services:**
-  - External Caddy (TLS/routing)
-  - `corescope-dev` container (Go server on port 3000, internal)
-  - `meshcore-mqtt-broker` container (michaelhart/meshcore-mqtt-broker) — WebSocket MQTT broker
-  - **MQTT:** Dev CoreScope subscribes to local WS broker (`wss://wsmqtt-dev.chicagooffline.com/mqtt`)
-  - **No Health Check** — dev is for CoreScope UI/backend testing only
+### Map Tile Server (EC2: `3.20.103.82`)
+| Service | URL |
+|---------|-----|
+| Tile Server | https://tiles.chicagooffline.com |
 
 ## Architecture
 
 ### Production Stack
 ```
 chicagooffline.com (EC2 t3.small, 13.58.181.117)
-├── External Caddy Container (TLS + routing)
-│   ├── chicagooffline.com → Landing page (static files)
-│   ├── scope.chicagooffline.com → CoreScope (:3000)
-│   ├── health.chicagooffline.com → Health Check (:3090)
-│   └── mqtt.chicagooffline.com:1883 → Mosquitto
-├── CoreScope Container
-│   ├── Mosquitto MQTT broker (port 1883)
-│   ├── Go backend + packet store (port 3000, internal)
+├── Caddy (TLS + routing, ports 80/443)
+│   ├── chicagooffline.com         → /srv/landing (static)
+│   ├── scope.chicagooffline.com   → corescope:3000
+│   ├── health.chicagooffline.com  → meshcore-health-check:3090
+│   └── wsmqtt.chicagooffline.com  → meshcore-mqtt-broker:8883
+├── CoreScope (Go, port 3000)
+│   ├── Built from emuehlstein/CoreScope-chicagooffline (deploy/chicagooffline branch)
+│   ├── MQTT client → local Mosquitto
 │   └── SQLite database (persistent volume)
-├── Mesh Health Check Container (port 3090, internal)
+├── Mosquitto (MQTT, port 1883 exposed)
+├── meshcore-mqtt-broker (WSS MQTT, JWT auth, port 8883 internal)
+├── meshcore-health-check (port 3090 internal)
 └── Docker network: chicagooffline-net
 ```
 
 ### Development Stack
 ```
-dev-scope.chicagooffline.com (EC2 t3.small, 3.141.31.229)
-├── External Caddy Container (TLS + routing)
-│   ├── dev-landing.chicagooffline.com → Landing page
-│   ├── dev-scope.chicagooffline.com → CoreScope (:3000)
-│   └── wsmqtt-dev.chicagooffline.com → meshcore-mqtt-broker (WSS)
-├── corescope-dev Container
-│   ├── Go backend + packet store (port 3000, internal)
-│   ├── MQTT client → wss://wsmqtt-dev.chicagooffline.com/mqtt (local WS broker)
-│   └── SQLite database (ephemeral, wiped on redeploy)
-├── meshcore-mqtt-broker Container (michaelhart/meshcore-mqtt-broker)
-│   ├── WebSocket MQTT over WSS
-│   ├── JWT auth via Ed25519 device keys (v1_{PUBKEY} username format)
-│   └── Subscriber accounts: corescope (read), admin (debug)
+dev EC2 (t3.small, 3.141.31.229)
+├── Caddy (TLS + routing, ports 80/443)
+│   ├── dev-landing.chicagooffline.com  → /srv/dev-landing (static)
+│   ├── dev-scope.chicagooffline.com    → corescope-dev:3000
+│   ├── dev-health.chicagooffline.com   → meshcore-health-check-dev:3091
+│   ├── dev-livemap.chicagooffline.com  → meshmap-live:8080
+│   ├── dev-keygen.chicagooffline.com   → /srv/keygen (static)
+│   └── wsmqtt-dev.chicagooffline.com   → meshcore-mqtt-broker:8883
+├── corescope-dev (Go, port 3000)
+├── Mosquitto (MQTT, port 1883)
+├── meshcore-mqtt-broker (WSS MQTT, JWT auth)
+├── meshcore-health-check-dev (port 3091 internal)
+├── meshmap-live (Live Map, port 8080 internal)
+│   └── yellowcooln/meshcore-mqtt-live-map
 └── Docker network: chicagooffline-net
 ```
 
 ## Deployment
 
-### Automated (GitHub Actions)
-- **Push to `main`** → deploys to **production**
-- **Push to `dev`** → deploys to **development**
-- **Manual workflow dispatch** → choose environment + optional DB reset
+### Branch Strategy
+| Branch | Triggers | Environment |
+|--------|----------|-------------|
+| `main` | auto on push | **dev** only |
+| `prod` | auto on push | **production** only |
+| `workflow_dispatch` | manual | your choice |
 
-**Required GitHub Secrets (per environment):**
-- `SSH_PRIVATE_KEY` - Private key for EC2 access
-- `SSH_HOST` - EC2 IP (13.58.181.117 for prod, 3.141.31.229 for dev)
-- `SSH_USER` - `ubuntu`
-- `DEPLOY_KEY` - ed25519 deploy key for git clone
-- `CARTOGRAPHER_HEALTHCHECK_KEY` - Health Check channel secret (prod only)
-- `BROKER_CORESCOPE_PASSWORD` - Password for `corescope` subscriber account (dev only)
-- `BROKER_ADMIN_PASSWORD` - Password for `admin` debug account (dev only)
+**Push to `main`** → deploys to dev. Safe for iterating.
 
-### Manual Deployment
-SSH into EC2 and run:
+**Promote dev → prod:**
 ```bash
-cd ~/chimesh-mqtt
-git pull origin main  # or dev
-ENVIRONMENT=production bash deploy.sh  # or ENVIRONMENT=dev
+git checkout prod && git merge main && git push && git checkout main
 ```
 
-### Deploy Script Features
-- Detects environment from `ENVIRONMENT` var or branch name
-- Installs Docker if missing (via user-data bootstrap on fresh instances)
-- Builds CoreScope from chicagooffline fork (`CORESCOPE_IMAGE_MODE=fork`)
-- Configures vhosts, MQTT sources, and data directories per environment
-- Handles TLS cert generation via Caddy ACME
-
-## Configuration
-
-### Environment-Specific Configs
-
-#### Production (`deploy.sh` defaults)
+**Manual deploy (either environment):**
 ```bash
-SCOPE_VHOST="scope.chicagooffline.com"
-LANDING_VHOST="chicagooffline.com"
-CORESCOPE_CONFIG="config.json"
-WITH_MQTT=true              # Run local Mosquitto broker
-WITH_HEALTH_CHECK=true      # Run mesh-health-check container
-WITH_LANDING=true           # Serve landing page
-DEV_BANNER=false            # No "DEV" banner
+gh workflow run deploy.yml -f environment=dev
+gh workflow run deploy.yml -f environment=production
+gh workflow run deploy.yml -f environment=dev -f reset_db=true  # wipe DB
 ```
 
-#### Development (`ENVIRONMENT=dev`)
-```bash
-SCOPE_VHOST="dev-scope.chicagooffline.com"
-LANDING_VHOST="dev-landing.chicagooffline.com"
-CORESCOPE_CONFIG="dev-config.json"
-WITH_MQTT=true              # Connect to local WS broker
-WITH_MQTT_BROKER=true       # Deploy meshcore-mqtt-broker container
-WITH_HEALTH_CHECK=false     # No health check in dev
-WITH_LANDING=true           # Serve landing page
-DEV_BANNER=true             # Show "DEV" banner in UI
-# Data dir: $HOME/corescope-dev-data
-# Container name: corescope-dev
-```
+### GitHub Secrets (per environment)
+| Secret | Prod | Dev | Notes |
+|--------|------|-----|-------|
+| `SSH_PRIVATE_KEY` | ✅ | ✅ | EC2 SSH key |
+| `SSH_HOST` | `13.58.181.117` | `3.141.31.229` | EC2 IP |
+| `SSH_USER` | `ubuntu` | `ubuntu` | |
+| `DEPLOY_KEY` | ✅ | ✅ | ed25519 deploy key for git clone |
+| `CARTOGRAPHER_HEALTHCHECK_KEY` | ✅ | ✅ | Health check channel secret |
+| `BROKER_CORESCOPE_PASSWORD` | ✅ | ✅ | MQTT broker subscriber password |
+| `BROKER_ADMIN_PASSWORD` | ✅ | ✅ | MQTT broker admin password |
 
-> **Standalone broker deploy:** Use `bash deploy-broker.sh` to redeploy only the `meshcore-mqtt-broker` container without touching CoreScope.
+### What Deploy Does
+1. SSHs into the target EC2
+2. Clones/pulls `chimesh-mqtt` repo via deploy key
+3. Clones/pulls `CoreScope-chicagooffline` fork (`deploy/chicagooffline` branch)
+4. Builds CoreScope Docker image (`--no-cache`)
+5. Clones/pulls `meshcore-web-keygen` (static files → `/srv/keygen`)
+6. Clones/pulls `meshcore-mqtt-live-map`, builds + starts container
+7. Starts all containers on shared Docker network
+8. Caddy auto-provisions TLS certs via Let's Encrypt
 
-### CoreScope Configs
+## CoreScope Fork
 
-#### `config.json` (Production)
-- MQTT broker: `mqtt://corescope:1883` (local container)
-- Channel keys: `#public`, `#atak`, `#wardriving`, `#test`, `#healthcheck`
-- Region: `ORD`
-- Map center: Chicago (41.8781, -87.6298)
+Built from [emuehlstein/CoreScope-chicagooffline](https://github.com/emuehlstein/CoreScope-chicagooffline) on the `deploy/chicagooffline` branch.
 
-#### `dev-config.json` (Development)
-- MQTT broker: `wss://wsmqtt-dev.chicagooffline.com/mqtt` (local WS broker)
-- Auth: JWT via Ed25519 device keys (username: `v1_{PUBKEY}`)
-- Channel keys: same as prod
-- Region: `ORD`
-- Map center: Chicago
+Customizations:
+- Chicago-themed dark UI with custom color palette
+- Hillshade map layer (combined 3DEP+LiDAR 9x tiles from `tiles.chicagooffline.com`)
+- Retro modem audio voice module
+- Custom config/theme overlays
 
-### Caddyfile
-External Caddy handles TLS + routing for all vhosts. Lives in repo root, mounted into Caddy container.
+### Configs
+- `config.json` — Production CoreScope config
+- `dev-config.json` — Dev CoreScope config
+- `dev-theme.json` — Dev theme overrides
+- `Caddyfile` — Production Caddy routes
+- `Caddyfile.dev` — Dev Caddy routes
 
-**Production routes:**
-- `chicagooffline.com` → Landing page (`/srv/landing`)
-- `scope.chicagooffline.com` → CoreScope (`:3000`)
-- `health.chicagooffline.com` / `healthcheck.chicagooffline.com` → Health Check (`:3090`)
+## Third-Party Tools
 
-**Development routes:**
-- `dev-landing.chicagooffline.com` → Landing page (`/srv/landing`)
-- `dev-scope.chicagooffline.com` → CoreScope (`:3000`)
+### meshcore-mqtt-live-map
+- **Repo:** [yellowcooln/meshcore-mqtt-live-map](https://github.com/yellowcooln/meshcore-mqtt-live-map)
+- **Purpose:** Live MQTT-fed node map with routes, weather, LOS analysis
+- **URL:** https://dev-livemap.chicagooffline.com
+- **Config:** `~/meshcore-mqtt-live-map/.env` on dev EC2
 
-### Mesh Health Check Environment
-On first deploy, `deploy.sh` creates `~/meshcore-health-check/.env` with defaults.
+### meshcore-web-keygen
+- **Repo:** [agessaman/meshcore-web-keygen](https://github.com/agessaman/meshcore-web-keygen)
+- **Purpose:** Client-side MeshCore Ed25519 vanity key generator
+- **URL:** https://dev-keygen.chicagooffline.com
+- **Static site:** no backend needed
 
-**Production-only** (`WITH_HEALTH_CHECK=true`):
-- `TEST_CHANNEL_NAME` - channel used for health-check test messages
-- `TEST_CHANNEL_SECRET` - channel secret (set via `HC_SECRET` env var in deploy)
-- `TURNSTILE_ENABLED` - set to `1` if you want Cloudflare Turnstile protection
+### meshcore-mqtt-broker
+- **Repo:** [michaelhart/meshcore-mqtt-broker](https://github.com/michaelhart/meshcore-mqtt-broker)
+- **Purpose:** WebSocket MQTT broker with JWT auth via MeshCore device keys
+- **Auth:** Ed25519 signatures, `v1_{PUBKEY}` username format
 
 ## Connecting Observer Nodes
 
-Point your observer nodes (meshcoretomqtt, meshcore-packet-capture, or native firmware) to:
+### Plain TCP (Production)
 ```
-mqtt://mqtt.chicagooffline.com:1883
-topic: meshcore/ORD/<node-pubkey>/packets
-```
-
-No authentication required (for now).
-
-Two methods are supported:
-
-### Method 1: Plain TCP (Production)
-```
-mqtt://mqtt.chicagooffline.com:1883
-topic: meshcore/ORD/<node-pubkey>/packets
-```
-No authentication required. Works with any standard firmware or `mctomqtt`.
-
-### Method 2: WebSocket + JWT (Dev)
-```
-wss://wsmqtt-dev.chicagooffline.com/mqtt
-topic: meshcore/ORD/<node-pubkey>/packets
-```
-Requires WS-capable firmware (see [Firmware Fork](#firmware-fork-ws-custom-broker)) or `mctomqtt` with WS support.
-JWT auth uses Ed25519 device keys — username format: `v1_{PUBKEY}`.
-
-See `OBSERVER_SETUP.md` for detailed per-method configuration.
-
-## Monitoring
-
-### Production
-```bash
-ssh ubuntu@13.58.181.117 -i ~/.ssh/chicagooffline.pem
-
-# View logs
-docker logs -f corescope
-docker logs -f caddy
-docker logs -f mosquitto
-docker logs -f meshcore-health-check
-
-# Check status
-docker ps
-
-# Restart services
-docker restart corescope
-docker restart caddy
+Server: mqtt.chicagooffline.com
+Port:   1883
+Topic:  meshcore/ORD/<node-pubkey>/packets
+Auth:   none
 ```
 
-### Development
-```bash
-ssh ubuntu@3.141.31.229 -i ~/.ssh/chicagooffline-dev.pem
-
-# View logs
-docker logs -f corescope-dev
-docker logs -f caddy
-docker logs -f meshcore-mqtt-broker
-
-# Check status
-docker ps
-
-# Restart
-docker restart corescope-dev
-docker restart meshcore-mqtt-broker
+### WebSocket + JWT (Dev)
 ```
+Server: wsmqtt-dev.chicagooffline.com
+Port:   443
+Path:   /mqtt
+TLS:    yes
+Topic:  meshcore/ORD/<node-pubkey>/packets
+Auth:   JWT (Ed25519 device key)
+```
+
+For `mctomqtt` config, see `OBSERVER_SETUP.md`.
 
 ## DNS Records (Route 53)
 
 **Hosted Zone:** `Z0192662J0UU9ADD406Z`
 
-### Production (13.58.181.117)
+### Production → 13.58.181.117
 ```
-A    chicagooffline.com                → 13.58.181.117
-A    scope.chicagooffline.com          → 13.58.181.117
-A    mqtt.chicagooffline.com           → 13.58.181.117
-A    health.chicagooffline.com         → 13.58.181.117
-A    healthcheck.chicagooffline.com    → 13.58.181.117
-```
-
-### Development (3.141.31.229)
-```
-A    dev-scope.chicagooffline.com      → 3.141.31.229
-A    dev-landing.chicagooffline.com    → 3.141.31.229
-A    wsmqtt-dev.chicagooffline.com     → 3.141.31.229
+chicagooffline.com
+scope.chicagooffline.com
+mqtt.chicagooffline.com
+health.chicagooffline.com
+healthcheck.chicagooffline.com
+wsmqtt.chicagooffline.com
 ```
 
-**TTL:** 60s for all records (allows fast IP updates during troubleshooting)
+### Development → 3.141.31.229
+```
+dev-scope.chicagooffline.com
+dev-landing.chicagooffline.com
+dev-health.chicagooffline.com
+dev-keygen.chicagooffline.com
+dev-livemap.chicagooffline.com
+wsmqtt-dev.chicagooffline.com
+```
+
+### Tile Server → 3.20.103.82
+```
+tiles.chicagooffline.com
+```
+
+## Monitoring
+
+```bash
+# Production
+ssh -i ~/.ssh/chicagooffline-ec2.pem ubuntu@13.58.181.117
+docker ps
+docker logs -f corescope
+
+# Development
+ssh -i ~/.ssh/chicagooffline-dev.pem ubuntu@3.141.31.229
+docker ps
+docker logs -f corescope-dev
+docker logs -f meshmap-live
+```
 
 ## Maintenance
 
-### Update CoreScope
+### Disk Space (Prod is 6.8GB — watch it)
 ```bash
-# Production
-ssh ubuntu@13.58.181.117
-cd ~/chimesh-mqtt
-git pull origin main
-bash deploy.sh
+ssh -i ~/.ssh/chicagooffline-ec2.pem ubuntu@13.58.181.117
+df -h /
+docker system prune -af    # remove unused images + build cache
+```
 
-# Development
-ssh ubuntu@3.141.31.229
-cd ~/chimesh-mqtt
-git pull origin dev
-ENVIRONMENT=dev bash deploy.sh
+### Stop/Start Dev Instance
+```bash
+# Stop (saves money when not testing)
+aws ec2 stop-instances --region us-east-2 --instance-ids i-015964acf101b916d
+
+# Start (IP may change — update DNS + GitHub secret)
+aws ec2 start-instances --region us-east-2 --instance-ids i-015964acf101b916d
 ```
 
 ### Wipe Dev Database
 ```bash
-# Via GitHub Actions workflow dispatch
-gh workflow run deploy.yml --repo emuehlstein/chimesh-mqtt \
-  --ref dev -f environment=dev -f reset_db=true
-
-# Or manually
-ssh ubuntu@3.141.31.229
-docker exec corescope-dev rm -f /app/data/meshcore.db
-docker restart corescope-dev
+gh workflow run deploy.yml -f environment=dev -f reset_db=true
 ```
 
-### Backup Production Database
-```bash
-ssh ubuntu@13.58.181.117
-docker exec corescope tar czf /tmp/backup.tar.gz /app/data/meshcore.db
-docker cp corescope:/tmp/backup.tar.gz ~/corescope-backup-$(date +%Y%m%d).tar.gz
-scp ubuntu@13.58.181.117:~/corescope-backup-*.tar.gz ~/backups/
-```
-
-### Add MQTT Authentication (Future)
-Edit `mosquitto.conf` and mount it into the container.
-
-## Firmware Fork: WS Custom Broker
-
-A fork of MeshCore adds WebSocket + JWT auth support for custom brokers.
-
-- **Fork:** [github.com/emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) (from KMusorin/MeshCore)
-- **Branch:** `feature/ws-custom-broker`
-- **New CLI commands:** `set mqtt.ws on|off`, `set mqtt.tls on|off`
-- **Pattern:** Same WSS+JWT auth as LetsMesh
-
-### Pre-Built Binary (Heltec v3 Repeater/Observer)
-```
-https://chicagooffline-firmware.s3.us-east-2.amazonaws.com/meshcore/Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin
-```
-S3 bucket: `chicagooffline-firmware` (us-east-2)
-
-See `OBSERVER_SETUP.md` for flash and configuration instructions.
-
-## Troubleshooting
-
-### Deploy Failures
-
-**SSH timeout / broken pipe:**
-- Cause: Long Docker builds (>5 min) on slow instances
-- Fix: GitHub Actions workflow has `ServerAliveInterval=60` keepalive
-- Solution: Use t3.small or larger (builds in ~3-4 min vs 8+ on t3.micro)
-
-**DNS mismatch:**
-- Symptom: HTTPS cert errors, wrong content served
-- Cause: DNS records pointing to old IPs
-- Fix: Update all A records to current instance IP, wait 60s (TTL)
-
-**No packets in dev-scope:**
-- Cause: `dev-config.json` broker URL was `mqtt://corescope:1883` (local container) instead of `mqtt://mqtt.chicagooffline.com:1883` (prod broker)
-- Fix: Update `dev-config.json` → commit → redeploy
-
-### Observer Node Issues
-See `OBSERVER_SETUP.md` for detailed observer configuration.
-
-## Cost Management
-
-### Production (Always On)
-- t3.small: ~$15/mo
-- Route 53: ~$0.50/mo
-- Data transfer: ~$1-5/mo
-- **Total: ~$17-20/mo**
-
-### Development (Stop When Not in Use)
-- t3.small stopped: $0 compute, ~$1/mo for EBS storage
-- t3.small running: ~$0.02/hr (~$15/mo if left on)
-- **Recommended:** Stop dev instance when not actively testing
-
-### Stop/Start Dev Instance
-```bash
-# Stop
-aws ec2 stop-instances --region us-east-2 --instance-ids i-015964acf101b916d
-
-# Start (IP may change, update DNS + GitHub secret)
-aws ec2 start-instances --region us-east-2 --instance-ids i-015964acf101b916d
-IP=$(aws ec2 describe-instances --region us-east-2 --instance-ids i-015964acf101b916d \
-  --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
-echo "New IP: $IP"
-
-# Update DNS + CI secret
-aws route53 change-resource-record-sets --hosted-zone-id Z0192662J0UU9ADD406Z ...
-gh secret set SSH_HOST --repo emuehlstein/chimesh-mqtt --env dev --body "$IP"
-```
-
-## Development Workflow
-
-1. **Make changes** to CoreScope fork or config files
-2. **Commit + push** to `dev` branch
-3. **GitHub Actions** auto-deploys to dev-scope.chicagooffline.com
-4. **Test** changes in browser
-5. **Merge to `main`** when ready for production
-6. **GitHub Actions** auto-deploys to scope.chicagooffline.com
-
-## Instance Bootstrap (User-Data)
-
-Fresh EC2 instances use this user-data script to pre-install Docker:
-
-```bash
-#!/bin/bash
-while ! ping -c1 google.com &>/dev/null; do sleep 1; done
-curl -fsSL https://get.docker.com | sh
-usermod -aG docker ubuntu
-systemctl stop unattended-upgrades
-systemctl disable unattended-upgrades
-```
-
-This avoids the deploy script needing to install Docker mid-run (which was causing SSH session re-exec issues).
+## Cost
+| Resource | Monthly |
+|----------|---------|
+| Prod EC2 (t3.small, always on) | ~$15 |
+| Dev EC2 (t3.small, stop when idle) | ~$0-15 |
+| Tile server (t4g.small, always on) | ~$12 |
+| Route 53 | ~$0.50 |
+| Data transfer | ~$1-5 |
+| **Total** | **~$30-48** |
