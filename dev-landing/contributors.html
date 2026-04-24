@@ -366,15 +366,39 @@ docker logs -f caddy</code></pre>
 
   <h2>📡 Connecting Observer Nodes</h2>
 
-  <p>Two connection methods are supported:</p>
+  <h3>Quick Setup (Recommended)</h3>
+  <p>Run our installer to set up packet capture with all Chicagoland MQTT brokers pre-configured. Supports companions, repeaters, and room servers:</p>
+  <pre><code>bash &lt;(curl -fsSL https://dev-landing.chicagooffline.com/install-observer.sh)</code></pre>
+  <p>The installer detects your node type and runs the appropriate upstream tool (<a href="https://github.com/agessaman/meshcore-packet-capture">meshcore-packet-capture</a> for companions, <a href="https://github.com/Cisien/meshcoretomqtt">mctomqtt</a> for repeaters/room servers) with 6 brokers pre-configured:</p>
+  <ul>
+    <li>LetsMesh US &amp; EU</li>
+    <li>chimesh.org</li>
+    <li>rflab.io</li>
+    <li>Chicago Offline (prod + dev)</li>
+  </ul>
+
+  <h3>Config Only (Existing Installs)</h3>
+  <p>If you already have <code>meshcore-packet-capture</code> or <code>mctomqtt</code> installed, grab the config file:</p>
+  <p><strong>Companions</strong> (<code>.env</code> format):</p>
+  <pre><code>curl -O https://dev-landing.chicagooffline.com/00-chicagoland.env
+cp 00-chicagoland.env ~/.meshcore-packet-capture/.env.local</code></pre>
+  <p><strong>Repeaters / Room Servers</strong> (TOML format):</p>
+  <pre><code>curl -O https://dev-landing.chicagooffline.com/00-chicagoland.toml
+sudo cp 00-chicagoland.toml /etc/mctomqtt/config.d/</code></pre>
+
+  <div class="divider"></div>
+
+  <h3>Manual Connection</h3>
+  <p>Two direct connection methods are also supported:</p>
 
   <h3>Method 1: Plain TCP (Production)</h3>
   <pre><code>MQTT Broker: mqtt://mqtt.chicagooffline.com:1883
 Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
   <p>No authentication required. Works with any standard firmware or <code>mctomqtt</code>.</p>
 
-  <h3>Method 2: WebSocket + JWT (Dev)</h3>
-  <pre><code>MQTT Broker: wss://wsmqtt-dev.chicagooffline.com/mqtt
+  <h3>Method 2: WebSocket + JWT</h3>
+  <pre><code>MQTT Broker: wss://wsmqtt.chicagooffline.com/mqtt  (prod)
+MQTT Broker: wss://wsmqtt-dev.chicagooffline.com/mqtt  (dev)
 Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
   <p>Requires WS-capable firmware (see <a href="https://github.com/emuehlstein/MeshCore">emuehlstein/MeshCore</a> <code>feature/ws-custom-broker</code>) or <code>mctomqtt</code> with WS support. JWT auth uses Ed25519 device keys &mdash; username format: <code>v1_{PUBKEY}</code>.</p>
 
