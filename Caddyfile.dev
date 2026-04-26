@@ -12,7 +12,7 @@ wsmqtt-dev.chicagooffline.com {
 }
 
 dev-health.chicagooffline.com {
-    reverse_proxy meshcore-health-check-dev:3091
+    reverse_proxy meshcore-health-check-dev:3090
 }
 
 dev-keygen.chicagooffline.com {
