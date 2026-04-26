@@ -131,7 +131,7 @@ fi
 # ── Health check setup (prod only) ───────────────────────────────────────────
 if [ "$WITH_HEALTH_CHECK" = true ]; then
   if [ ! -d "$HEALTH_DIR/.git" ]; then
-    git clone https://github.com/yellowcooln/meshcore-health-check.git "$HEALTH_DIR"
+    git clone https://github.com/emuehlstein/meshcore-health-check.git "$HEALTH_DIR"
   else
     git -C "$HEALTH_DIR" fetch origin main
     git -C "$HEALTH_DIR" reset --hard origin/main
