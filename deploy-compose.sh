@@ -167,7 +167,7 @@ else
     migrate_dir_to_volume "$HOME/meshcore-health-check/data" "${PROJECT}_healthcheck-data"
 fi
 
-# ── Stop old deploy.sh containers (one-time cleanup) ────────────────────────
+# ── Stop old deploy.sh containers + network (one-time cleanup) ─────────────
 # If legacy standalone containers exist, stop them so compose can take over.
 for c in corescope corescope-dev caddy mosquitto meshcore-mqtt-broker meshcore-health-check meshcore-health-check-dev meshmap-live; do
   if docker inspect "$c" &>/dev/null 2>&1; then
@@ -176,6 +176,15 @@ for c in corescope corescope-dev caddy mosquitto meshcore-mqtt-broker meshcore-h
     docker rm   "$c" 2>/dev/null || true
   fi
 done
+
+# Remove old manually-created network so compose can recreate with proper labels
+if docker network inspect chicagooffline-net &>/dev/null 2>&1; then
+  LABEL=$(docker network inspect chicagooffline-net --format '{{index .Labels "com.docker.compose.network"}}' 2>/dev/null || true)
+  if [ -z "$LABEL" ]; then
+    echo "🧹 Removing legacy chicagooffline-net (no compose labels)..."
+    docker network rm chicagooffline-net 2>/dev/null || true
+  fi
+fi
 
 # ── Reset DB if requested ────────────────────────────────────────────────────
 if [ "${RESET_DB:-}" = "true" ]; then
