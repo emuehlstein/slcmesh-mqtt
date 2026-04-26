@@ -48,7 +48,7 @@ cp "$CONFIG_SRC" config.resolved.json
 # ── Generate per-service env files ───────────────────────────────────────────
 if [ "$ENVIRONMENT" = "dev" ]; then
   BROKER_AUDIENCE="wsmqtt-dev.chicagooffline.com"
-  LIVEMAP_MQTT="corescope-dev"
+  LIVEMAP_MQTT="mosquitto"
   LIVEMAP_SCOPE="https://dev-scope.chicagooffline.com"
   HEALTH_TITLE="Chicago Mesh Health Check [dev]"
   HEALTH_PORT=3090
@@ -127,6 +127,55 @@ MAP_START_ZOOM=10
 DISTANCE_UNITS=mi
 PACKET_ANALYZER_URL=$LIVEMAP_SCOPE
 EOF
+
+# ── Migrate from deploy.sh host dirs → compose volumes (one-time) ───────────
+# Old deploy.sh used bind mounts in ~/. On first compose deploy, seed named
+# volumes from those directories so we keep Caddy certs, CoreScope DB, etc.
+migrate_dir_to_volume() {
+  local host_dir="$1" vol_name="$2"
+  [ -d "$host_dir" ] || return 0
+  # Check if the volume already has data (container was run before)
+  local has_data
+  has_data=$(docker run --rm -v "${vol_name}:/vol" alpine sh -c 'ls -A /vol 2>/dev/null | head -1')
+  if [ -z "$has_data" ]; then
+    echo "📦 Migrating $host_dir → volume $vol_name..."
+    docker run --rm \
+      -v "${host_dir}:/src:ro" \
+      -v "${vol_name}:/dst" \
+      alpine sh -c 'cp -a /src/. /dst/'
+    echo "  ✅ Done"
+  fi
+}
+
+PROJECT="chimesh-mqtt"  # compose project name (directory name)
+if [ "$ENVIRONMENT" = "dev" ]; then
+  migrate_dir_to_volume "$HOME/corescope-dev-data"   "${PROJECT}_corescope-dev-data"
+  migrate_dir_to_volume "$HOME/caddy-data"           "${PROJECT}_caddy-data"
+else
+  migrate_dir_to_volume "$HOME/corescope-data"       "${PROJECT}_corescope-data"
+  migrate_dir_to_volume "$HOME/caddy-data"           "${PROJECT}_caddy-data"
+fi
+migrate_dir_to_volume "$HOME/mosquitto-data"         "${PROJECT}_mosquitto-data"
+migrate_dir_to_volume "$HOME/meshcore-mqtt-broker-data" "${PROJECT}_broker-data"
+
+# Health check data
+if [ "$ENVIRONMENT" = "dev" ]; then
+  [ -d "$HOME/meshcore-health-check-dev/data" ] && \
+    migrate_dir_to_volume "$HOME/meshcore-health-check-dev/data" "${PROJECT}_healthcheck-data"
+else
+  [ -d "$HOME/meshcore-health-check/data" ] && \
+    migrate_dir_to_volume "$HOME/meshcore-health-check/data" "${PROJECT}_healthcheck-data"
+fi
+
+# ── Stop old deploy.sh containers (one-time cleanup) ────────────────────────
+# If legacy standalone containers exist, stop them so compose can take over.
+for c in corescope corescope-dev caddy mosquitto meshcore-mqtt-broker meshcore-health-check meshcore-health-check-dev meshmap-live; do
+  if docker inspect "$c" &>/dev/null 2>&1; then
+    echo "🧹 Stopping legacy container: $c"
+    docker stop "$c" 2>/dev/null || true
+    docker rm   "$c" 2>/dev/null || true
+  fi
+done
 
 # ── Reset DB if requested ────────────────────────────────────────────────────
 if [ "${RESET_DB:-}" = "true" ]; then

@@ -1,4 +1,4 @@
-name: Deploy CoreScope
+name: Deploy Chicago Offline
 
 on:
   push:
@@ -95,7 +95,7 @@ jobs:
               git -C $REPO_DIR reset --hard origin/$BRANCH
             fi
             cd $REPO_DIR
-            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" BROKER_CORESCOPE_PASSWORD="${BROKER_CORESCOPE_PASSWORD:-}" BROKER_ADMIN_PASSWORD="${BROKER_ADMIN_PASSWORD:-}" CHIMESH_VIEWER_PASSWORD="${CHIMESH_VIEWER_PASSWORD:-}" bash deploy.sh
+            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" BROKER_CORESCOPE_PASSWORD="${BROKER_CORESCOPE_PASSWORD:-}" BROKER_ADMIN_PASSWORD="${BROKER_ADMIN_PASSWORD:-}" CHIMESH_VIEWER_PASSWORD="${CHIMESH_VIEWER_PASSWORD:-}" bash deploy-compose.sh
           ENDSSH
 
       - name: Cleanup
