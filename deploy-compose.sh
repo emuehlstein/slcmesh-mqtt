@@ -36,7 +36,7 @@ clone_or_pull() {
 
 FORK_DIR="./CoreScope-chicagooffline"
 clone_or_pull "https://github.com/emuehlstein/CoreScope-chicagooffline.git" "$FORK_DIR" "deploy/chicagooffline"
-clone_or_pull "https://github.com/yellowcooln/meshcore-health-check.git" "./meshcore-health-check" "main"
+clone_or_pull "https://github.com/emuehlstein/meshcore-health-check.git" "./meshcore-health-check" "main"
 clone_or_pull "https://github.com/yellowcooln/meshcore-mqtt-live-map.git" "./meshcore-mqtt-live-map" "main"
 clone_or_pull "https://github.com/agessaman/meshcore-web-keygen.git" "./meshcore-web-keygen" "main"
 
