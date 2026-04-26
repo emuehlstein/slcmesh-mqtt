@@ -1,214 +1,186 @@
-# Build Custom Observer Firmware with chicagooffline.com
+# Build Chicagoland Observer Firmware
 
-Guide for building MeshCore observer firmware with hardcoded MQTT server.
+Guide for building MeshCore observer firmware from the `chioff-flex` branch with Chicagoland defaults baked in.
 
 ## Source Repository
 
-**Adam Gessaman's MQTT Bridge PR:**
 ```bash
-git clone --branch mqtt-bridge-implementation https://github.com/agessaman/MeshCore.git
+git clone --branch chioff-flex https://github.com/emuehlstein/MeshCore.git
 cd MeshCore
 ```
 
-## Configuration
-
-### 1. WiFi Credentials (Required)
-
-Edit the example code to add WiFi credentials. The firmware will auto-connect on boot.
-
-Create `variants/station_g2/wifi_config.h`:
-```cpp
-#ifndef WIFI_CONFIG_H
-#define WIFI_CONFIG_H
-
-#define WIFI_SSID "YourNetworkName"
-#define WIFI_PASSWORD "YourPassword"
-
-#endif
-```
-
-### 2. MQTT Broker Configuration
-
-The MQTTBridge supports **3 concurrent brokers** (`MAX_MQTT_BROKERS=3`):
-- Broker 0: Custom (your chicagooffline.com server)
-- Broker 1: LetsMesh US (optional)
-- Broker 2: LetsMesh EU (optional)
-
-**Option A: Hardcode in Source**
-
-Edit `src/helpers/bridges/MQTTBridge.cpp` and modify `setBrokerDefaults()`:
-
-```cpp
-void MQTTBridge::setBrokerDefaults() {
-  // Broker 0: Custom chicagooffline.com server
-  setBroker(0, "mqtt.chicagooffline.com", 1883, "", "", true);
-  
-  // Broker 1: LetsMesh US (disable if not needed)
-  setBroker(1, "mqtt-us-v1.letsmesh.net", 443, "", "", false);
-  
-  // Broker 2: LetsMesh EU (disable if not needed)
-  setBroker(2, "mqtt-eu-v1.letsmesh.net", 443, "", "", false);
-}
-```
-
-**Option B: Configure via CLI After Flash**
-
-Leave defaults as-is and configure after flashing:
-```bash
-set mqtt.broker.0.host mqtt.chicagooffline.com
-set mqtt.broker.0.port 1883
-set mqtt.broker.0.enabled on
-reboot
-```
-
-### 3. IATA Code (Region)
-
-Set your region code (used in MQTT topic):
-```cpp
-// In platformio.ini, add:
--D MQTT_IATA='"ORD"'
-```
-
-Or configure after flash:
-```bash
-set mqtt.iata ORD
-```
+The `chioff-flex` branch is based on agessaman's `mqtt-bridge-implementation-flex` with Chicagoland-specific additions:
+- `chioff` and `chioff-dev` MQTT presets (WSS + JWT auth to chicagooffline.com)
+- Chicagoland radio defaults (910.525 MHz / BW 62.5 / SF7 / CR5)
+- 3-byte path hash and moderate loop detect defaults
+- Board-specific MQTT slot configurations
 
 ## Build Targets
 
-### Station G2 with MQTT Bridge
-
-**Target:** `env:Station_G2_repeater_bridge_mqtt`
-
-**Build command:**
+### Heltec V3 (Repeater + Observer)
 ```bash
-pio run -e Station_G2_repeater_bridge_mqtt
+pio run -e Heltec_v3_repeater_observer_mqtt
 ```
 
-**Flash command:**
+### Heltec V4 (Repeater + Observer)
 ```bash
-pio run -e Station_G2_repeater_bridge_mqtt -t upload
+pio run -e Heltec_v4_repeater_observer_mqtt
 ```
 
-### Heltec V3 with MQTT Bridge
+### Station G2 (Repeater + Observer)
+```bash
+pio run -e Station_G2_repeater_observer_mqtt
+```
 
-Check `variants/heltec_v3/platformio.ini` for MQTT bridge targets.
+### T-Beam SX1262 (Repeater + Observer)
+```bash
+pio run -e TBeam_SX1262_repeater_observer_mqtt
+```
 
-## Build Flags Reference
+### T-Beam S3 Supreme (Repeater + Observer)
+```bash
+pio run -e TBeam_S3_Supreme_repeater_observer_mqtt
+```
 
-Key flags in `platformio.ini`:
+### LilyGo T3S3 (Repeater + Observer)
+```bash
+pio run -e T3S3_repeater_observer_mqtt
+```
+
+### Heltec Wireless Tracker (Repeater only, no MQTT)
+```bash
+pio run -e Wireless_Tracker_repeater
+```
+Note: The Wireless Tracker build requires MQTT file exclusions in `src_filter` (already configured in the `chioff-flex` branch).
+
+## Flash
+
+### Via USB (esptool)
+```bash
+pio run -e <target> -t upload
+```
+
+### Clean Flash (Erase First)
+Recommended when switching from a different firmware or to reset all saved preferences:
+```bash
+pio run -e <target> -t erase
+pio run -e <target> -t upload
+```
+
+## What's Baked In at Compile Time
+
+### Radio Defaults (platformio.ini)
 ```ini
--D WITH_MQTT_BRIDGE=1          # Enable MQTT bridge
--D MAX_MQTT_BROKERS=3          # Support 3 concurrent brokers
--D MQTT_MAX_PACKET_SIZE=1024   # Max packet size
--D MQTT_DEBUG=1                # Enable debug logging
--D CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y  # SSL/TLS support
+-D LORA_FREQ=910.525
+-D LORA_BW=62.5
+-D LORA_SF=7
+```
+CR defaults to 5 (MeshCore standard).
+
+### Path Hash & Loop Detect (CommonCLI.cpp)
+```ini
+-D DEFAULT_PATH_HASH_MODE=2     # 3-byte hashes
+-D DEFAULT_LOOP_DETECT=2        # moderate
+```
+These only apply on fresh flash (no saved preferences file). Existing nodes with saved prefs are unaffected.
+
+### MQTT Preset Defaults (CommonCLI.cpp)
+
+**V3/V4 builds** (no PSRAM, 2 active slots max):
+- Slot 0: `chimesh` (chimesh.org WSS)
+- Slot 1: `chioff` (chicagooffline.com WSS)
+
+**G2 builds** (PSRAM, 5 active slots):
+- Slot 0: `analyzer-us` (LetsMesh US)
+- Slot 1: `chimesh` (chimesh.org WSS)
+- Slot 2: `chioff` (chicagooffline.com WSS)
+- Slot 3: `chioff-dev` (chicagooffline.com dev WSS) — enabled via `-D CHIOFF_DEFAULT_SLOT3`
+
+### MQTT RX/TX Defaults
+- `mqtt.rx`: ON (publishes RF-received packets to MQTT)
+- `mqtt.tx`: OFF (does NOT re-publish own transmitted packets — avoids duplicates)
+
+## Available MQTT Presets (MQTTPresets.h)
+
+| ID | Name | Broker URL |
+|----|------|-----------|
+| 0 | `none` | — (disable slot) |
+| 1 | `chimesh` | wss://mqtt.chimesh.org |
+| 2 | `chioff` | wss://wsmqtt.chicagooffline.com:443/mqtt |
+| 3 | `chioff-dev` | wss://wsmqtt-dev.chicagooffline.com:443/mqtt |
+| 4 | `analyzer-us` | LetsMesh US |
+| 5 | `analyzer-eu` | LetsMesh EU |
+| 6 | `letsmesh` | LetsMesh (legacy) |
+
+All WSS presets use JWT auth via Ed25519 device keys (username: `v1_{PUBKEY}`).
+
+## Board PSRAM Matrix
+
+| Board | PSRAM | Max Active TLS Slots | Default Slots |
+|-------|-------|---------------------|---------------|
+| Heltec V3 | ❌ | 2 | chimesh, chioff |
+| Heltec V4 | ✅ | 5 | chimesh, chioff |
+| Station G2 | ✅ | 5 | analyzer-us, chimesh, chioff, chioff-dev |
+| T-Beam SX1262 | ✅ | 5 | chimesh, chioff |
+| T-Beam S3 Supreme | ❌ | 2 | chimesh, chioff |
+| LilyGo T3S3 | ✅ | 5 | chimesh, chioff |
+
+PSRAM detection: `psramFound() ? 5 : 2` max active slots. Each TLS/WSS connection needs ~40KB of mbedTLS buffers.
+
+## Customization
+
+### Add a New MQTT Preset
+
+1. Edit `src/helpers/MQTTPresets.h` — add entry to `MQTTPresetConfig presets[]`
+2. Update `NUM_MQTT_PRESETS` count
+3. Rebuild all targets
+
+### Change Default Slots for a Board
+
+Edit the board's `platformio.ini` env:
+```ini
+build_flags =
+    -D DEFAULT_MQTT_SLOT0_PRESET=1    ; chimesh
+    -D DEFAULT_MQTT_SLOT1_PRESET=2    ; chioff
 ```
 
-## CLI Commands Reference
+### Enable chioff-dev Default on Additional Boards
 
-After flashing custom firmware with MQTT bridge enabled:
+Add to the board's `platformio.ini`:
+```ini
+build_flags =
+    -D CHIOFF_DEFAULT_SLOT3
+```
 
-### WiFi Commands
+## Post-Flash Configuration
+
+After flashing, connect via serial (115200 baud):
+
 ```bash
-get wifi.ssid
-get wifi.status
-set wifi.ssid <network>
-set wifi.password <password>
-set wifi.enabled on
+# Required
+set wifi.ssid <SSID>
+set wifi.pwd <password>
+set mqtt.email <email>
+set mqtt.iata ORD
+set name <NodeName>
+set lat <latitude>
+set lon <longitude>
+reboot
 ```
 
-### MQTT Commands
-```bash
-get mqtt.status               # Show all broker status
-get mqtt.server              # Get broker 0 hostname
-set mqtt.server <hostname>   # Set broker 0 hostname
-set mqtt.port <port>         # Set broker 0 port
-get mqtt.iata                # Get region code
-set mqtt.iata <code>         # Set region code (e.g., ORD)
-set mqtt.broker.0.enabled on # Enable custom broker
-set mqtt.broker.1.enabled off # Disable LetsMesh US
-set mqtt.broker.2.enabled off # Disable LetsMesh EU
-```
+See [OBSERVER_SETUP.md](OBSERVER_SETUP.md) for full configuration guide.
 
-### Message Types
-```bash
-set mqtt.msgs on             # Enable packet publishing
-set mqtt.status on           # Enable status messages
-set mqtt.raw on              # Enable raw packet data
-```
+## Release Process
 
-## MQTT Topic Structure
+1. Build all board targets
+2. Collect `.bin` files from `.pio/build/<env>/firmware.bin`
+3. Create GitHub release on [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore)
+4. Upload binaries named `<Board>_repeater_observer_mqtt.bin`
 
-Published topics follow this pattern:
-```
-meshcore/{IATA}/{PUBKEY}/packets
-meshcore/{IATA}/{PUBKEY}/status
-meshcore/{IATA}/{PUBKEY}/raw
-```
+Current release: [v0.3.0-chicagoland](https://github.com/emuehlstein/MeshCore/releases/tag/v0.3.0-chicagoland)
 
-Example for Chicago (ORD):
-```
-meshcore/ORD/ABC123/packets
-meshcore/ORD/ABC123/status
-meshcore/ORD/ABC123/raw
-```
+## Related Documentation
 
-## Verification
-
-After flashing and configuring:
-
-1. **Check WiFi connection:**
-   ```bash
-   get wifi.status
-   # Should show: connected
-   ```
-
-2. **Check MQTT status:**
-   ```bash
-   get mqtt.status
-   # Should show: broker: connected
-   ```
-
-3. **Monitor MQTT feed locally:**
-   ```bash
-   mosquitto_sub -h mqtt.chicagooffline.com -p 1883 -t 'meshcore/#' -v
-   ```
-
-4. **Check CoreScope UI:**
-   - Open https://scope.chicagooffline.com
-   - Look for your node's packets in the feed
-
-## Troubleshooting
-
-### WiFi not connecting
-- Verify SSID and password are correct
-- Check 2.4GHz WiFi is available (5GHz not supported)
-- Serial debug should show WiFi connection attempts
-
-### MQTT broker disconnected
-- Verify WiFi is connected first
-- Check DNS resolution: `ping mqtt.chicagooffline.com`
-- Verify broker is running: `curl -I https://mqtt.chicagooffline.com`
-- Check firewall allows outbound port 1883
-
-### No packets in CoreScope
-- Verify MQTT is connected: `get mqtt.status`
-- Check topic format matches: `meshcore/ORD/<pubkey>/packets`
-- Monitor raw MQTT feed to confirm publishing
-- Check LoRa radio is receiving packets: `neighbors`
-
-## Alternative: Use meshcoretomqtt Instead
-
-If you don't want to build custom firmware, use the **meshcoretomqtt** Python bridge instead:
-- Connects to any MeshCore repeater via serial/USB
-- Publishes packets to your MQTT broker
-- Easier to configure, no firmware changes needed
-- Repo: https://github.com/Cisien/meshcoretomqtt
-
-## Related Files
-
-- Source: `src/helpers/bridges/MQTTBridge.cpp`
-- Header: `src/helpers/bridges/MQTTBridge.h`
-- Example: `examples/simple_repeater` (with `-D WITH_MQTT_BRIDGE=1`)
-- Config: `variants/station_g2/platformio.ini`
+- [OBSERVER_SETUP.md](OBSERVER_SETUP.md) — Post-flash configuration guide
+- [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) — Source (branch: `chioff-flex`)
+- [agessaman/MeshCore](https://github.com/agessaman/MeshCore) — Upstream MQTT flex branch

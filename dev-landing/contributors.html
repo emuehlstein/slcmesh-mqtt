@@ -268,28 +268,27 @@
     <li><strong>Build Mode:</strong> <code>CORESCOPE_IMAGE_MODE=fork</code> in <code>deploy.sh</code></li>
   </ul>
 
-  <h3>MeshCore Native Observer Firmware</h3>
+  <h3>MeshCore Chicagoland Observer Firmware</h3>
   <ul>
-    <li><strong>Repo:</strong> <a href="https://github.com/agessaman/MeshCore">github.com/agessaman/MeshCore</a></li>
-    <li><strong>Branch:</strong> <code>mqtt-bridge-implementation</code> (PR <a href="https://github.com/meshcore-dev/MeshCore/pull/1249">#1249</a>)</li>
-    <li><strong>Firmware:</strong> <code>observer-uplink-native-dev</code> (native WiFi + MQTT, no Pi bridge needed)</li>
-  </ul>
-
-  <h3>MeshCore Firmware Fork (WS Custom Broker)</h3>
-  <ul>
-    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/MeshCore">github.com/emuehlstein/MeshCore</a> (from KMusorin/MeshCore)</li>
-    <li><strong>Branch:</strong> <code>feature/ws-custom-broker</code></li>
-    <li><strong>New commands:</strong> <code>set mqtt.ws on|off</code>, <code>set mqtt.tls on|off</code></li>
-    <li><strong>Purpose:</strong> Enables WSS+JWT auth for custom brokers (same pattern as LetsMesh)</li>
-    <li><strong>Pre-built binary (Heltec v3):</strong><br>
-      <a href="https://chicagooffline-firmware.s3.us-east-2.amazonaws.com/meshcore/Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin">Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin</a><br>
-      S3 bucket: <code>chicagooffline-firmware</code> (us-east-2)
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/MeshCore">github.com/emuehlstein/MeshCore</a></li>
+    <li><strong>Branch:</strong> <code>chioff-flex</code> (based on agessaman's <code>mqtt-bridge-implementation-flex</code>)</li>
+    <li><strong>Release:</strong> <a href="https://github.com/emuehlstein/MeshCore/releases/tag/v0.3.0-chicagoland">v0.3.0-chicagoland</a></li>
+    <li><strong>Features:</strong> Multi-slot MQTT (up to 6 brokers), preset system, PSRAM-aware memory management, embedded CA bundle, radio watchdog</li>
+    <li><strong>Boards:</strong> Heltec V3, Heltec V4, Station G2, T-Beam SX1262, T-Beam S3 Supreme, LilyGo T3S3</li>
+    <li><strong>Default MQTT presets:</strong>
+      <ul>
+        <li><code>chimesh</code> &mdash; chimesh.org WSS broker</li>
+        <li><code>chioff</code> &mdash; chicagooffline.com WSS broker</li>
+        <li><code>analyzer-us</code> &mdash; LetsMesh US (G2 only, or user-configured)</li>
+      </ul>
     </li>
+    <li><strong>Chicagoland radio defaults:</strong> 910.525 MHz / BW 62.5 / SF7 / CR5, 3-byte path hash, moderate loop detect</li>
   </ul>
 
   <h3>Mesh Health Check</h3>
   <ul>
-    <li><strong>Repo:</strong> <a href="https://github.com/KPA-Clawbot/meshcore-health-check">github.com/KPA-Clawbot/meshcore-health-check</a></li>
+    <li><strong>Upstream:</strong> <a href="https://github.com/yellowcooln/meshcore-health-check">github.com/yellowcooln/meshcore-health-check</a></li>
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/meshcore-health-check">github.com/emuehlstein/meshcore-health-check</a> (Chicago Mesh color system reskin)</li>
     <li><strong>Live:</strong> <a href="https://health.chicagooffline.com">health.chicagooffline.com</a></li>
   </ul>
 
@@ -400,7 +399,7 @@ Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
   <pre><code>MQTT Broker: wss://wsmqtt.chicagooffline.com/mqtt  (prod)
 MQTT Broker: wss://wsmqtt-dev.chicagooffline.com/mqtt  (dev)
 Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
-  <p>Requires WS-capable firmware (see <a href="https://github.com/emuehlstein/MeshCore">emuehlstein/MeshCore</a> <code>feature/ws-custom-broker</code>) or <code>mctomqtt</code> with WS support. JWT auth uses Ed25519 device keys &mdash; username format: <code>v1_{PUBKEY}</code>.</p>
+  <p>Requires WS-capable firmware (see <a href="https://github.com/emuehlstein/MeshCore">emuehlstein/MeshCore</a> <code>chioff-flex</code> branch) or <code>mctomqtt</code> with WS support. JWT auth uses Ed25519 device keys &mdash; username format: <code>v1_{PUBKEY}</code>.</p>
 
   <p>For detailed setup instructions, see:</p>
   <ul>

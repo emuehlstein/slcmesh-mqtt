@@ -233,11 +233,11 @@
     </li>
     <li><strong>URLs:</strong>
       <ul>
-        <li><a href="https://scope.chicagooffline.com/#/live">dev-scope.chicagooffline.com</a> &mdash; Dev Network Scope</li>
-        <li><a href="https://health.chicagooffline.com">dev-health.chicagooffline.com</a> &mdash; Dev Health Check</li>
-        <li><a href="https://chicagooffline.com">dev-landing.chicagooffline.com</a> &mdash; Dev Landing Page</li>
-        <li><a href="https://livemap.chicagooffline.com">dev-livemap.chicagooffline.com</a> &mdash; Dev Live Map</li>
-        <li><a href="https://keygen.chicagooffline.com">dev-keygen.chicagooffline.com</a> &mdash; Dev Key Generator</li>
+        <li><a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a> &mdash; Dev Network Scope</li>
+        <li><a href="https://dev-health.chicagooffline.com">dev-health.chicagooffline.com</a> &mdash; Dev Health Check</li>
+        <li><a href="https://dev-landing.chicagooffline.com">dev-landing.chicagooffline.com</a> &mdash; Dev Landing Page</li>
+        <li><a href="https://dev-livemap.chicagooffline.com">dev-livemap.chicagooffline.com</a> &mdash; Dev Live Map</li>
+        <li><a href="https://dev-keygen.chicagooffline.com">dev-keygen.chicagooffline.com</a> &mdash; Dev Key Generator</li>
         <li><code>wss://wsmqtt-dev.chicagooffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
       </ul>
     </li>
@@ -268,28 +268,27 @@
     <li><strong>Build Mode:</strong> <code>CORESCOPE_IMAGE_MODE=fork</code> in <code>deploy.sh</code></li>
   </ul>
 
-  <h3>MeshCore Native Observer Firmware</h3>
+  <h3>MeshCore Chicagoland Observer Firmware</h3>
   <ul>
-    <li><strong>Repo:</strong> <a href="https://github.com/agessaman/MeshCore">github.com/agessaman/MeshCore</a></li>
-    <li><strong>Branch:</strong> <code>mqtt-bridge-implementation</code> (PR <a href="https://github.com/meshcore-dev/MeshCore/pull/1249">#1249</a>)</li>
-    <li><strong>Firmware:</strong> <code>observer-uplink-native-dev</code> (native WiFi + MQTT, no Pi bridge needed)</li>
-  </ul>
-
-  <h3>MeshCore Firmware Fork (WS Custom Broker)</h3>
-  <ul>
-    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/MeshCore">github.com/emuehlstein/MeshCore</a> (from KMusorin/MeshCore)</li>
-    <li><strong>Branch:</strong> <code>feature/ws-custom-broker</code></li>
-    <li><strong>New commands:</strong> <code>set mqtt.ws on|off</code>, <code>set mqtt.tls on|off</code></li>
-    <li><strong>Purpose:</strong> Enables WSS+JWT auth for custom brokers (same pattern as LetsMesh)</li>
-    <li><strong>Pre-built binary (Heltec v3):</strong><br>
-      <a href="https://chicagooffline-firmware.s3.us-east-2.amazonaws.com/meshcore/Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin">Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin</a><br>
-      S3 bucket: <code>chicagooffline-firmware</code> (us-east-2)
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/MeshCore">github.com/emuehlstein/MeshCore</a></li>
+    <li><strong>Branch:</strong> <code>chioff-flex</code> (based on agessaman's <code>mqtt-bridge-implementation-flex</code>)</li>
+    <li><strong>Release:</strong> <a href="https://github.com/emuehlstein/MeshCore/releases/tag/v0.3.0-chicagoland">v0.3.0-chicagoland</a></li>
+    <li><strong>Features:</strong> Multi-slot MQTT (up to 6 brokers), preset system, PSRAM-aware memory management, embedded CA bundle, radio watchdog</li>
+    <li><strong>Boards:</strong> Heltec V3, Heltec V4, Station G2, T-Beam SX1262, T-Beam S3 Supreme, LilyGo T3S3</li>
+    <li><strong>Default MQTT presets:</strong>
+      <ul>
+        <li><code>chimesh</code> &mdash; chimesh.org WSS broker</li>
+        <li><code>chioff</code> &mdash; chicagooffline.com WSS broker</li>
+        <li><code>analyzer-us</code> &mdash; LetsMesh US (G2 only, or user-configured)</li>
+      </ul>
     </li>
+    <li><strong>Chicagoland radio defaults:</strong> 910.525 MHz / BW 62.5 / SF7 / CR5, 3-byte path hash, moderate loop detect</li>
   </ul>
 
   <h3>Mesh Health Check</h3>
   <ul>
-    <li><strong>Repo:</strong> <a href="https://github.com/KPA-Clawbot/meshcore-health-check">github.com/KPA-Clawbot/meshcore-health-check</a></li>
+    <li><strong>Upstream:</strong> <a href="https://github.com/yellowcooln/meshcore-health-check">github.com/yellowcooln/meshcore-health-check</a></li>
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/meshcore-health-check">github.com/emuehlstein/meshcore-health-check</a> (Chicago Mesh color system reskin)</li>
     <li><strong>Live:</strong> <a href="https://health.chicagooffline.com">health.chicagooffline.com</a></li>
   </ul>
 
@@ -323,7 +322,7 @@ ENVIRONMENT=production bash deploy.sh  # or ENVIRONMENT=dev</code></pre>
   <ol>
     <li>Make changes to CoreScope fork or config files</li>
     <li>Commit and push to <code>main</code> branch</li>
-    <li>GitHub Actions auto-deploys to dev (<a href="https://scope.chicagooffline.com/#/live">dev-scope.chicagooffline.com</a>)</li>
+    <li>GitHub Actions auto-deploys to dev (<a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a>)</li>
     <li>Test changes in browser</li>
     <li>Promote to prod: <code>git checkout prod && git merge main && git push && git checkout main</code></li>
     <li>GitHub Actions auto-deploys to production (<a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a>)</li>
@@ -366,17 +365,41 @@ docker logs -f caddy</code></pre>
 
   <h2>📡 Connecting Observer Nodes</h2>
 
-  <p>Two connection methods are supported:</p>
+  <h3>Quick Setup (Recommended)</h3>
+  <p>Run our installer to set up packet capture with all Chicagoland MQTT brokers pre-configured. Supports companions, repeaters, and room servers:</p>
+  <pre><code>bash &lt;(curl -fsSL https://dev-landing.chicagooffline.com/install-observer.sh)</code></pre>
+  <p>The installer detects your node type and runs the appropriate upstream tool (<a href="https://github.com/agessaman/meshcore-packet-capture">meshcore-packet-capture</a> for companions, <a href="https://github.com/Cisien/meshcoretomqtt">mctomqtt</a> for repeaters/room servers) with 6 brokers pre-configured:</p>
+  <ul>
+    <li>LetsMesh US &amp; EU</li>
+    <li>chimesh.org</li>
+    <li>rflab.io</li>
+    <li>Chicago Offline (prod + dev)</li>
+  </ul>
+
+  <h3>Config Only (Existing Installs)</h3>
+  <p>If you already have <code>meshcore-packet-capture</code> or <code>mctomqtt</code> installed, grab the config file:</p>
+  <p><strong>Companions</strong> (<code>.env</code> format):</p>
+  <pre><code>curl -O https://dev-landing.chicagooffline.com/00-chicagoland.env
+cp 00-chicagoland.env ~/.meshcore-packet-capture/.env.local</code></pre>
+  <p><strong>Repeaters / Room Servers</strong> (TOML format):</p>
+  <pre><code>curl -O https://dev-landing.chicagooffline.com/00-chicagoland.toml
+sudo cp 00-chicagoland.toml /etc/mctomqtt/config.d/</code></pre>
+
+  <div class="divider"></div>
+
+  <h3>Manual Connection</h3>
+  <p>Two direct connection methods are also supported:</p>
 
   <h3>Method 1: Plain TCP (Production)</h3>
   <pre><code>MQTT Broker: mqtt://mqtt.chicagooffline.com:1883
 Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
   <p>No authentication required. Works with any standard firmware or <code>mctomqtt</code>.</p>
 
-  <h3>Method 2: WebSocket + JWT (Dev)</h3>
-  <pre><code>MQTT Broker: wss://wsmqtt-dev.chicagooffline.com/mqtt
+  <h3>Method 2: WebSocket + JWT</h3>
+  <pre><code>MQTT Broker: wss://wsmqtt.chicagooffline.com/mqtt  (prod)
+MQTT Broker: wss://wsmqtt-dev.chicagooffline.com/mqtt  (dev)
 Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
-  <p>Requires WS-capable firmware (see <a href="https://github.com/emuehlstein/MeshCore">emuehlstein/MeshCore</a> <code>feature/ws-custom-broker</code>) or <code>mctomqtt</code> with WS support. JWT auth uses Ed25519 device keys &mdash; username format: <code>v1_{PUBKEY}</code>.</p>
+  <p>Requires WS-capable firmware (see <a href="https://github.com/emuehlstein/MeshCore">emuehlstein/MeshCore</a> <code>chioff-flex</code> branch) or <code>mctomqtt</code> with WS support. JWT auth uses Ed25519 device keys &mdash; username format: <code>v1_{PUBKEY}</code>.</p>
 
   <p>For detailed setup instructions, see:</p>
   <ul>
