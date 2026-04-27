@@ -203,16 +203,19 @@
         <li><code>mosquitto</code> &mdash; Standalone Mosquitto MQTT broker (port 1883)</li>
         <li><code>meshcore-mqtt-broker</code> &mdash; WebSocket MQTT broker with JWT auth</li>
         <li><code>meshcore-health-check</code> &mdash; Mesh Health Check app</li>
-        <li><code>caddy</code> &mdash; Reverse proxy / TLS termination</li>
+        <li><code>meshmap-live</code> &mdash; Live MQTT node map (<a href="https://github.com/yellowcooln/meshcore-mqtt-live-map">yellowcooln/meshcore-mqtt-live-map</a>)</li>
+        <li><code>caddy</code> &mdash; Reverse proxy / TLS termination (also serves keygen static files)</li>
       </ul>
     </li>
     <li><strong>URLs:</strong>
       <ul>
         <li><a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a> &mdash; Network Scope</li>
-        <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> &mdash; Health Check</li>
+        <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> / <a href="https://healthcheck.chicagooffline.com">healthcheck.chicagooffline.com</a> &mdash; Mesh Health Check</li>
+        <li><a href="https://livemap.chicagooffline.com">livemap.chicagooffline.com</a> / <a href="https://map.chioff.com">map.chioff.com</a> &mdash; Live MQTT Node Map</li>
+        <li><a href="https://keygen.chicagooffline.com">keygen.chicagooffline.com</a> &mdash; MeshCore Vanity Key Generator</li>
         <li><code>mqtt.chicagooffline.com:1883</code> &mdash; Plain TCP MQTT</li>
         <li><code>wss://wsmqtt.chicagooffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
-        <li><a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a> &mdash; Map Tile Server</li>
+        <li><a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a> &mdash; Map Tile Server (separate EC2)</li>
       </ul>
     </li>
   </ul>
@@ -265,24 +268,20 @@
   <ul>
     <li><strong>Upstream:</strong> <a href="https://github.com/meshcore-dev/CoreScope">github.com/meshcore-dev/CoreScope</a></li>
     <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/CoreScope-chicagooffline">github.com/emuehlstein/CoreScope-chicagooffline</a> (branch: <code>deploy/chicagooffline</code>)</li>
-    <li><strong>Build Mode:</strong> <code>CORESCOPE_IMAGE_MODE=fork</code> in <code>deploy.sh</code></li>
+    <li><strong>Build Mode:</strong> <code>CORESCOPE_IMAGE_MODE=fork</code> in <code>deploy-compose.sh</code></li>
   </ul>
 
-  <h3>MeshCore Chicagoland Observer Firmware</h3>
+  <h3>Live MQTT Node Map</h3>
   <ul>
-    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/MeshCore">github.com/emuehlstein/MeshCore</a></li>
-    <li><strong>Branch:</strong> <code>chioff-flex</code> (based on agessaman's <code>mqtt-bridge-implementation-flex</code>)</li>
-    <li><strong>Release:</strong> <a href="https://github.com/emuehlstein/MeshCore/releases/tag/v0.3.0-chicagoland">v0.3.0-chicagoland</a></li>
-    <li><strong>Features:</strong> Multi-slot MQTT (up to 6 brokers), preset system, PSRAM-aware memory management, embedded CA bundle, radio watchdog</li>
-    <li><strong>Boards:</strong> Heltec V3, Heltec V4, Station G2, T-Beam SX1262, T-Beam S3 Supreme, LilyGo T3S3</li>
-    <li><strong>Default MQTT presets:</strong>
-      <ul>
-        <li><code>chimesh</code> &mdash; chimesh.org WSS broker</li>
-        <li><code>chioff</code> &mdash; chicagooffline.com WSS broker</li>
-        <li><code>analyzer-us</code> &mdash; LetsMesh US (G2 only, or user-configured)</li>
-      </ul>
-    </li>
-    <li><strong>Chicagoland radio defaults:</strong> 910.525 MHz / BW 62.5 / SF7 / CR5, 3-byte path hash, moderate loop detect</li>
+    <li><strong>Upstream:</strong> <a href="https://github.com/yellowcooln/meshcore-mqtt-live-map">github.com/yellowcooln/meshcore-mqtt-live-map</a></li>
+    <li><strong>Live:</strong> <a href="https://livemap.chicagooffline.com">livemap.chicagooffline.com</a> / <a href="https://map.chioff.com">map.chioff.com</a></li>
+  </ul>
+
+  <h3>MeshCore Vanity Key Generator</h3>
+  <ul>
+    <li><strong>Upstream:</strong> <a href="https://github.com/agessaman/meshcore-web-keygen">github.com/agessaman/meshcore-web-keygen</a></li>
+    <li><strong>Live:</strong> <a href="https://keygen.chicagooffline.com">keygen.chicagooffline.com</a></li>
+    <li><strong>Tech:</strong> Static client-side only, served by Caddy from <code>/srv/keygen</code></li>
   </ul>
 
   <h3>Mesh Health Check</h3>
