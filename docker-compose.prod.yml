@@ -75,7 +75,7 @@ services:
       - caddy-data:/data/caddy
       - ./landing:/srv/landing:ro
       - ./dev-landing:/srv/dev-landing:ro
-      - ${KEYGEN_DIR:-./meshcore-web-keygen}:/srv/keygen:ro
+      - ./keygen:/srv/keygen:ro
 
 networks:
   chicagooffline:

@@ -38,7 +38,7 @@ FORK_DIR="./CoreScope-chicagooffline"
 clone_or_pull "https://github.com/emuehlstein/CoreScope-chicagooffline.git" "$FORK_DIR" "deploy/chicagooffline"
 clone_or_pull "https://github.com/emuehlstein/meshcore-health-check.git" "./meshcore-health-check" "main"
 clone_or_pull "https://github.com/yellowcooln/meshcore-mqtt-live-map.git" "./meshcore-mqtt-live-map" "main"
-clone_or_pull "https://github.com/agessaman/meshcore-web-keygen.git" "./meshcore-web-keygen" "main"
+# Keygen is now bundled in ./keygen/ (themed for Chicago Offline)
 
 # ── Resolve config (inject secrets) ──────────────────────────────────────────
 cp "$CONFIG_SRC" config.resolved.json
@@ -196,7 +196,6 @@ fi
 export CORESCOPE_FORK_DIR="$FORK_DIR"
 export HEALTH_CHECK_DIR="./meshcore-health-check"
 export LIVEMAP_DIR="./meshcore-mqtt-live-map"
-export KEYGEN_DIR="./meshcore-web-keygen"
 
 docker compose -f "$COMPOSE_FILE" build --no-cache
 docker compose -f "$COMPOSE_FILE" up -d --remove-orphans
