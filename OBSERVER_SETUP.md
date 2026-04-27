@@ -4,14 +4,15 @@ Guide for configuring MeshCore nodes as observers for the Chicago Mesh network.
 
 ## Quick Start: Chicagoland Firmware (Recommended)
 
-Flash the **Chicagoland observer firmware** from [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) (`chioff-flex` branch). Pre-built binaries are available in the [v0.3.0-chicagoland release](https://github.com/emuehlstein/MeshCore/releases/tag/v0.3.0-chicagoland).
+Flash the **Chicagoland observer firmware** from [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) (`chioff-flex` branch). Pre-built binaries are available in the [v0.4.1-chicagoland release](https://github.com/emuehlstein/MeshCore/releases/tag/v0.4.1-chicagoland).
 
 ### What's Baked In (No Commands Needed)
 
 - **Radio:** 910.525 MHz / BW 62.5 / SF7 / CR5 (Chicagoland standard)
 - **Path hash mode:** 2 (3-byte)
 - **Loop detect:** moderate
-- **MQTT presets:** chimesh + chioff (V3/V4) or chimesh + chioff + analyzer-us (G2)
+- **MQTT presets (V3/V4/WSL3):** analyzer-us (slot 0) + chimesh (slot 1) + chioff (slot 2)
+- **MQTT presets (G2):** chimesh + chioff + analyzer-us + analyzer-eu + chioff-dev (5 active slots)
 - **mqtt.rx:** on (publishes RF-received packets to MQTT)
 - **mqtt.tx:** off (does NOT re-publish own transmitted packets)
 
@@ -67,16 +68,29 @@ set mqtt3.preset analyzer-us
 
 ### Board PSRAM & Slot Limits
 
-| Board | PSRAM | Max Active MQTT Slots |
-|-------|-------|-----------------------|
-| Heltec V3 | ❌ | 2 |
-| Heltec V4 | ✅ | 5 |
-| Station G2 | ✅ | 5 |
-| T-Beam SX1262 | ✅ | 5 |
-| T-Beam S3 Supreme | ❌ | 2 |
-| LilyGo T3S3 | ✅ | 5 |
+| Board | PSRAM | Max Active MQTT Slots | Default Slots |
+|-------|-------|-----------------------|---------------|
+| Heltec V3 | ❌ | 2 | analyzer-us, chimesh, chioff |
+| Heltec V4 | ✅ | 5 | analyzer-us, chimesh, chioff |
+| Heltec WSL3 | ✅ | 5 | analyzer-us, chimesh, chioff |
+| Heltec V4 Expansion Kit | ✅ | 5 | analyzer-us, chimesh, chioff |
+| Station G2 | ✅ | 5 | chimesh, chioff, analyzer-us, analyzer-eu, chioff-dev |
+| T-Beam SX1262 | ✅ | 5 | analyzer-us, chimesh, chioff |
+| T-Beam S3 Supreme | ❌ | 2 | analyzer-us, chimesh, chioff |
+| LilyGo T3S3 | ✅ | 5 | analyzer-us, chimesh, chioff |
 
-Boards without PSRAM can configure 3 MQTT slots but only 2 will be active simultaneously (each TLS connection needs ~40KB of mbedTLS buffers).
+Boards without PSRAM (V3, T-Beam Supreme) can configure 3 MQTT slots but only 2 will be active simultaneously — each TLS connection needs ~40KB of mbedTLS buffers. Station G2 is the only board with `chioff-dev` as a default slot.
+
+## Quick Config Tool: Web Serial (Recommended for First-Time Setup)
+
+Use the **MeshCore Web Serial Config Tool** to configure a freshly-flashed node without typing serial commands manually:
+
+- **URL:** <https://chicago-offline.github.io/meshcore-config/>
+- **Works in:** Chrome or Edge (Web Serial API required — not supported in Firefox/Safari)
+- **Features:** Set node name, lat/lon (with browser geolocation), WiFi credentials, MQTT IATA, repeat toggle, advert intervals, admin password
+- **Includes:** Serial log viewer showing all commands sent/received
+
+Connect via USB, open the tool, click **Connect**, and fill in the fields. The tool sends serial commands automatically.
 
 ## Alternative: Plain TCP (Any Firmware)
 
@@ -183,5 +197,6 @@ After configuring and rebooting:
 
 - [BUILD_CUSTOM_OBSERVER.md](BUILD_CUSTOM_OBSERVER.md) — Building firmware from source
 - [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) — Chicagoland firmware fork (branch: `chioff-flex`)
-- [v0.3.0-chicagoland release](https://github.com/emuehlstein/MeshCore/releases/tag/v0.3.0-chicagoland) — Pre-built binaries
+- [v0.4.1-chicagoland release](https://github.com/emuehlstein/MeshCore/releases/tag/v0.4.1-chicagoland) — Pre-built binaries (properly merged, all boards)
+- [Chicago-Offline/meshcore-config](https://github.com/Chicago-Offline/meshcore-config) — Web Serial config tool
 - [MeshCore CLI Commands](https://docs.meshcore.io/cli_commands/) — Full command reference
