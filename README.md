@@ -10,6 +10,8 @@ MeshCore network tools for the Chicago (ORD) region.
 | Landing Page | https://chicagooffline.com |
 | Network Scope | https://scope.chicagooffline.com |
 | Health Check | https://health.chicagooffline.com |
+| Live Map | https://livemap.chicagooffline.com |
+| Keygen | https://keygen.chicagooffline.com |
 | MQTT Broker | `mqtt://mqtt.chicagooffline.com:1883` |
 | WS MQTT Broker | `wss://wsmqtt.chicagooffline.com/mqtt` |
 
@@ -37,6 +39,8 @@ chicagooffline.com (EC2 t3.small, 13.58.181.117)
 │   ├── chicagooffline.com         → /srv/landing (static)
 │   ├── scope.chicagooffline.com   → corescope:3000
 │   ├── health.chicagooffline.com  → meshcore-health-check:3090
+│   ├── livemap.chicagooffline.com → meshmap-live:8080
+│   ├── keygen.chicagooffline.com  → /srv/keygen (static)
 │   └── wsmqtt.chicagooffline.com  → meshcore-mqtt-broker:8883
 ├── CoreScope (Go, port 3000)
 │   ├── Built from emuehlstein/CoreScope-chicagooffline (deploy/chicagooffline branch)
@@ -45,6 +49,8 @@ chicagooffline.com (EC2 t3.small, 13.58.181.117)
 ├── Mosquitto (MQTT, port 1883 exposed)
 ├── meshcore-mqtt-broker (WSS MQTT, JWT auth, port 8883 internal)
 ├── meshcore-health-check (port 3090 internal)
+├── meshmap-live (Live Map, port 8080 internal)
+│   └── yellowcooln/meshcore-mqtt-live-map
 └── Docker network: chicagooffline-net
 ```
 
@@ -133,7 +139,8 @@ Customizations:
 ### meshcore-mqtt-live-map
 - **Repo:** [yellowcooln/meshcore-mqtt-live-map](https://github.com/yellowcooln/meshcore-mqtt-live-map)
 - **Purpose:** Live MQTT-fed node map with routes, weather, LOS analysis
-- **URL:** https://dev-livemap.chicagooffline.com
+- **URL (prod):** https://livemap.chicagooffline.com
+- **URL (dev):** https://dev-livemap.chicagooffline.com
 - **Config:** `~/meshcore-mqtt-live-map/.env` on dev EC2
 
 ### meshcore-web-keygen
@@ -180,6 +187,8 @@ scope.chicagooffline.com
 mqtt.chicagooffline.com
 health.chicagooffline.com
 healthcheck.chicagooffline.com
+livemap.chicagooffline.com
+keygen.chicagooffline.com
 wsmqtt.chicagooffline.com
 ```
 
