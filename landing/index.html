@@ -473,75 +473,7 @@
     }
     .theme-toggle button.active .icon { filter: brightness(0); }
 
-    /* -- Observer strip -- */
-    .observer-strip {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent-green);
-      border-radius: 10px;
-      padding: 0.75rem 1.25rem;
-      margin-bottom: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-    .observer-strip a {
-      color: var(--accent-green);
-      font-weight: 700;
-      text-decoration: none;
-    }
-    .observer-strip a:hover { text-decoration: underline; }
-
-    /* -- Observer setup section -- */
-    #observer-setup h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      margin: 1.25rem 0 0.5rem;
-      color: var(--text);
-    }
-    #observer-setup pre {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.9rem 1rem;
-      overflow-x: auto;
-      margin: 0.5rem 0 0.75rem;
-      font-size: 0.83rem;
-    }
-    #observer-setup code {
-      font-family: "SF Mono", "Fira Code", "Menlo", monospace;
-      font-size: 0.88em;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.12rem 0.35rem;
-      color: var(--accent-amber);
-    }
-    #observer-setup pre code {
-      background: none;
-      border: none;
-      padding: 0;
-      color: var(--text);
-      font-size: 0.83rem;
-    }
-    #observer-setup ul {
-      margin-left: 1.5rem;
-      margin-bottom: 0.75rem;
-    }
-    #observer-setup ul li {
-      color: var(--muted);
-      font-size: 0.88rem;
-      margin-bottom: 0.25rem;
-    }
-    #observer-setup .obs-link {
-      display: inline-block;
-      margin-top: 0.75rem;
-      color: var(--accent-cyan);
-      font-size: 0.85rem;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    #observer-setup .obs-link:hover { text-decoration: underline; }
+    
 
   </style>
 </head>
@@ -581,10 +513,7 @@
       <a class="btn-primary" href="#get-started">Join the Network</a>
     </div>
 
-    <!-- -- Observer strip -- -->
-    <div class="observer-strip">
-      📡 Got a node? <a href="#observer-setup">Add your packet data to the live map &rarr;</a>
-    </div>
+
 
     <!-- ── Why ── -->
     <section>
@@ -714,29 +643,7 @@
       <p class="reassure">No subscription. No account. The device is yours.</p>
     </section>
 
-    <!-- -- Observer setup -- -->
-    <section id="observer-setup">
-      <div class="section-label">Add your data</div>
-      <h2>Feed your node to the live&nbsp;map.</h2>
-      <p>Got a MeshCore node running? Publish its traffic to the Chicago Offline MQTT broker and your packets show up on the <a href="https://dev-scope.chicagooffline.com/#/live" style="color:var(--accent-cyan)">Network Scope</a> and <a href="https://dev-livemap.chicagooffline.com" style="color:var(--accent-cyan)">Live Map</a> in real time.</p>
 
-      <h3>Quick Setup <span style="color:var(--muted);font-weight:400;font-size:0.85em">(recommended)</span></h3>
-      <p>Run our installer &mdash; detects your node type and pre-configures all Chicagoland MQTT brokers:</p>
-      <pre><code>bash &lt;(curl -fsSL https://dev-landing.chicagooffline.com/install-observer.sh)</code></pre>
-      <p>Supports companions, repeaters, and room servers. Pre-configures LetsMesh US &amp; EU, chimesh.org, rflab.io, and Chicago Offline.</p>
-
-      <h3>Manual: Plain TCP</h3>
-      <pre><code>MQTT Broker: mqtt://mqtt.chicagooffline.com:1883
-Topic:       meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
-      <p>No authentication required. Works with any standard firmware or <code>mctomqtt</code>.</p>
-
-      <h3>Manual: WebSocket + JWT</h3>
-      <pre><code>MQTT Broker: wss://wsmqtt.chicagooffline.com/mqtt
-Topic:       meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
-      <p>Requires WS-capable firmware. See <a href="https://github.com/emuehlstein/MeshCore" style="color:var(--accent-cyan)">emuehlstein/MeshCore</a> <code>chioff-flex</code> branch. JWT auth uses Ed25519 device keys &mdash; username: <code>v1_{PUBKEY}</code>.</p>
-
-      <a class="obs-link" href="/contributors.html">Full infrastructure &amp; deployment docs &rarr;</a>
-    </section>
 
     <!-- ── Final CTA ── -->
     <div class="final-cta">
@@ -749,7 +656,7 @@ Topic:       meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
       Chicago Offline &mdash; ORD region &nbsp;·&nbsp;
       <a href="https://chimesh.org">Chicagoland Mesh</a> &nbsp;·&nbsp;
       <a href="/contributors.html">Open-Source</a> &nbsp;&middot;&nbsp;
-      <a href="#observer-setup">Add your data</a>
+      <a href="https://observers.chicagooffline.com/#observer-setup">Add Your Data</a>
     </div>
 
   </div>
