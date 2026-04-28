@@ -203,19 +203,16 @@
         <li><code>mosquitto</code> &mdash; Standalone Mosquitto MQTT broker (port 1883)</li>
         <li><code>meshcore-mqtt-broker</code> &mdash; WebSocket MQTT broker with JWT auth</li>
         <li><code>meshcore-health-check</code> &mdash; Mesh Health Check app</li>
-        <li><code>meshmap-live</code> &mdash; Live MQTT node map (<a href="https://github.com/yellowcooln/meshcore-mqtt-live-map">yellowcooln/meshcore-mqtt-live-map</a>)</li>
-        <li><code>caddy</code> &mdash; Reverse proxy / TLS termination (also serves keygen static files)</li>
+        <li><code>caddy</code> &mdash; Reverse proxy / TLS termination</li>
       </ul>
     </li>
     <li><strong>URLs:</strong>
       <ul>
         <li><a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a> &mdash; Network Scope</li>
-        <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> / <a href="https://healthcheck.chicagooffline.com">healthcheck.chicagooffline.com</a> &mdash; Mesh Health Check</li>
-        <li><a href="https://livemap.chicagooffline.com">livemap.chicagooffline.com</a> / <a href="https://map.chioff.com">map.chioff.com</a> &mdash; Live MQTT Node Map</li>
-        <li><a href="https://keygen.chicagooffline.com">keygen.chicagooffline.com</a> &mdash; MeshCore Vanity Key Generator</li>
+        <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> &mdash; Health Check</li>
         <li><code>mqtt.chicagooffline.com:1883</code> &mdash; Plain TCP MQTT</li>
         <li><code>wss://wsmqtt.chicagooffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
-        <li><a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a> &mdash; Map Tile Server (separate EC2)</li>
+        <li><a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a> &mdash; Map Tile Server</li>
       </ul>
     </li>
   </ul>
@@ -268,20 +265,24 @@
   <ul>
     <li><strong>Upstream:</strong> <a href="https://github.com/meshcore-dev/CoreScope">github.com/meshcore-dev/CoreScope</a></li>
     <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/CoreScope-chicagooffline">github.com/emuehlstein/CoreScope-chicagooffline</a> (branch: <code>deploy/chicagooffline</code>)</li>
-    <li><strong>Build Mode:</strong> <code>CORESCOPE_IMAGE_MODE=fork</code> in <code>deploy-compose.sh</code></li>
+    <li><strong>Build Mode:</strong> <code>CORESCOPE_IMAGE_MODE=fork</code> in <code>deploy.sh</code></li>
   </ul>
 
-  <h3>Live MQTT Node Map</h3>
+  <h3>MeshCore Chicagoland Observer Firmware</h3>
   <ul>
-    <li><strong>Upstream:</strong> <a href="https://github.com/yellowcooln/meshcore-mqtt-live-map">github.com/yellowcooln/meshcore-mqtt-live-map</a></li>
-    <li><strong>Live:</strong> <a href="https://livemap.chicagooffline.com">livemap.chicagooffline.com</a> / <a href="https://map.chioff.com">map.chioff.com</a></li>
-  </ul>
-
-  <h3>MeshCore Vanity Key Generator</h3>
-  <ul>
-    <li><strong>Upstream:</strong> <a href="https://github.com/agessaman/meshcore-web-keygen">github.com/agessaman/meshcore-web-keygen</a></li>
-    <li><strong>Live:</strong> <a href="https://keygen.chicagooffline.com">keygen.chicagooffline.com</a></li>
-    <li><strong>Tech:</strong> Static client-side only, served by Caddy from <code>/srv/keygen</code></li>
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/MeshCore">github.com/emuehlstein/MeshCore</a></li>
+    <li><strong>Branch:</strong> <code>chioff-flex</code> (based on agessaman's <code>mqtt-bridge-implementation-flex</code>)</li>
+    <li><strong>Release:</strong> <a href="https://github.com/emuehlstein/MeshCore/releases/tag/v0.3.0-chicagoland">v0.3.0-chicagoland</a></li>
+    <li><strong>Features:</strong> Multi-slot MQTT (up to 6 brokers), preset system, PSRAM-aware memory management, embedded CA bundle, radio watchdog</li>
+    <li><strong>Boards:</strong> Heltec V3, Heltec V4, Station G2, T-Beam SX1262, T-Beam S3 Supreme, LilyGo T3S3</li>
+    <li><strong>Default MQTT presets:</strong>
+      <ul>
+        <li><code>chimesh</code> &mdash; chimesh.org WSS broker</li>
+        <li><code>chioff</code> &mdash; chicagooffline.com WSS broker</li>
+        <li><code>analyzer-us</code> &mdash; LetsMesh US (G2 only, or user-configured)</li>
+      </ul>
+    </li>
+    <li><strong>Chicagoland radio defaults:</strong> 910.525 MHz / BW 62.5 / SF7 / CR5, 3-byte path hash, moderate loop detect</li>
   </ul>
 
   <h3>Mesh Health Check</h3>
@@ -362,51 +363,15 @@ docker logs -f meshcore-health-check-dev
 # Caddy logs
 docker logs -f caddy</code></pre>
 
-  <h2>📡 Connecting Observer Nodes</h2>
+    <h2>📡 Connecting Observer Nodes</h2>
 
-  <h3>Quick Setup (Recommended)</h3>
-  <p>Run our installer to set up packet capture with all Chicagoland MQTT brokers pre-configured. Supports companions, repeaters, and room servers:</p>
-  <pre><code>bash &lt;(curl -fsSL https://dev-landing.chicagooffline.com/install-observer.sh)</code></pre>
-  <p>The installer detects your node type and runs the appropriate upstream tool (<a href="https://github.com/agessaman/meshcore-packet-capture">meshcore-packet-capture</a> for companions, <a href="https://github.com/Cisien/meshcoretomqtt">mctomqtt</a> for repeaters/room servers) with 6 brokers pre-configured:</p>
-  <ul>
-    <li>LetsMesh US &amp; EU</li>
-    <li>chimesh.org</li>
-    <li>rflab.io</li>
-    <li>Chicago Offline (prod + dev)</li>
-  </ul>
-
-  <h3>Config Only (Existing Installs)</h3>
-  <p>If you already have <code>meshcore-packet-capture</code> or <code>mctomqtt</code> installed, grab the config file:</p>
-  <p><strong>Companions</strong> (<code>.env</code> format):</p>
-  <pre><code>curl -O https://dev-landing.chicagooffline.com/00-chicagoland.env
-cp 00-chicagoland.env ~/.meshcore-packet-capture/.env.local</code></pre>
-  <p><strong>Repeaters / Room Servers</strong> (TOML format):</p>
-  <pre><code>curl -O https://dev-landing.chicagooffline.com/00-chicagoland.toml
-sudo cp 00-chicagoland.toml /etc/mctomqtt/config.d/</code></pre>
+  <p>Want to add your node's packet data to the Chicago Offline live map and scope?</p>
+  <p><a href="https://dev-landing.chicagooffline.com/#observer-setup">See the observer setup guide &rarr;</a></p>
+  <p style="margin-top:0.5rem">Covers the one-line installer, plain TCP, WebSocket+JWT, and per-node-type config.</p>
 
   <div class="divider"></div>
 
-  <h3>Manual Connection</h3>
-  <p>Two direct connection methods are also supported:</p>
-
-  <h3>Method 1: Plain TCP (Production)</h3>
-  <pre><code>MQTT Broker: mqtt://mqtt.chicagooffline.com:1883
-Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
-  <p>No authentication required. Works with any standard firmware or <code>mctomqtt</code>.</p>
-
-  <h3>Method 2: WebSocket + JWT</h3>
-  <pre><code>MQTT Broker: wss://wsmqtt.chicagooffline.com/mqtt  (prod)
-MQTT Broker: wss://wsmqtt-dev.chicagooffline.com/mqtt  (dev)
-Topic Pattern: meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
-  <p>Requires WS-capable firmware (see <a href="https://github.com/emuehlstein/MeshCore">emuehlstein/MeshCore</a> <code>chioff-flex</code> branch) or <code>mctomqtt</code> with WS support. JWT auth uses Ed25519 device keys &mdash; username format: <code>v1_{PUBKEY}</code>.</p>
-
-  <p>For detailed setup instructions, see:</p>
-  <ul>
-    <li><a href="https://github.com/emuehlstein/chimesh-mqtt/blob/main/OBSERVER_SETUP.md">OBSERVER_SETUP.md</a> — Chicagoland observer firmware setup guide</li>
-    <li><a href="https://github.com/emuehlstein/chimesh-mqtt/blob/main/BUILD_CUSTOM_OBSERVER.md">BUILD_CUSTOM_OBSERVER.md</a> — Building custom observer firmware</li>
-  </ul>
-
-  <h2>💡 Contributing</h2>
+    <h2>💡 Contributing</h2>
 
   <p>Interested in contributing to the Chicago Mesh network infrastructure?</p>
 

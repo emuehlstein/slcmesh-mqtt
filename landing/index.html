@@ -472,26 +472,97 @@
       background: var(--accent-cyan);
     }
     .theme-toggle button.active .icon { filter: brightness(0); }
+
+    /* -- Observer strip -- */
+    .observer-strip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent-green);
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .observer-strip a {
+      color: var(--accent-green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .observer-strip a:hover { text-decoration: underline; }
+
+    /* -- Observer setup section -- */
+    #observer-setup h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 1.25rem 0 0.5rem;
+      color: var(--text);
+    }
+    #observer-setup pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      overflow-x: auto;
+      margin: 0.5rem 0 0.75rem;
+      font-size: 0.83rem;
+    }
+    #observer-setup code {
+      font-family: "SF Mono", "Fira Code", "Menlo", monospace;
+      font-size: 0.88em;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.12rem 0.35rem;
+      color: var(--accent-amber);
+    }
+    #observer-setup pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text);
+      font-size: 0.83rem;
+    }
+    #observer-setup ul {
+      margin-left: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    #observer-setup ul li {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 0.25rem;
+    }
+    #observer-setup .obs-link {
+      display: inline-block;
+      margin-top: 0.75rem;
+      color: var(--accent-cyan);
+      font-size: 0.85rem;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    #observer-setup .obs-link:hover { text-decoration: underline; }
+
   </style>
 </head>
 <body>
 
-  
+  <div class="dev-banner">Development Preview</div>
 
   <nav class="top-nav">
-    <a href="https://scope.chicagooffline.com/#/live">
+    <a href="https://dev-scope.chicagooffline.com/#/live">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg>
       <span class="nav-label">Scope</span>
     </a>
-    <a href="https://health.chicagooffline.com">
+    <a href="https://dev-health.chicagooffline.com">
       <svg viewBox="0 0 24 24"><polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/></svg>
       <span class="nav-label">Health Check</span>
     </a>
-    <a href="https://livemap.chicagooffline.com">
+    <a href="https://dev-livemap.chicagooffline.com">
       <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       <span class="nav-label">Live Map</span>
     </a>
-    <a href="https://keygen.chicagooffline.com">
+    <a href="https://dev-keygen.chicagooffline.com">
       <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
       <span class="nav-label">Keygen</span>
     </a>
@@ -508,6 +579,11 @@
       <h1>Text when the internet&nbsp;is&nbsp;down.</h1>
       <p class="sub">A local messaging network for Chicago built on long-range radio — no internet, no cell towers, no monthly bill.</p>
       <a class="btn-primary" href="#get-started">Join the Network</a>
+    </div>
+
+    <!-- -- Observer strip -- -->
+    <div class="observer-strip">
+      📡 Got a node? <a href="#observer-setup">Add your packet data to the live map &rarr;</a>
     </div>
 
     <!-- ── Why ── -->
@@ -566,19 +642,19 @@
         </div>
       </div>
       <div class="tools-grid">
-        <a class="tool-card" href="https://scope.chicagooffline.com/#/live">
+        <a class="tool-card" href="https://dev-scope.chicagooffline.com/#/live">
           <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg> Network Scope</strong>
           <span>Live packet analyzer and node map</span>
         </a>
-        <a class="tool-card" href="https://livemap.chicagooffline.com">
+        <a class="tool-card" href="https://dev-livemap.chicagooffline.com">
           <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> Live Map</strong>
           <span>Real-time node map with routes and weather</span>
         </a>
-        <a class="tool-card" href="https://health.chicagooffline.com">
+        <a class="tool-card" href="https://dev-health.chicagooffline.com">
           <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/></svg> Health Check</strong>
           <span>Test which devices hear your signal</span>
         </a>
-        <a class="tool-card" href="https://keygen.chicagooffline.com">
+        <a class="tool-card" href="https://dev-keygen.chicagooffline.com">
           <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Key Generator</strong>
           <span>Create a custom device identity</span>
         </a>
@@ -638,6 +714,30 @@
       <p class="reassure">No subscription. No account. The device is yours.</p>
     </section>
 
+    <!-- -- Observer setup -- -->
+    <section id="observer-setup">
+      <div class="section-label">Add your data</div>
+      <h2>Feed your node to the live&nbsp;map.</h2>
+      <p>Got a MeshCore node running? Publish its traffic to the Chicago Offline MQTT broker and your packets show up on the <a href="https://dev-scope.chicagooffline.com/#/live" style="color:var(--accent-cyan)">Network Scope</a> and <a href="https://dev-livemap.chicagooffline.com" style="color:var(--accent-cyan)">Live Map</a> in real time.</p>
+
+      <h3>Quick Setup <span style="color:var(--muted);font-weight:400;font-size:0.85em">(recommended)</span></h3>
+      <p>Run our installer &mdash; detects your node type and pre-configures all Chicagoland MQTT brokers:</p>
+      <pre><code>bash &lt;(curl -fsSL https://dev-landing.chicagooffline.com/install-observer.sh)</code></pre>
+      <p>Supports companions, repeaters, and room servers. Pre-configures LetsMesh US &amp; EU, chimesh.org, rflab.io, and Chicago Offline.</p>
+
+      <h3>Manual: Plain TCP</h3>
+      <pre><code>MQTT Broker: mqtt://mqtt.chicagooffline.com:1883
+Topic:       meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
+      <p>No authentication required. Works with any standard firmware or <code>mctomqtt</code>.</p>
+
+      <h3>Manual: WebSocket + JWT</h3>
+      <pre><code>MQTT Broker: wss://wsmqtt.chicagooffline.com/mqtt
+Topic:       meshcore/ORD/&lt;node-pubkey&gt;/packets</code></pre>
+      <p>Requires WS-capable firmware. See <a href="https://github.com/emuehlstein/MeshCore" style="color:var(--accent-cyan)">emuehlstein/MeshCore</a> <code>chioff-flex</code> branch. JWT auth uses Ed25519 device keys &mdash; username: <code>v1_{PUBKEY}</code>.</p>
+
+      <a class="obs-link" href="/contributors.html">Full infrastructure &amp; deployment docs &rarr;</a>
+    </section>
+
     <!-- ── Final CTA ── -->
     <div class="final-cta">
       <h2>Chicago already has a network that works without the&nbsp;internet.</h2>
@@ -648,7 +748,8 @@
     <div class="footer">
       Chicago Offline &mdash; ORD region &nbsp;·&nbsp;
       <a href="https://chimesh.org">Chicagoland Mesh</a> &nbsp;·&nbsp;
-      <a href="/contributors.html">Contributors</a>
+      <a href="/contributors.html">Contributors</a> &nbsp;&middot;&nbsp;
+      <a href="#observer-setup">Add your data</a>
     </div>
 
   </div>
