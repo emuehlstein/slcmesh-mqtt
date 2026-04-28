@@ -519,7 +519,8 @@
     </style>
 </head>
 <body>
-    <div class="dev-banner">Development Preview</div>
+    <div class="dev-banner" id="devBanner" style="display:none">Development Preview</div>
+    <script>if(location.hostname.startsWith('dev-'))document.getElementById('devBanner').style.display='';</script>
     <div class="container">
         <div class="header">
             <h1>Chicago Offline Key Generator</h1>
