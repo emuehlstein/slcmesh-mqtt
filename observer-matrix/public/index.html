@@ -371,75 +371,44 @@
 
   <!-- Method 1 -->
   <div class="method-card">
-    <h3><span class="method-badge recommended">Recommended</span> Method 1: Plain TCP</h3>
-    <p>The simplest setup — no authentication, works with any observer firmware. Publishes to the production MQTT broker.</p>
+    <h3><span class="method-badge recommended">Recommended</span> Chicagoland Firmware (chioff-flex)</h3>
+    <p>Flash the Chicagoland firmware &mdash; all MQTT brokers and radio settings are baked in. Just add WiFi and identity.</p>
     <h4>Serial Configuration</h4>
     <p>Connect via serial (115200 baud) and run:</p>
     <pre><code># Configure WiFi
 set wifi.ssid YourNetworkName
-set wifi.password YourPassword
-set wifi.enabled on
+set wifi.pwd YourPassword
 
-# Configure MQTT broker
-set mqtt.server mqtt.chicagooffline.com
-set mqtt.port 1883
-
-# Set region prefix (ORD = Chicago)
-set mqtt.topic meshcore/ORD
-
-# Optional: set node name and location
+# Set region and identity
+set mqtt.iata ORD
 set name MyObserver
 set lat 41.8781
 set lon -87.6298
 
 # Save and reboot
 reboot</code></pre>
-    <h4>Connection Details</h4>
+    <h4>What's Baked In</h4>
     <ul>
-      <li><strong>Broker:</strong> <code>mqtt.chicagooffline.com:1883</code></li>
-      <li><strong>Protocol:</strong> Plain TCP (no TLS)</li>
-      <li><strong>Auth:</strong> None required</li>
-      <li><strong>Topic:</strong> <code>meshcore/ORD/&lt;node-pubkey&gt;/packets</code></li>
+      <li><strong>Radio:</strong> 910.525 MHz / BW 62.5 / SF7 / CR5 (Chicagoland standard)</li>
+      <li><strong>MQTT slots:</strong> analyzer-us + chimesh + chioff (auto-configured)</li>
+      <li><strong>Auth:</strong> Ed25519 JWT (automatic)</li>
+      <li><strong>mqtt.rx:</strong> ON &mdash; publishes received packets</li>
     </ul>
   </div>
 
   <!-- Method 2 -->
   <div class="method-card">
-    <h3><span class="method-badge advanced">Advanced</span> Method 2: WebSocket + JWT</h3>
-    <p>Connects via WSS with Ed25519 JWT authentication. Requires the <a href="https://github.com/emuehlstein/MeshCore/tree/chioff-flex">chioff-flex firmware</a>.</p>
-    <h4>Pre-Built Binary (Heltec v3)</h4>
-    <p>Download and flash without building from source:</p>
-    <pre><code># Download
-# Download from latest release
-curl -LO https://github.com/emuehlstein/MeshCore/releases/latest/download/Heltec_v3_repeater_observer_mqtt.bin
-
-# Flash via esptool (USB)
-esptool.py --chip esp32s3 --port /dev/ttyUSB0 write_flash 0x0 \
-  Heltec_v3_repeater_observer_mqtt.bin</code></pre>
-    <h4>Serial Configuration</h4>
-    <pre><code># Configure WiFi
-set wifi.ssid YourNetworkName
-set wifi.password YourPassword
-set wifi.enabled on
-
-# Configure MQTT broker (WSS)
-set mqtt.server wsmqtt.chicagooffline.com
-set mqtt.port 443
-set mqtt.ws on
-set mqtt.tls on
-
-# Set region prefix
-set mqtt.topic meshcore/ORD
-
-# Save and reboot
+    <h3><span class="method-badge advanced">Advanced</span> Plain TCP (Any Firmware)</h3>
+    <p>If you're running standard MeshCore firmware (not chioff-flex), use plain TCP to our Mosquitto broker:</p>
+    <pre><code>set mqtt.server mqtt.chicagooffline.com
+set mqtt.port 1883
+set mqtt.iata ORD
 reboot</code></pre>
-    <p>Auth is automatic — the firmware signs JWTs with the device's Ed25519 key. Username format: <code>v1_{PUBKEY}</code>.</p>
     <h4>Connection Details</h4>
     <ul>
-      <li><strong>Broker:</strong> <code>wss://wsmqtt.chicagooffline.com/mqtt</code></li>
-      <li><strong>Protocol:</strong> WebSocket over TLS</li>
-      <li><strong>Auth:</strong> Ed25519 JWT (automatic)</li>
-      <li><strong>Topic:</strong> <code>meshcore/ORD/&lt;node-pubkey&gt;/packets</code></li>
+      <li><strong>Broker:</strong> <code>mqtt.chicagooffline.com:1883</code></li>
+      <li><strong>Protocol:</strong> Plain TCP (no TLS)</li>
+      <li><strong>Auth:</strong> None required</li>
     </ul>
   </div>
 

@@ -177,7 +177,7 @@ See [OBSERVER_SETUP.md](OBSERVER_SETUP.md) for full configuration guide.
 3. Create GitHub release on [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore)
 4. Upload binaries named `<Board>_repeater_observer_mqtt.bin`
 
-Current release: [v0.3.0-chicagoland](https://github.com/emuehlstein/MeshCore/releases/tag/v0.3.0-chicagoland)
+Current release: [Latest](https://github.com/emuehlstein/MeshCore/releases/latest)
 
 ## Related Documentation
 
