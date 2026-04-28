@@ -112,15 +112,16 @@ EOF
 
 # Observer Matrix MQTT sources — connects to ALL environments (dev + prod + CM)
 # Local WS broker is internal (ws://), remote is external (wss://)
-BROKER_PW="${BROKER_CORESCOPE_PASSWORD:-changeme}"
+LOCAL_PW="${BROKER_CORESCOPE_PASSWORD:-changeme}"
+REMOTE_PW="${BROKER_REMOTE_CORESCOPE_PASSWORD:-$LOCAL_PW}"
 VIEWER_PW="${CHIMESH_VIEWER_PASSWORD:-changeme}"
 
 if [ "$ENVIRONMENT" = "dev" ]; then
-  # Running on dev: local broker = CO-DEV (internal ws), CO = prod (external wss)
-  MQTT_SOURCES_JSON='[{"name":"co","label":"CO","broker":"wss://wsmqtt.chicagooffline.com","username":"corescope","password":"'"$BROKER_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"ws://meshcore-mqtt-broker:8883","username":"corescope","password":"'"$BROKER_PW"'","topics":["meshcore/#"]},{"name":"chimesh-org","label":"CM","broker":"wss://mqtt.chimesh.org","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]}]'
+  # Running on dev: CO-DEV local (internal ws), CO = prod (external wss, may differ)
+  MQTT_SOURCES_JSON='[{"name":"co","label":"CO","broker":"wss://wsmqtt.chicagooffline.com","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"ws://meshcore-mqtt-broker:8883","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"chimesh-org","label":"CM","broker":"wss://mqtt.chimesh.org","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]}]'
 else
-  # Running on prod: local broker = CO, remote = CO-DEV (dev, external WSS)
-  MQTT_SOURCES_JSON='[{"name":"co","label":"CO","broker":"ws://meshcore-mqtt-broker:8883","username":"corescope","password":"'"$BROKER_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"wss://wsmqtt-dev.chicagooffline.com","username":"corescope","password":"'"$BROKER_PW"'","topics":["meshcore/#"]},{"name":"chimesh-org","label":"CM","broker":"wss://mqtt.chimesh.org","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]}]'
+  # Running on prod: CO local (internal ws), CO-DEV = dev (external wss, may differ)
+  MQTT_SOURCES_JSON='[{"name":"co","label":"CO","broker":"ws://meshcore-mqtt-broker:8883","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"wss://wsmqtt-dev.chicagooffline.com","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"chimesh-org","label":"CM","broker":"wss://mqtt.chimesh.org","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]}]'
 fi
 
 cat > .env.observer-matrix << EOF

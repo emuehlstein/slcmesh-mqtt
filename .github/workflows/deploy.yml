@@ -57,6 +57,7 @@ jobs:
           BROKER_CORESCOPE_PASSWORD: ${{ secrets.BROKER_CORESCOPE_PASSWORD }}
           CHIMESH_VIEWER_PASSWORD: ${{ secrets.CHIMESH_VIEWER_PASSWORD }}
           BROKER_ADMIN_PASSWORD: ${{ secrets.BROKER_ADMIN_PASSWORD }}
+          BROKER_REMOTE_CORESCOPE_PASSWORD: ${{ secrets.BROKER_REMOTE_CORESCOPE_PASSWORD }}
           DEPLOY_KEY_CONTENT: ${{ secrets.DEPLOY_KEY }}
         run: |
           # Write deploy key to EC2 for git clone (via scp to avoid shell escaping issues)
@@ -75,6 +76,7 @@ jobs:
           export BROKER_CORESCOPE_PASSWORD="${BROKER_CORESCOPE_PASSWORD}"
           export CHIMESH_VIEWER_PASSWORD="${CHIMESH_VIEWER_PASSWORD}"
           export BROKER_ADMIN_PASSWORD="${BROKER_ADMIN_PASSWORD}"
+          export BROKER_REMOTE_CORESCOPE_PASSWORD="${BROKER_REMOTE_CORESCOPE_PASSWORD}"
           ENVEOF
           scp -i ~/.ssh/id_rsa /tmp/deploy-env.sh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/deploy-env.sh
           rm -f /tmp/deploy-env.sh
@@ -95,7 +97,7 @@ jobs:
               git -C $REPO_DIR reset --hard origin/$BRANCH
             fi
             cd $REPO_DIR
-            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" BROKER_CORESCOPE_PASSWORD="${BROKER_CORESCOPE_PASSWORD:-}" BROKER_ADMIN_PASSWORD="${BROKER_ADMIN_PASSWORD:-}" CHIMESH_VIEWER_PASSWORD="${CHIMESH_VIEWER_PASSWORD:-}" bash deploy-compose.sh
+            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" BROKER_CORESCOPE_PASSWORD="${BROKER_CORESCOPE_PASSWORD:-}" BROKER_ADMIN_PASSWORD="${BROKER_ADMIN_PASSWORD:-}" CHIMESH_VIEWER_PASSWORD="${CHIMESH_VIEWER_PASSWORD:-}" BROKER_REMOTE_CORESCOPE_PASSWORD="${BROKER_REMOTE_CORESCOPE_PASSWORD:-}" bash deploy-compose.sh
           ENDSSH
 
       - name: Cleanup
