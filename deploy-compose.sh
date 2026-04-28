@@ -110,6 +110,19 @@ TURNSTILE_ENABLED=0
 OBSERVERS_FILE=data/observer.json
 EOF
 
+# Observer Matrix MQTT sources — same topology as CoreScope
+if [ "$ENVIRONMENT" = "dev" ]; then
+  OBSERVER_LABEL="CO-DEV"
+else
+  OBSERVER_LABEL="CO"
+fi
+
+cat > .env.observer-matrix << EOF
+PORT=3100
+STALE_THRESHOLD_MS=900000
+MQTT_SOURCES=[{"name":"mosquitto-tcp","label":"Legacy","broker":"mqtt://mosquitto:1883","topics":["meshcore/#"]},{"name":"wsmqtt-ws","label":"$OBSERVER_LABEL","broker":"ws://meshcore-mqtt-broker:8883","username":"corescope","password":"${BROKER_CORESCOPE_PASSWORD:-changeme}","topics":["meshcore/#"]},{"name":"chimesh-org","label":"CM","broker":"wss://mqtt.chimesh.org","username":"viewer","password":"${CHIMESH_VIEWER_PASSWORD:-changeme}","topics":["meshcore/#"]}]
+EOF
+
 cat > .env.livemap << EOF
 SITE_TITLE=Chicago Mesh Live Map
 SITE_DESCRIPTION=Live view of Chicago MeshCore nodes, message routes, and advert paths.
@@ -209,6 +222,7 @@ if [ "$ENVIRONMENT" = "dev" ]; then
   echo "🩺 Health:  https://dev-health.chicagooffline.com"
   echo "🔑 Keygen:  https://dev-keygen.chicagooffline.com"
   echo "🗺️  LiveMap: https://dev-livemap.chicagooffline.com"
+  echo "📡 Matrix: https://observers-dev.chicagooffline.com"
 else
   echo "🌐 Landing: https://chicagooffline.com"
   echo "📡 Scope:   https://scope.chicagooffline.com"
@@ -216,6 +230,7 @@ else
   echo "🩺 Health:  https://health.chicagooffline.com"
   echo "🔑 Keygen:  https://keygen.chicagooffline.com"
   echo "🗺️  LiveMap: https://livemap.chicagooffline.com"
+  echo "📡 Matrix: https://observers.chicagooffline.com"
 fi
 
 # ── Smoke test ───────────────────────────────────────────────────────────────

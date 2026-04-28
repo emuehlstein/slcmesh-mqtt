@@ -61,6 +61,13 @@ services:
     volumes:
       - livemap-data:/data
 
+  # ── Observer Matrix ───────────────────────────────────────────────────────
+  observer-matrix:
+    <<: *common
+    build:
+      context: ./observer-matrix
+    env_file: .env.observer-matrix
+
   # ── Caddy (TLS reverse proxy) ────────────────────────────────────────────
   caddy:
     <<: *common
@@ -73,6 +80,8 @@ services:
       - caddy-data:/data/caddy
       - ./dev-landing:/srv/dev-landing:ro
       - ./keygen:/srv/keygen:ro
+    depends_on:
+      - observer-matrix
 
 networks:
   chicagooffline:
@@ -85,3 +94,4 @@ volumes:
   caddy-data:
   healthcheck-data:
   livemap-data:
+  observer-matrix-data:

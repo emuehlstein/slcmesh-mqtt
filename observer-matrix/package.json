@@ -1,0 +1,12 @@
+{
+  "name": "observer-matrix",
+  "version": "1.0.0",
+  "description": "MeshCore observer status matrix — tracks observer heartbeats across MQTT environments",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "mqtt": "^5.0.0"
+  }
+}
