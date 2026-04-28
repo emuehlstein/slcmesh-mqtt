@@ -110,17 +110,23 @@ TURNSTILE_ENABLED=0
 OBSERVERS_FILE=data/observer.json
 EOF
 
-# Observer Matrix MQTT sources — same topology as CoreScope
+# Observer Matrix MQTT sources — connects to ALL environments (dev + prod + CM)
+# Local WS broker is internal (ws://), remote is external (wss://)
+BROKER_PW="${BROKER_CORESCOPE_PASSWORD:-changeme}"
+VIEWER_PW="${CHIMESH_VIEWER_PASSWORD:-changeme}"
+
 if [ "$ENVIRONMENT" = "dev" ]; then
-  OBSERVER_LABEL="CO-DEV"
+  # Running on dev: local broker = CO-DEV (internal ws), CO = prod (external wss)
+  MQTT_SOURCES_JSON='[{"name":"co","label":"CO","broker":"wss://wsmqtt.chicagooffline.com","username":"corescope","password":"'"$BROKER_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"ws://meshcore-mqtt-broker:8883","username":"corescope","password":"'"$BROKER_PW"'","topics":["meshcore/#"]},{"name":"chimesh-org","label":"CM","broker":"wss://mqtt.chimesh.org","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]}]'
 else
-  OBSERVER_LABEL="CO"
+  # Running on prod: local broker = CO, remote = CO-DEV (dev, external WSS)
+  MQTT_SOURCES_JSON='[{"name":"co","label":"CO","broker":"ws://meshcore-mqtt-broker:8883","username":"corescope","password":"'"$BROKER_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"wss://wsmqtt-dev.chicagooffline.com","username":"corescope","password":"'"$BROKER_PW"'","topics":["meshcore/#"]},{"name":"chimesh-org","label":"CM","broker":"wss://mqtt.chimesh.org","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]}]'
 fi
 
 cat > .env.observer-matrix << EOF
 PORT=3100
 STALE_THRESHOLD_MS=900000
-MQTT_SOURCES=[{"name":"mosquitto-tcp","label":"Legacy","broker":"mqtt://mosquitto:1883","topics":["meshcore/#"]},{"name":"wsmqtt-ws","label":"$OBSERVER_LABEL","broker":"ws://meshcore-mqtt-broker:8883","username":"corescope","password":"${BROKER_CORESCOPE_PASSWORD:-changeme}","topics":["meshcore/#"]},{"name":"chimesh-org","label":"CM","broker":"wss://mqtt.chimesh.org","username":"viewer","password":"${CHIMESH_VIEWER_PASSWORD:-changeme}","topics":["meshcore/#"]}]
+MQTT_SOURCES=$MQTT_SOURCES_JSON
 EOF
 
 cat > .env.livemap << EOF

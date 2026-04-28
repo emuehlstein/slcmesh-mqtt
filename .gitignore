@@ -7,3 +7,4 @@ caddy-data/
 corescope-source/
 health-check/
 docker-compose.yml
+observer-matrix/node_modules/
