@@ -30,6 +30,10 @@ livemap.chicagooffline.com, map.chioff.com {
     reverse_proxy meshmap-live:8080
 }
 
+observers.chicagooffline.com {
+    reverse_proxy observer-matrix:3100
+}
+
 # === Dev environments ===
 
 dev-landing.chicagooffline.com {

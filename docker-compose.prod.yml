@@ -63,6 +63,13 @@ services:
     volumes:
       - livemap-data:/data
 
+  # ── Observer Matrix (observer status dashboard) ─────────────────────────
+  observer-matrix:
+    <<: *common
+    build:
+      context: ./observer-matrix
+    env_file: .env.observer-matrix
+
   # ── Caddy (TLS reverse proxy) ────────────────────────────────────────────
   caddy:
     <<: *common
@@ -88,3 +95,4 @@ volumes:
   caddy-data:
   healthcheck-data:
   livemap-data:
+  observer-matrix-data:
