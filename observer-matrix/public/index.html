@@ -364,7 +364,7 @@
   <h3>Prerequisites</h3>
   <ul>
     <li>A MeshCore-compatible LoRa device (Heltec v3, T-Beam, etc.)</li>
-    <li>Observer firmware flashed — <code>observer-uplink-native-dev</code> or the <a href="https://github.com/emuehlstein/MeshCore/tree/feature/ws-custom-broker">WS custom broker fork</a></li>
+    <li>Observer firmware flashed — <a href="https://github.com/emuehlstein/MeshCore/releases/latest">Chicagoland firmware</a> (chioff-flex branch) or upstream <code>observer-uplink-native-dev</code></li>
     <li>Serial connection to the node (USB)</li>
     <li>WiFi network the node can reach</li>
   </ul>
@@ -406,15 +406,16 @@ reboot</code></pre>
   <!-- Method 2 -->
   <div class="method-card">
     <h3><span class="method-badge advanced">Advanced</span> Method 2: WebSocket + JWT</h3>
-    <p>Connects via WSS with Ed25519 JWT authentication. Requires the <a href="https://github.com/emuehlstein/MeshCore/tree/feature/ws-custom-broker">WS custom broker firmware fork</a>.</p>
+    <p>Connects via WSS with Ed25519 JWT authentication. Requires the <a href="https://github.com/emuehlstein/MeshCore/tree/chioff-flex">chioff-flex firmware</a>.</p>
     <h4>Pre-Built Binary (Heltec v3)</h4>
     <p>Download and flash without building from source:</p>
     <pre><code># Download
-curl -LO https://chicagooffline-firmware.s3.us-east-2.amazonaws.com/meshcore/Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin
+# Download from latest release
+curl -LO https://github.com/emuehlstein/MeshCore/releases/latest/download/Heltec_v3_repeater_observer_mqtt.bin
 
 # Flash via esptool (USB)
 esptool.py --chip esp32s3 --port /dev/ttyUSB0 write_flash 0x0 \
-  Heltec_v3_repeater_observer_mqtt-ws-custom-broker.bin</code></pre>
+  Heltec_v3_repeater_observer_mqtt.bin</code></pre>
     <h4>Serial Configuration</h4>
     <pre><code># Configure WiFi
 set wifi.ssid YourNetworkName
@@ -472,7 +473,7 @@ mctomqtt --broker wss://wsmqtt.chicagooffline.com/mqtt --topic meshcore/ORD</cod
   <ul>
     <li><a href="https://github.com/emuehlstein/chimesh-mqtt/blob/main/OBSERVER_SETUP.md">Full Observer Setup Guide</a> — Detailed configuration reference</li>
     <li><a href="https://github.com/emuehlstein/chimesh-mqtt/blob/main/BUILD_CUSTOM_OBSERVER.md">Build Custom Observer Firmware</a> — Compile from source</li>
-    <li><a href="https://github.com/emuehlstein/MeshCore/tree/feature/ws-custom-broker">WS Custom Broker Firmware</a> — Fork with WebSocket + TLS support</li>
+    <li><a href="https://github.com/emuehlstein/MeshCore/tree/chioff-flex">chioff-flex Firmware</a> — Chicagoland defaults + multi-slot MQTT</li>
     <li><a href="https://chimesh.org">Chicagoland Mesh Community</a> — Join the community</li>
   </ul>
 

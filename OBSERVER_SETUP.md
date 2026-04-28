@@ -4,7 +4,7 @@ Guide for configuring MeshCore nodes as observers for the Chicago Mesh network.
 
 ## Quick Start: Chicagoland Firmware (Recommended)
 
-Flash the **Chicagoland observer firmware** from [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) (`chioff-flex` branch). Pre-built binaries are available in the [v0.4.1-chicagoland release](https://github.com/emuehlstein/MeshCore/releases/tag/v0.4.1-chicagoland).
+Flash the **Chicagoland observer firmware** from [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) (`chioff-flex` branch). Pre-built binaries are available in the [latest release](https://github.com/emuehlstein/MeshCore/releases/latest).
 
 ### What's Baked In (No Commands Needed)
 
@@ -197,6 +197,6 @@ After configuring and rebooting:
 
 - [BUILD_CUSTOM_OBSERVER.md](BUILD_CUSTOM_OBSERVER.md) — Building firmware from source
 - [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) — Chicagoland firmware fork (branch: `chioff-flex`)
-- [v0.4.1-chicagoland release](https://github.com/emuehlstein/MeshCore/releases/tag/v0.4.1-chicagoland) — Pre-built binaries (properly merged, all boards)
+- [Latest release](https://github.com/emuehlstein/MeshCore/releases/latest) — Pre-built binaries (all boards)
 - [Chicago-Offline/meshcore-config](https://github.com/Chicago-Offline/meshcore-config) — Web Serial config tool
 - [MeshCore CLI Commands](https://docs.meshcore.io/cli_commands/) — Full command reference
