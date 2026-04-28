@@ -341,6 +341,7 @@
         <th>Observer</th>
         <th>Key Prefix</th>
         <th>Model</th>
+        <th>Firmware</th>
         <th id="env-headers"><!-- filled by JS --></th>
       </tr>
     </thead>
@@ -544,6 +545,7 @@ function renderTable(sources, observers) {
     html += `<td class="name-cell">${esc(obs.name)}</td>`;
     html += `<td class="pubkey">${esc(obs.pubkeyPrefix)}</td>`;
     html += `<td class="model-cell">${esc(obs.model)}</td>`;
+    html += `<td class="model-cell">${esc(obs.firmware)}</td>`;
     for (const s of sources) {
       const env = obs.environments[s.name];
       const st = env?.status || 'unseen';
@@ -553,7 +555,7 @@ function renderTable(sources, observers) {
     html += `</tr>`;
 
     if (isExpanded) {
-      const cols = 4 + sources.length;
+      const cols = 5 + sources.length;
       html += `<tr class="details-row"><td colspan="${cols}">`;
       html += `<div class="stat-grid">`;
       html += `<span>Region:</span> ${esc(obs.region)}`;
