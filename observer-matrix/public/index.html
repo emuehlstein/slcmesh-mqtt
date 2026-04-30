@@ -71,6 +71,7 @@
   .dot.offline { background: var(--red); box-shadow: 0 0 4px var(--red); }
   .dot.stale { background: var(--amber); box-shadow: 0 0 4px var(--amber); }
   .dot.unseen { background: var(--muted); }
+  .badge-time { font-size: 0.68rem; color: var(--muted); margin-left: 0.1rem; }
 
   /* CTA strip */
   .cta-strip {
@@ -484,9 +485,13 @@ async function refresh() {
 
 function renderSources(sources) {
   const el = document.getElementById('sources');
-  el.innerHTML = sources.map(s =>
-    `<span class="source-badge">${statusDot(s.connected ? 'online' : 'offline')} ${s.label}</span>`
-  ).join('');
+  el.innerHTML = sources.map(s => {
+    const dotClass = s.connected ? 'online' : 'offline';
+    const timeLabel = s.connected
+      ? (s.lastMessageAgo != null ? ago(s.lastMessageAgo) + ' ago' : 'connected')
+      : 'offline';
+    return `<span class="source-badge">${statusDot(dotClass)} ${s.label} <span class="badge-time">${timeLabel}</span></span>`;
+  }).join('');
 }
 
 function renderTable(sources, observers) {
