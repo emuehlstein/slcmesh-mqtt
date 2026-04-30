@@ -128,3 +128,20 @@ verify = true
 [broker.auth]
 method = "token"
 audience = "mqtt-eu-v1.letsmesh.net"
+
+# -- 7. Chicago Offline TCP (fallback, no auth) ---------------------------
+[[broker]]
+name = "chioff-tcp"
+enabled = true
+server = "mqtt.chioff.com"
+port = 1883
+transport = "tcp"
+keepalive = 60
+qos = 0
+retain = true
+
+[broker.tls]
+enabled = false
+
+[broker.auth]
+method = "none"

@@ -13,13 +13,14 @@
 #   - Repeaters   (via Cisien/meshcoretomqtt, requires sudo)
 #   - Room Servers (via Cisien/meshcoretomqtt, requires sudo)
 #
-# Brokers configured:
-#   - LetsMesh US  (mqtt-us-v1.letsmesh.net)
-#   - LetsMesh EU  (mqtt-eu-v1.letsmesh.net)
-#   - chimesh.org  (mqtt.chimesh.org)
-#   - rflab.io     (mqtt.rflab.io)
-#   - Chicago Offline prod (ws.chioff.com)
-#   - Chicago Offline dev  (wsmqtt-dev.chicagooffline.com)
+# Brokers configured (priority order):
+#   1. LetsMesh US  (mqtt-us-v1.letsmesh.net:443, WebSocket, JWT)
+#   2. chimesh.org  (mqtt.chimesh.org:443, WebSocket, JWT)
+#   3. Chicago Offline prod (wsmqtt.chicagooffline.com:443, WebSocket, JWT)
+#   4. Chicago Offline dev  (wsmqtt-dev.chicagooffline.com:443, WebSocket, JWT)
+#   5. rflab.io     (mqtt.rflab.io:443, WebSocket, JWT)
+#   6. LetsMesh EU  (mqtt-eu-v1.letsmesh.net:443, WebSocket, JWT)
+#   7. Chicago Offline TCP fallback (mqtt.chioff.com:1883, TCP, no auth)
 #
 # IATA region: ORD (Chicago)
 # ============================================================================
@@ -41,12 +42,13 @@ echo -e "${BLUE}  Chicago Offline - MeshCore Observer Setup${NC}"
 echo -e "${BLUE}  ==========================================${NC}"
 echo ""
 echo "  This will install an MQTT observer and configure it to report to:"
-echo "    - LetsMesh US  (mqtt-us-v1.letsmesh.net)"
-echo "    - LetsMesh EU  (mqtt-eu-v1.letsmesh.net)"
-echo "    - chimesh.org  (mqtt.chimesh.org)"
-echo "    - rflab.io     (mqtt.rflab.io)"
-echo "    - Chicago Offline prod (ws.chioff.com)"
-echo "    - Chicago Offline dev  (wsmqtt-dev.chicagooffline.com)"
+echo "    1. LetsMesh US  (mqtt-us-v1.letsmesh.net:443)"
+echo "    2. chimesh.org  (mqtt.chimesh.org:443)"
+echo "    3. Chicago Offline prod (wsmqtt.chicagooffline.com:443)"
+echo "    4. Chicago Offline dev  (wsmqtt-dev.chicagooffline.com:443)"
+echo "    5. rflab.io     (mqtt.rflab.io:443)"
+echo "    6. LetsMesh EU  (mqtt-eu-v1.letsmesh.net:443)"
+echo "    7. Chicago Offline TCP fallback (mqtt.chioff.com:1883, no auth)"
 echo ""
 echo "  IATA region: ORD (Chicago)"
 echo ""

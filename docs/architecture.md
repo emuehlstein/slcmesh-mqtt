@@ -130,11 +130,10 @@ graph TB
 ## Mesh Observer Config
 
 Observers/nodes connect to MQTT brokers in priority order:
-1. LetsMesh US (mqtt-us-v1.letsmesh.net:443)
-2. ChiMesh.org (mqtt.chimesh.org:443)
-3. Chicago Offline prod (wsmqtt.chicagooffline.com:443)
-4. Chicago Offline dev (wsmqtt-dev.chicagooffline.com:443)
-5. rflab.io (mqtt.rflab.io:443)
-6. LetsMesh EU (mqtt-eu-v1.letsmesh.net:443)
-
-All brokers use JWT token authentication (Ed25519 key signing).
+1. LetsMesh US (mqtt-us-v1.letsmesh.net:443, WebSocket, JWT token auth)
+2. ChiMesh.org (mqtt.chimesh.org:443, WebSocket, JWT token auth)
+3. Chicago Offline prod (wsmqtt.chicagooffline.com:443, WebSocket, JWT token auth)
+4. Chicago Offline dev (wsmqtt-dev.chicagooffline.com:443, WebSocket, JWT token auth)
+5. rflab.io (mqtt.rflab.io:443, WebSocket, JWT token auth)
+6. LetsMesh EU (mqtt-eu-v1.letsmesh.net:443, WebSocket, JWT token auth)
+7. Chicago Offline TCP fallback (mqtt.chioff.com:1883, plain TCP, no auth, no TLS)
