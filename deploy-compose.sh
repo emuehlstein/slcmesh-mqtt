@@ -116,12 +116,24 @@ LOCAL_PW="${BROKER_CORESCOPE_PASSWORD:-changeme}"
 REMOTE_PW="${BROKER_REMOTE_CORESCOPE_PASSWORD:-$LOCAL_PW}"
 VIEWER_PW="${CHIMESH_VIEWER_PASSWORD:-changeme}"
 
+# JWT-auth brokers: connect and subscribe but may not receive wildcard data
+# (depends on broker ACL granting read access to JWT clients).
+# userpass brokers: use privileged viewer/corescope accounts for wildcard access.
+# no-auth brokers: plain TCP, no restrictions.
 if [ "$ENVIRONMENT" = "dev" ]; then
-  # Running on dev: CO-DEV local (internal ws), CO = prod (external wss, may differ)
-  MQTT_SOURCES_JSON='[{"name":"co","label":"CO","broker":"wss://wsmqtt.chicagooffline.com","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"ws://meshcore-mqtt-broker:8883","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"chimesh-org","label":"CM","broker":"wss://mqtt.chimesh.org","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]}]'
+  # Running on dev: CO-DEV local (internal ws), CO = prod (external wss)
+  MQTT_SOURCES_JSON='[{"name":"lm-us","label":"LMUS","broker":"wss://mqtt-us-v1.letsmesh.net:443/mqtt","auth":"jwt","audience":"mqtt-us-v1.letsmesh.net","topics":["meshcore/#"]},{"name":"chimesh","label":"CM","broker":"wss://mqtt.chimesh.org:443","auth":"userpass","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]},{"name":"co","label":"CO","broker":"wss://wsmqtt.chicagooffline.com:443","auth":"userpass","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"ws://meshcore-mqtt-broker:8883","auth":"userpass","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"rflab","label":"RF","broker":"wss://mqtt.rflab.io:443","auth":"jwt","audience":"mqtt.rflab.io","topics":["meshcore/#"]},{"name":"lm-eu","label":"LMEU","broker":"wss://mqtt-eu-v1.letsmesh.net:443/mqtt","auth":"jwt","audience":"mqtt-eu-v1.letsmesh.net","topics":["meshcore/#"]},{"name":"co-tcp","label":"CO-TCP","broker":"mqtt://mqtt.chioff.com:1883","auth":"none","topics":["meshcore/#"]}]'
 else
-  # Running on prod: CO local (internal ws), CO-DEV = dev (external wss, may differ)
-  MQTT_SOURCES_JSON='[{"name":"co","label":"CO","broker":"ws://meshcore-mqtt-broker:8883","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"wss://wsmqtt-dev.chicagooffline.com","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"chimesh-org","label":"CM","broker":"wss://mqtt.chimesh.org","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]}]'
+  # Running on prod: CO local (internal ws), CO-DEV = dev (external wss)
+  MQTT_SOURCES_JSON='[{"name":"lm-us","label":"LMUS","broker":"wss://mqtt-us-v1.letsmesh.net:443/mqtt","auth":"jwt","audience":"mqtt-us-v1.letsmesh.net","topics":["meshcore/#"]},{"name":"chimesh","label":"CM","broker":"wss://mqtt.chimesh.org:443","auth":"userpass","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]},{"name":"co","label":"CO","broker":"ws://meshcore-mqtt-broker:8883","auth":"userpass","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"wss://wsmqtt-dev.chicagooffline.com:443","auth":"userpass","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"rflab","label":"RF","broker":"wss://mqtt.rflab.io:443","auth":"jwt","audience":"mqtt.rflab.io","topics":["meshcore/#"]},{"name":"lm-eu","label":"LMEU","broker":"wss://mqtt-eu-v1.letsmesh.net:443/mqtt","auth":"jwt","audience":"mqtt-eu-v1.letsmesh.net","topics":["meshcore/#"]},{"name":"co-tcp","label":"CO-TCP","broker":"mqtt://mqtt.chioff.com:1883","auth":"none","topics":["meshcore/#"]}]'
+fi
+
+# Preserve existing Ed25519 keypair if present (identity persists across deploys)
+OM_PRIV=""
+OM_PUB=""
+if [ -f .env.observer-matrix ]; then
+  OM_PRIV=$(grep '^ED25519_PRIVATE_KEY_HEX=' .env.observer-matrix 2>/dev/null | cut -d= -f2 || true)
+  OM_PUB=$(grep '^ED25519_PUBLIC_KEY_HEX=' .env.observer-matrix 2>/dev/null | cut -d= -f2 || true)
 fi
 
 cat > .env.observer-matrix << EOF
@@ -129,6 +141,12 @@ PORT=3100
 STALE_THRESHOLD_MS=900000
 MQTT_SOURCES=$MQTT_SOURCES_JSON
 EOF
+
+# Append persisted keypair (if empty, server auto-generates and logs keys)
+if [ -n "$OM_PRIV" ] && [ -n "$OM_PUB" ]; then
+  echo "ED25519_PRIVATE_KEY_HEX=$OM_PRIV" >> .env.observer-matrix
+  echo "ED25519_PUBLIC_KEY_HEX=$OM_PUB" >> .env.observer-matrix
+fi
 
 cat > .env.livemap << EOF
 SITE_TITLE=Chicago Mesh Live Map
