@@ -518,9 +518,40 @@ function renderSources(sources) {
   }).join('');
 }
 
+const OFFLINE_CUTOFF_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+function countConnectedBrokers(obs) {
+  return Object.values(obs.environments).filter(e => e.status === 'online').length;
+}
+
+function mostRecentSeen(obs) {
+  // Return smallest lastSeenAgo (most recent), or Infinity if none
+  let best = Infinity;
+  for (const e of Object.values(obs.environments)) {
+    if (e.lastSeenAgo != null && e.lastSeenAgo < best) best = e.lastSeenAgo;
+  }
+  return best;
+}
+
+function filterOffline(observers) {
+  return observers.filter(obs => {
+    const recent = mostRecentSeen(obs);
+    return recent < OFFLINE_CUTOFF_MS;
+  });
+}
+
 function sortObservers(observers, sources) {
-  if (!sortCol) return observers;
-  const sorted = [...observers];
+  const filtered = filterOffline(observers);
+  const sorted = [...filtered];
+  if (!sortCol) {
+    // Default sort: most connected brokers desc, then most recent first
+    sorted.sort((a, b) => {
+      const ca = countConnectedBrokers(a), cb = countConnectedBrokers(b);
+      if (cb !== ca) return cb - ca;
+      return mostRecentSeen(a) - mostRecentSeen(b);
+    });
+    return sorted;
+  }
   sorted.sort((a, b) => {
     let va, vb;
     if (sortCol === 'name') { va = a.name; vb = b.name; }
