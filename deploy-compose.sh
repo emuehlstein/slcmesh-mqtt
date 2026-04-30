@@ -116,16 +116,16 @@ LOCAL_PW="${BROKER_CORESCOPE_PASSWORD:-changeme}"
 REMOTE_PW="${BROKER_REMOTE_CORESCOPE_PASSWORD:-$LOCAL_PW}"
 VIEWER_PW="${CHIMESH_VIEWER_PASSWORD:-changeme}"
 
-# JWT-auth brokers: connect and subscribe but may not receive wildcard data
-# (depends on broker ACL granting read access to JWT clients).
-# userpass brokers: use privileged viewer/corescope accounts for wildcard access.
-# no-auth brokers: plain TCP, no restrictions.
+# Only brokers where we have wildcard read access (viewer/corescope/no-auth).
+# JWT-only brokers (LetsMesh US/EU, rflab) restrict reads to per-key topics —
+# our observer-matrix key gets zero messages on meshcore/#. Add them back
+# when/if we obtain viewer credentials.
 if [ "$ENVIRONMENT" = "dev" ]; then
   # Running on dev: CO-DEV local (internal ws), CO = prod (external wss)
-  MQTT_SOURCES_JSON='[{"name":"lm-us","label":"LMUS","broker":"wss://mqtt-us-v1.letsmesh.net:443/mqtt","auth":"jwt","audience":"mqtt-us-v1.letsmesh.net","topics":["meshcore/#"]},{"name":"chimesh","label":"CM","broker":"wss://mqtt.chimesh.org:443","auth":"userpass","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]},{"name":"co","label":"CO","broker":"wss://wsmqtt.chicagooffline.com:443","auth":"userpass","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"ws://meshcore-mqtt-broker:8883","auth":"userpass","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"rflab","label":"RF","broker":"wss://mqtt.rflab.io:443","auth":"jwt","audience":"mqtt.rflab.io","topics":["meshcore/#"]},{"name":"lm-eu","label":"LMEU","broker":"wss://mqtt-eu-v1.letsmesh.net:443/mqtt","auth":"jwt","audience":"mqtt-eu-v1.letsmesh.net","topics":["meshcore/#"]},{"name":"co-tcp","label":"CO-TCP","broker":"mqtt://mqtt.chioff.com:1883","auth":"none","topics":["meshcore/#"]}]'
+  MQTT_SOURCES_JSON='[{"name":"chimesh","label":"CM","broker":"wss://mqtt.chimesh.org:443","auth":"userpass","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]},{"name":"co","label":"CO","broker":"wss://wsmqtt.chicagooffline.com:443","auth":"userpass","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"ws://meshcore-mqtt-broker:8883","auth":"userpass","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"co-tcp","label":"CO-TCP","broker":"mqtt://mqtt.chioff.com:1883","auth":"none","topics":["meshcore/#"]}]'
 else
   # Running on prod: CO local (internal ws), CO-DEV = dev (external wss)
-  MQTT_SOURCES_JSON='[{"name":"lm-us","label":"LMUS","broker":"wss://mqtt-us-v1.letsmesh.net:443/mqtt","auth":"jwt","audience":"mqtt-us-v1.letsmesh.net","topics":["meshcore/#"]},{"name":"chimesh","label":"CM","broker":"wss://mqtt.chimesh.org:443","auth":"userpass","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]},{"name":"co","label":"CO","broker":"ws://meshcore-mqtt-broker:8883","auth":"userpass","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"wss://wsmqtt-dev.chicagooffline.com:443","auth":"userpass","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"rflab","label":"RF","broker":"wss://mqtt.rflab.io:443","auth":"jwt","audience":"mqtt.rflab.io","topics":["meshcore/#"]},{"name":"lm-eu","label":"LMEU","broker":"wss://mqtt-eu-v1.letsmesh.net:443/mqtt","auth":"jwt","audience":"mqtt-eu-v1.letsmesh.net","topics":["meshcore/#"]},{"name":"co-tcp","label":"CO-TCP","broker":"mqtt://mqtt.chioff.com:1883","auth":"none","topics":["meshcore/#"]}]'
+  MQTT_SOURCES_JSON='[{"name":"chimesh","label":"CM","broker":"wss://mqtt.chimesh.org:443","auth":"userpass","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]},{"name":"co","label":"CO","broker":"ws://meshcore-mqtt-broker:8883","auth":"userpass","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"wss://wsmqtt-dev.chicagooffline.com:443","auth":"userpass","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"co-tcp","label":"CO-TCP","broker":"mqtt://mqtt.chioff.com:1883","auth":"none","topics":["meshcore/#"]}]'
 fi
 
 # Preserve existing Ed25519 keypair if present (identity persists across deploys)
