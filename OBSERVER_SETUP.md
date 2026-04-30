@@ -85,7 +85,7 @@ Boards without PSRAM (V3, T-Beam Supreme) can configure 3 MQTT slots but only 2 
 
 Use the **MeshCore Web Serial Config Tool** to configure a freshly-flashed node without typing serial commands manually:
 
-- **URL:** <https://chicago-offline.github.io/meshcore-config/>
+- **URL:** <https://github.com/emuehlstein/slcmesh-mqtt> (configuration repository)
 - **Works in:** Chrome or Edge (Web Serial API required — not supported in Firefox/Safari)
 - **Features:** Set node name, lat/lon (with browser geolocation), WiFi credentials, MQTT IATA, repeat toggle, advert intervals, admin password
 - **Includes:** Serial log viewer showing all commands sent/received
@@ -123,14 +123,14 @@ Pre-configured with 6 brokers: LetsMesh US & EU, chimesh.org, rflab.io, Salt Lak
 
 **Companions** (`.env` format):
 ```bash
-curl -O https://slcoffline.com/00-chicagoland.env
-cp 00-chicagoland.env ~/.meshcore-packet-capture/.env.local
+curl -O https://slcoffline.com/00-slcland.env
+cp 00-slcland.env ~/.meshcore-packet-capture/.env.local
 ```
 
 **Repeaters / Room Servers** (TOML format):
 ```bash
-curl -O https://slcoffline.com/00-chicagoland.toml
-sudo cp 00-chicagoland.toml /etc/mctomqtt/config.d/
+curl -O https://slcoffline.com/00-slcland.toml
+sudo cp 00-slcland.toml /etc/mctomqtt/config.d/
 ```
 
 ## Verification

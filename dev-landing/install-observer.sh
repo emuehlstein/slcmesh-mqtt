@@ -25,8 +25,8 @@
 # ============================================================================
 set -e
 
-CONFIG_TOML="https://dev-landing.slcoffline.com/00-chicagoland.toml"
-CONFIG_ENV="https://dev-landing.slcoffline.com/00-chicagoland.env"
+CONFIG_TOML="https://dev-landing.slcoffline.com/00-slcland.toml"
+CONFIG_ENV="https://dev-landing.slcoffline.com/00-slcland.env"
 
 # Colors
 RED='\033[0;31m'
