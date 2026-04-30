@@ -34,30 +34,30 @@ clone_or_pull() {
   fi
 }
 
-FORK_DIR="./CoreScope-chicagooffline"
-clone_or_pull "https://github.com/emuehlstein/CoreScope-chicagooffline.git" "$FORK_DIR" "deploy/chicagooffline"
+FORK_DIR="./CoreScope-slcoffline"
+clone_or_pull "https://github.com/emuehlstein/CoreScope-slcoffline.git" "$FORK_DIR" "deploy/slcoffline"
 clone_or_pull "https://github.com/emuehlstein/meshcore-health-check.git" "./meshcore-health-check" "main"
 clone_or_pull "https://github.com/yellowcooln/meshcore-mqtt-live-map.git" "./meshcore-mqtt-live-map" "main"
-# Keygen is now bundled in ./keygen/ (themed for Chicago Offline)
+# Keygen is now bundled in ./keygen/ (themed for Salt Lake Offline)
 
 # ── Resolve config (inject secrets) ──────────────────────────────────────────
 cp "$CONFIG_SRC" config.resolved.json
-[ -n "${BROKER_CORESCOPE_PASSWORD:-}" ] && sed -i "s/BROKER_CORESCOPE_PASSWORD/${BROKER_CORESCOPE_PASSWORD}/g" config.resolved.json
-[ -n "${CHIMESH_VIEWER_PASSWORD:-}" ]   && sed -i "s/CHIMESH_VIEWER_PASSWORD/${CHIMESH_VIEWER_PASSWORD}/g" config.resolved.json
+[ -n "${BROKER_CORESCOPE_PASSWSLC:-}" ] && sed -i "s/BROKER_CORESCOPE_PASSWSLC/${BROKER_CORESCOPE_PASSWSLC}/g" config.resolved.json
+[ -n "${CHIMESH_VIEWER_PASSWSLC:-}" ]   && sed -i "s/CHIMESH_VIEWER_PASSWSLC/${CHIMESH_VIEWER_PASSWSLC}/g" config.resolved.json
 
 # ── Generate per-service env files ───────────────────────────────────────────
 if [ "$ENVIRONMENT" = "dev" ]; then
-  BROKER_AUDIENCE="wsmqtt-dev.chicagooffline.com"
+  BROKER_AUDIENCE="wsmqtt-dev.slcoffline.com"
   LIVEMAP_MQTT="mosquitto"
-  LIVEMAP_SCOPE="https://dev-scope.chicagooffline.com"
-  HEALTH_TITLE="Chicago Mesh Health Check [dev]"
+  LIVEMAP_SCOPE="https://dev-scope.slcoffline.com"
+  HEALTH_TITLE="SLC Mesh Health Check [dev]"
   HEALTH_PORT=3090
   HEALTH_MQTT="mosquitto"
 else
-  BROKER_AUDIENCE="wsmqtt.chicagooffline.com"
+  BROKER_AUDIENCE="wsmqtt.slcoffline.com"
   LIVEMAP_MQTT="mosquitto"
-  LIVEMAP_SCOPE="https://scope.chicagooffline.com"
-  HEALTH_TITLE="Chicago Mesh Health Check"
+  LIVEMAP_SCOPE="https://scope.slcoffline.com"
+  HEALTH_TITLE="SLC Mesh Health Check"
   HEALTH_PORT=3090
   HEALTH_MQTT="mosquitto"
 fi
@@ -67,8 +67,8 @@ MQTT_WS_PORT=8883
 MQTT_HOST=0.0.0.0
 AUTH_EXPECTED_AUDIENCE=$BROKER_AUDIENCE
 SUBSCRIBER_MAX_CONNECTIONS_DEFAULT=4
-SUBSCRIBER_1=corescope:${BROKER_CORESCOPE_PASSWORD:-changeme}:4
-SUBSCRIBER_2=admin:${BROKER_ADMIN_PASSWORD:-changeme}:2:5
+SUBSCRIBER_1=corescope:${BROKER_CORESCOPE_PASSWSLC:-changeme}:4
+SUBSCRIBER_2=admin:${BROKER_ADMIN_PASSWSLC:-changeme}:2:5
 ABUSE_ENFORCEMENT_ENABLED=false
 ABUSE_PERSISTENCE_PATH=/data/abuse-detection.db
 ABUSE_DUPLICATE_WINDOW_SIZE=100
@@ -91,9 +91,9 @@ EOF
 cat > .env.healthcheck << EOF
 PORT=$HEALTH_PORT
 APP_TITLE=$HEALTH_TITLE
-APP_EYEBROW=Chicago Mesh
+APP_EYEBROW=SLC Mesh
 APP_HEADLINE=MeshCore Health Check
-APP_DESCRIPTION=Generate a test code and measure observer coverage in Chicago.
+APP_DESCRIPTION=Generate a test code and measure observer coverage in Salt Lake City.
 LOG_LEVEL=info
 TRUST_PROXY=1
 MQTT_HOST=$HEALTH_MQTT
@@ -112,9 +112,9 @@ EOF
 
 # Observer Matrix MQTT sources — connects to ALL environments (dev + prod + CM)
 # Local WS broker is internal (ws://), remote is external (wss://)
-LOCAL_PW="${BROKER_CORESCOPE_PASSWORD:-changeme}"
-REMOTE_PW="${BROKER_REMOTE_CORESCOPE_PASSWORD:-$LOCAL_PW}"
-VIEWER_PW="${CHIMESH_VIEWER_PASSWORD:-changeme}"
+LOCAL_PW="${BROKER_CORESCOPE_PASSWSLC:-changeme}"
+REMOTE_PW="${BROKER_REMOTE_CORESCOPE_PASSWSLC:-$LOCAL_PW}"
+VIEWER_PW="${CHIMESH_VIEWER_PASSWSLC:-changeme}"
 
 # Only brokers where we have wildcard read access (viewer/corescope/no-auth).
 # JWT-only brokers (LetsMesh US/EU, rflab) restrict reads to per-key topics —
@@ -122,10 +122,10 @@ VIEWER_PW="${CHIMESH_VIEWER_PASSWORD:-changeme}"
 # when/if we obtain viewer credentials.
 if [ "$ENVIRONMENT" = "dev" ]; then
   # Running on dev: CO-DEV local (internal ws), CO = prod (external wss)
-  MQTT_SOURCES_JSON='[{"name":"chimesh","label":"CM","broker":"wss://mqtt.chimesh.org:443","auth":"userpass","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]},{"name":"co","label":"CO","broker":"wss://wsmqtt.chicagooffline.com:443","auth":"userpass","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"ws://meshcore-mqtt-broker:8883","auth":"userpass","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"co-tcp","label":"CO-TCP","broker":"mqtt://mqtt.chioff.com:1883","auth":"none","topics":["meshcore/#"]}]'
+  MQTT_SOURCES_JSON='[{"name":"chimesh","label":"CM","broker":"wss://mqtt.chimesh.org:443","auth":"userpass","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]},{"name":"co","label":"CO","broker":"wss://wsmqtt.slcoffline.com:443","auth":"userpass","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"ws://meshcore-mqtt-broker:8883","auth":"userpass","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"co-tcp","label":"CO-TCP","broker":"mqtt://mqtt.slcoff.com:1883","auth":"none","topics":["meshcore/#"]}]'
 else
   # Running on prod: CO local (internal ws), CO-DEV = dev (external wss)
-  MQTT_SOURCES_JSON='[{"name":"chimesh","label":"CM","broker":"wss://mqtt.chimesh.org:443","auth":"userpass","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]},{"name":"co","label":"CO","broker":"ws://meshcore-mqtt-broker:8883","auth":"userpass","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"wss://wsmqtt-dev.chicagooffline.com:443","auth":"userpass","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"co-tcp","label":"CO-TCP","broker":"mqtt://mqtt.chioff.com:1883","auth":"none","topics":["meshcore/#"]}]'
+  MQTT_SOURCES_JSON='[{"name":"chimesh","label":"CM","broker":"wss://mqtt.chimesh.org:443","auth":"userpass","username":"viewer","password":"'"$VIEWER_PW"'","topics":["meshcore/#"]},{"name":"co","label":"CO","broker":"ws://meshcore-mqtt-broker:8883","auth":"userpass","username":"corescope","password":"'"$LOCAL_PW"'","topics":["meshcore/#"]},{"name":"co-dev","label":"CO-DEV","broker":"wss://wsmqtt-dev.slcoffline.com:443","auth":"userpass","username":"corescope","password":"'"$REMOTE_PW"'","topics":["meshcore/#"]},{"name":"co-tcp","label":"CO-TCP","broker":"mqtt://mqtt.slcoff.com:1883","auth":"none","topics":["meshcore/#"]}]'
 fi
 
 # Preserve existing Ed25519 keypair if present (identity persists across deploys)
@@ -149,18 +149,18 @@ if [ -n "$OM_PRIV" ] && [ -n "$OM_PUB" ]; then
 fi
 
 cat > .env.livemap << EOF
-SITE_TITLE=Chicago Mesh Live Map
-SITE_DESCRIPTION=Live view of Chicago MeshCore nodes, message routes, and advert paths.
-SITE_FEED_NOTE=Feed: chicagooffline.com MQTT.
+SITE_TITLE=SLC Mesh Live Map
+SITE_DESCRIPTION=Live view of SLC MeshCore nodes, message routes, and advert paths.
+SITE_FEED_NOTE=Feed: slcoffline.com MQTT.
 MQTT_HOST=$LIVEMAP_MQTT
 MQTT_PORT=1883
 MQTT_USERNAME=
-MQTT_PASSWORD=
+MQTT_PASSWSLC=
 MQTT_TRANSPORT=tcp
 MQTT_TLS=false
 MQTT_TOPIC=meshcore/#
-MAP_START_LAT=41.8781
-MAP_START_LON=-87.6298
+MAP_START_LAT=40.7608
+MAP_START_LON=-111.8910
 MAP_START_ZOOM=10
 DISTANCE_UNITS=mi
 PACKET_ANALYZER_URL=$LIVEMAP_SCOPE
@@ -216,11 +216,11 @@ for c in corescope corescope-dev caddy mosquitto meshcore-mqtt-broker meshcore-h
 done
 
 # Remove old manually-created network so compose can recreate with proper labels
-if docker network inspect chicagooffline-net &>/dev/null 2>&1; then
-  LABEL=$(docker network inspect chicagooffline-net --format '{{index .Labels "com.docker.compose.network"}}' 2>/dev/null || true)
+if docker network inspect slcoffline-net &>/dev/null 2>&1; then
+  LABEL=$(docker network inspect slcoffline-net --format '{{index .Labels "com.docker.compose.network"}}' 2>/dev/null || true)
   if [ -z "$LABEL" ]; then
-    echo "🧹 Removing legacy chicagooffline-net (no compose labels)..."
-    docker network rm chicagooffline-net 2>/dev/null || true
+    echo "🧹 Removing legacy slcoffline-net (no compose labels)..."
+    docker network rm slcoffline-net 2>/dev/null || true
   fi
 fi
 
@@ -242,20 +242,20 @@ docker compose -f "$COMPOSE_FILE" up -d --remove-orphans
 echo ""
 echo "✅ Deployed [$ENVIRONMENT]!"
 if [ "$ENVIRONMENT" = "dev" ]; then
-  echo "🔧 Scope:   https://dev-scope.chicagooffline.com"
-  echo "🔧 Landing: https://dev-landing.chicagooffline.com"
-  echo "🩺 Health:  https://dev-health.chicagooffline.com"
-  echo "🔑 Keygen:  https://dev-keygen.chicagooffline.com"
-  echo "🗺️  LiveMap: https://dev-livemap.chicagooffline.com"
-  echo "📡 Matrix: https://observers-dev.chicagooffline.com"
+  echo "🔧 Scope:   https://dev-scope.slcoffline.com"
+  echo "🔧 Landing: https://dev-landing.slcoffline.com"
+  echo "🩺 Health:  https://dev-health.slcoffline.com"
+  echo "🔑 Keygen:  https://dev-keygen.slcoffline.com"
+  echo "🗺️  LiveMap: https://dev-livemap.slcoffline.com"
+  echo "📡 Matrix: https://observers-dev.slcoffline.com"
 else
-  echo "🌐 Landing: https://chicagooffline.com"
-  echo "📡 Scope:   https://scope.chicagooffline.com"
-  echo "📻 MQTT:    mqtt://mqtt.chicagooffline.com:1883"
-  echo "🩺 Health:  https://health.chicagooffline.com"
-  echo "🔑 Keygen:  https://keygen.chicagooffline.com"
-  echo "🗺️  LiveMap: https://livemap.chicagooffline.com"
-  echo "📡 Matrix: https://observers.chicagooffline.com"
+  echo "🌐 Landing: https://slcoffline.com"
+  echo "📡 Scope:   https://scope.slcoffline.com"
+  echo "📻 MQTT:    mqtt://mqtt.slcoffline.com:1883"
+  echo "🩺 Health:  https://health.slcoffline.com"
+  echo "🔑 Keygen:  https://keygen.slcoffline.com"
+  echo "🗺️  LiveMap: https://livemap.slcoffline.com"
+  echo "📡 Matrix: https://observers.slcoffline.com"
 fi
 
 # ── Smoke test ───────────────────────────────────────────────────────────────

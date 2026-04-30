@@ -1,4 +1,4 @@
-name: Deploy Chicago Offline
+name: Deploy Salt Lake Offline
 
 on:
   push:
@@ -54,10 +54,10 @@ jobs:
         env:
           HC_SECRET_B64: ${{ secrets.CARTOGRAPHER_HEALTHCHECK_KEY }}
           ENVIRONMENT: ${{ steps.env.outputs.name }}
-          BROKER_CORESCOPE_PASSWORD: ${{ secrets.BROKER_CORESCOPE_PASSWORD }}
-          CHIMESH_VIEWER_PASSWORD: ${{ secrets.CHIMESH_VIEWER_PASSWORD }}
-          BROKER_ADMIN_PASSWORD: ${{ secrets.BROKER_ADMIN_PASSWORD }}
-          BROKER_REMOTE_CORESCOPE_PASSWORD: ${{ secrets.BROKER_REMOTE_CORESCOPE_PASSWORD }}
+          BROKER_CORESCOPE_PASSWSLC: ${{ secrets.BROKER_CORESCOPE_PASSWSLC }}
+          CHIMESH_VIEWER_PASSWSLC: ${{ secrets.CHIMESH_VIEWER_PASSWSLC }}
+          BROKER_ADMIN_PASSWSLC: ${{ secrets.BROKER_ADMIN_PASSWSLC }}
+          BROKER_REMOTE_CORESCOPE_PASSWSLC: ${{ secrets.BROKER_REMOTE_CORESCOPE_PASSWSLC }}
           DEPLOY_KEY_CONTENT: ${{ secrets.DEPLOY_KEY }}
         run: |
           # Write deploy key to EC2 for git clone (via scp to avoid shell escaping issues)
@@ -73,10 +73,10 @@ jobs:
           export HC_SECRET="${HC_SECRET_B64}"
           export RESET_DB="${{ github.event.inputs.reset_db }}"
           export ENVIRONMENT="${ENVIRONMENT}"
-          export BROKER_CORESCOPE_PASSWORD="${BROKER_CORESCOPE_PASSWORD}"
-          export CHIMESH_VIEWER_PASSWORD="${CHIMESH_VIEWER_PASSWORD}"
-          export BROKER_ADMIN_PASSWORD="${BROKER_ADMIN_PASSWORD}"
-          export BROKER_REMOTE_CORESCOPE_PASSWORD="${BROKER_REMOTE_CORESCOPE_PASSWORD}"
+          export BROKER_CORESCOPE_PASSWSLC="${BROKER_CORESCOPE_PASSWSLC}"
+          export CHIMESH_VIEWER_PASSWSLC="${CHIMESH_VIEWER_PASSWSLC}"
+          export BROKER_ADMIN_PASSWSLC="${BROKER_ADMIN_PASSWSLC}"
+          export BROKER_REMOTE_CORESCOPE_PASSWSLC="${BROKER_REMOTE_CORESCOPE_PASSWSLC}"
           ENVEOF
           scp -i ~/.ssh/id_rsa /tmp/deploy-env.sh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/deploy-env.sh
           rm -f /tmp/deploy-env.sh
@@ -87,17 +87,17 @@ jobs:
             set -e
             source /tmp/deploy-env.sh
             rm -f /tmp/deploy-env.sh
-            REPO_DIR=$HOME/chimesh-mqtt
+            REPO_DIR=$HOME/slcmesh-mqtt
             BRANCH="${{ steps.env.outputs.branch }}"
             export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/chimesh_deploy -o StrictHostKeyChecking=no"
             if [ ! -d "$REPO_DIR/.git" ]; then
-              git clone git@github.com:emuehlstein/chimesh-mqtt.git $REPO_DIR
+              git clone git@github.com:emuehlstein/slcmesh-mqtt.git $REPO_DIR
             else
               git -C $REPO_DIR fetch origin
               git -C $REPO_DIR reset --hard origin/$BRANCH
             fi
             cd $REPO_DIR
-            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" BROKER_CORESCOPE_PASSWORD="${BROKER_CORESCOPE_PASSWORD:-}" BROKER_ADMIN_PASSWORD="${BROKER_ADMIN_PASSWORD:-}" CHIMESH_VIEWER_PASSWORD="${CHIMESH_VIEWER_PASSWORD:-}" BROKER_REMOTE_CORESCOPE_PASSWORD="${BROKER_REMOTE_CORESCOPE_PASSWORD:-}" bash deploy-compose.sh
+            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" BROKER_CORESCOPE_PASSWSLC="${BROKER_CORESCOPE_PASSWSLC:-}" BROKER_ADMIN_PASSWSLC="${BROKER_ADMIN_PASSWSLC:-}" CHIMESH_VIEWER_PASSWSLC="${CHIMESH_VIEWER_PASSWSLC:-}" BROKER_REMOTE_CORESCOPE_PASSWSLC="${BROKER_REMOTE_CORESCOPE_PASSWSLC:-}" bash deploy-compose.sh
           ENDSSH
 
       - name: Cleanup

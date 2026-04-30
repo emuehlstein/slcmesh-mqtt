@@ -1,49 +1,49 @@
-# chicagooffline.com — MeshCore Infrastructure
+# slcoffline.com — MeshCore Infrastructure
 
-MeshCore network tools for the Chicago (ORD) region.
+MeshCore network tools for the Salt Lake City (SLC) region.
 
 ## URLs
 
-### Production (EC2: `13.58.181.117`)
+### Production (EC2)
 | Service | URL |
 |---------|-----|
-| Landing Page | https://chicagooffline.com |
-| Network Scope | https://scope.chicagooffline.com |
-| Health Check | https://health.chicagooffline.com |
-| Live Map | https://livemap.chicagooffline.com |
-| Keygen | https://keygen.chicagooffline.com |
-| MQTT Broker | `mqtt://mqtt.chicagooffline.com:1883` |
-| WS MQTT Broker | `wss://wsmqtt.chicagooffline.com/mqtt` |
+| Landing Page | https://slcoffline.com |
+| Network Scope | https://scope.slcoffline.com |
+| Health Check | https://health.slcoffline.com |
+| Live Map | https://livemap.slcoffline.com |
+| Keygen | https://keygen.slcoffline.com |
+| MQTT Broker | `mqtt://mqtt.slcoffline.com:1883` |
+| WS MQTT Broker | `wss://wsmqtt.slcoffline.com/mqtt` |
 
-### Development (EC2: `3.141.31.229`)
+### Development (EC2)
 | Service | URL |
 |---------|-----|
-| Landing Page | https://dev-landing.chicagooffline.com |
-| Network Scope | https://dev-scope.chicagooffline.com |
-| Health Check | https://dev-health.chicagooffline.com |
-| Live Map | https://dev-livemap.chicagooffline.com |
-| Keygen | https://dev-keygen.chicagooffline.com |
-| WS MQTT Broker | `wss://wsmqtt-dev.chicagooffline.com/mqtt` |
+| Landing Page | https://dev-landing.slcoffline.com |
+| Network Scope | https://dev-scope.slcoffline.com |
+| Health Check | https://dev-health.slcoffline.com |
+| Live Map | https://dev-livemap.slcoffline.com |
+| Keygen | https://dev-keygen.slcoffline.com |
+| WS MQTT Broker | `wss://wsmqtt-dev.slcoffline.com/mqtt` |
 
-### Map Tile Server (EC2: `3.20.103.82`)
+### Map Tile Server (EC2)
 | Service | URL |
 |---------|-----|
-| Tile Server | https://tiles.chicagooffline.com |
+| Tile Server | https://tiles.slcoffline.com |
 
 ## Architecture
 
 ### Production Stack
 ```
-chicagooffline.com (EC2 t3.small, 13.58.181.117)
+slcoffline.com (EC2)
 ├── Caddy (TLS + routing, ports 80/443)
-│   ├── chicagooffline.com         → /srv/landing (static)
-│   ├── scope.chicagooffline.com   → corescope:3000
-│   ├── health.chicagooffline.com  → meshcore-health-check:3090
-│   ├── livemap.chicagooffline.com → meshmap-live:8080
-│   ├── keygen.chicagooffline.com  → /srv/keygen (static)
-│   └── wsmqtt.chicagooffline.com  → meshcore-mqtt-broker:8883
+│   ├── slcoffline.com         → /srv/landing (static)
+│   ├── scope.slcoffline.com   → corescope:3000
+│   ├── health.slcoffline.com  → meshcore-health-check:3090
+│   ├── livemap.slcoffline.com → meshmap-live:8080
+│   ├── keygen.slcoffline.com  → /srv/keygen (static)
+│   └── wsmqtt.slcoffline.com  → meshcore-mqtt-broker:8883
 ├── CoreScope (Go, port 3000)
-│   ├── Built from emuehlstein/CoreScope-chicagooffline (deploy/chicagooffline branch)
+│   ├── Built from emuehlstein/CoreScope-slcoffline (deploy/slcoffline branch)
 │   ├── MQTT client → local Mosquitto
 │   └── SQLite database (persistent volume)
 ├── Mosquitto (MQTT, port 1883 exposed)
@@ -51,26 +51,26 @@ chicagooffline.com (EC2 t3.small, 13.58.181.117)
 ├── meshcore-health-check (port 3090 internal)
 ├── meshmap-live (Live Map, port 8080 internal)
 │   └── yellowcooln/meshcore-mqtt-live-map
-└── Docker network: chicagooffline-net
+└── Docker network: slcoffline-net
 ```
 
 ### Development Stack
 ```
-dev EC2 (t3.small, 3.141.31.229)
+dev EC2
 ├── Caddy (TLS + routing, ports 80/443)
-│   ├── dev-landing.chicagooffline.com  → /srv/dev-landing (static)
-│   ├── dev-scope.chicagooffline.com    → corescope-dev:3000
-│   ├── dev-health.chicagooffline.com   → meshcore-health-check-dev:3091
-│   ├── dev-livemap.chicagooffline.com  → meshmap-live:8080
-│   ├── dev-keygen.chicagooffline.com   → /srv/keygen (static)
-│   └── wsmqtt-dev.chicagooffline.com   → meshcore-mqtt-broker:8883
+│   ├── dev-landing.slcoffline.com  → /srv/dev-landing (static)
+│   ├── dev-scope.slcoffline.com    → corescope-dev:3000
+│   ├── dev-health.slcoffline.com   → meshcore-health-check-dev:3091
+│   ├── dev-livemap.slcoffline.com  → meshmap-live:8080
+│   ├── dev-keygen.slcoffline.com   → /srv/keygen (static)
+│   └── wsmqtt-dev.slcoffline.com   → meshcore-mqtt-broker:8883
 ├── corescope-dev (Go, port 3000)
 ├── Mosquitto (MQTT, port 1883)
 ├── meshcore-mqtt-broker (WSS MQTT, JWT auth)
 ├── meshcore-health-check-dev (port 3091 internal)
 ├── meshmap-live (Live Map, port 8080 internal)
 │   └── yellowcooln/meshcore-mqtt-live-map
-└── Docker network: chicagooffline-net
+└── Docker network: slcoffline-net
 ```
 
 ## Deployment
@@ -100,17 +100,17 @@ gh workflow run deploy.yml -f environment=dev -f reset_db=true  # wipe DB
 | Secret | Prod | Dev | Notes |
 |--------|------|-----|-------|
 | `SSH_PRIVATE_KEY` | ✅ | ✅ | EC2 SSH key |
-| `SSH_HOST` | `13.58.181.117` | `3.141.31.229` | EC2 IP |
+| `SSH_HOST` | (set by env) | (set by env) | EC2 IP |
 | `SSH_USER` | `ubuntu` | `ubuntu` | |
 | `DEPLOY_KEY` | ✅ | ✅ | ed25519 deploy key for git clone |
 | `CARTOGRAPHER_HEALTHCHECK_KEY` | ✅ | ✅ | Health check channel secret |
-| `BROKER_CORESCOPE_PASSWORD` | ✅ | ✅ | MQTT broker subscriber password |
-| `BROKER_ADMIN_PASSWORD` | ✅ | ✅ | MQTT broker admin password |
+| `BROKER_CORESCOPE_PASSWSLC` | ✅ | ✅ | MQTT broker subscriber password |
+| `BROKER_ADMIN_PASSWSLC` | ✅ | ✅ | MQTT broker admin password |
 
 ### What Deploy Does
 1. SSHs into the target EC2
-2. Clones/pulls `chimesh-mqtt` repo via deploy key
-3. Clones/pulls `CoreScope-chicagooffline` fork (`deploy/chicagooffline` branch)
+2. Clones/pulls `slcmesh-mqtt` repo via deploy key
+3. Clones/pulls `CoreScope-slcoffline` fork (`deploy/slcoffline` branch)
 4. Builds CoreScope Docker image (`--no-cache`)
 5. Clones/pulls `meshcore-web-keygen` (static files → `/srv/keygen`)
 6. Clones/pulls `meshcore-mqtt-live-map`, builds + starts container
@@ -119,11 +119,11 @@ gh workflow run deploy.yml -f environment=dev -f reset_db=true  # wipe DB
 
 ## CoreScope Fork
 
-Built from [emuehlstein/CoreScope-chicagooffline](https://github.com/emuehlstein/CoreScope-chicagooffline) on the `deploy/chicagooffline` branch.
+Built from [emuehlstein/CoreScope-slcoffline](https://github.com/emuehlstein/CoreScope-slcoffline) on the `deploy/slcoffline` branch.
 
 Customizations:
-- Chicago-themed dark UI with custom color palette
-- Hillshade map layer (combined 3DEP+LiDAR 9x tiles from `tiles.chicagooffline.com`)
+- Salt Lake City-themed dark UI with Wasatch-inspired color palette
+- Hillshade map layer (combined terrain tiles from `tiles.slcoffline.com`)
 - Retro modem audio voice module
 - Custom config/theme overlays
 
@@ -139,14 +139,14 @@ Customizations:
 ### meshcore-mqtt-live-map
 - **Repo:** [yellowcooln/meshcore-mqtt-live-map](https://github.com/yellowcooln/meshcore-mqtt-live-map)
 - **Purpose:** Live MQTT-fed node map with routes, weather, LOS analysis
-- **URL (prod):** https://livemap.chicagooffline.com
-- **URL (dev):** https://dev-livemap.chicagooffline.com
+- **URL (prod):** https://livemap.slcoffline.com
+- **URL (dev):** https://dev-livemap.slcoffline.com
 - **Config:** `~/meshcore-mqtt-live-map/.env` on dev EC2
 
 ### meshcore-web-keygen
 - **Repo:** [agessaman/meshcore-web-keygen](https://github.com/agessaman/meshcore-web-keygen)
 - **Purpose:** Client-side MeshCore Ed25519 vanity key generator
-- **URL:** https://dev-keygen.chicagooffline.com
+- **URL:** https://dev-keygen.slcoffline.com
 - **Static site:** no backend needed
 
 ### meshcore-mqtt-broker
@@ -158,19 +158,19 @@ Customizations:
 
 ### Plain TCP (Production)
 ```
-Server: mqtt.chicagooffline.com
+Server: mqtt.slcoffline.com
 Port:   1883
-Topic:  meshcore/ORD/<node-pubkey>/packets
+Topic:  meshcore/SLC/<node-pubkey>/packets
 Auth:   none
 ```
 
 ### WebSocket + JWT (Dev)
 ```
-Server: wsmqtt-dev.chicagooffline.com
+Server: wsmqtt-dev.slcoffline.com
 Port:   443
 Path:   /mqtt
 TLS:    yes
-Topic:  meshcore/ORD/<node-pubkey>/packets
+Topic:  meshcore/SLC/<node-pubkey>/packets
 Auth:   JWT (Ed25519 device key)
 ```
 
@@ -178,45 +178,45 @@ For `mctomqtt` config, see `OBSERVER_SETUP.md`.
 
 ## DNS Records (Route 53)
 
-**Hosted Zone:** `Z0192662J0UU9ADD406Z`
+**Hosted Zone:** (set up per environment)
 
-### Production → 13.58.181.117
+### Production → (prod EC2 IP)
 ```
-chicagooffline.com
-scope.chicagooffline.com
-mqtt.chicagooffline.com
-health.chicagooffline.com
-healthcheck.chicagooffline.com
-livemap.chicagooffline.com
-keygen.chicagooffline.com
-wsmqtt.chicagooffline.com
-```
-
-### Development → 3.141.31.229
-```
-dev-scope.chicagooffline.com
-dev-landing.chicagooffline.com
-dev-health.chicagooffline.com
-dev-keygen.chicagooffline.com
-dev-livemap.chicagooffline.com
-wsmqtt-dev.chicagooffline.com
+slcoffline.com
+scope.slcoffline.com
+mqtt.slcoffline.com
+health.slcoffline.com
+healthcheck.slcoffline.com
+livemap.slcoffline.com
+keygen.slcoffline.com
+wsmqtt.slcoffline.com
 ```
 
-### Tile Server → 3.20.103.82
+### Development → (dev EC2 IP)
 ```
-tiles.chicagooffline.com
+dev-scope.slcoffline.com
+dev-landing.slcoffline.com
+dev-health.slcoffline.com
+dev-keygen.slcoffline.com
+dev-livemap.slcoffline.com
+wsmqtt-dev.slcoffline.com
+```
+
+### Tile Server → (tile server EC2 IP)
+```
+tiles.slcoffline.com
 ```
 
 ## Monitoring
 
 ```bash
 # Production
-ssh -i ~/.ssh/chicagooffline-ec2.pem ubuntu@13.58.181.117
+ssh ubuntu@<prod-ec2-ip>
 docker ps
 docker logs -f corescope
 
 # Development
-ssh -i ~/.ssh/chicagooffline-dev.pem ubuntu@3.141.31.229
+ssh ubuntu@<dev-ec2-ip>
 docker ps
 docker logs -f corescope-dev
 docker logs -f meshmap-live
@@ -224,9 +224,9 @@ docker logs -f meshmap-live
 
 ## Maintenance
 
-### Disk Space (Prod is 6.8GB — watch it)
+### Disk Space
 ```bash
-ssh -i ~/.ssh/chicagooffline-ec2.pem ubuntu@13.58.181.117
+ssh ubuntu@<prod-ec2-ip>
 df -h /
 docker system prune -af    # remove unused images + build cache
 ```
@@ -234,10 +234,10 @@ docker system prune -af    # remove unused images + build cache
 ### Stop/Start Dev Instance
 ```bash
 # Stop (saves money when not testing)
-aws ec2 stop-instances --region us-east-2 --instance-ids i-015964acf101b916d
+aws ec2 stop-instances --region <region> --instance-ids <instance-id>
 
 # Start (IP may change — update DNS + GitHub secret)
-aws ec2 start-instances --region us-east-2 --instance-ids i-015964acf101b916d
+aws ec2 start-instances --region <region> --instance-ids <instance-id>
 ```
 
 ### Wipe Dev Database
@@ -245,12 +245,13 @@ aws ec2 start-instances --region us-east-2 --instance-ids i-015964acf101b916d
 gh workflow run deploy.yml -f environment=dev -f reset_db=true
 ```
 
-## Cost
-| Resource | Monthly |
-|----------|---------|
-| Prod EC2 (t3.small, always on) | ~$15 |
-| Dev EC2 (t3.small, stop when idle) | ~$0-15 |
-| Tile server (t4g.small, always on) | ~$12 |
-| Route 53 | ~$0.50 |
-| Data transfer | ~$1-5 |
-| **Total** | **~$30-48** |
+## Cost Estimate
+| Resource | Notes |
+|----------|-------|
+| Prod EC2 | t3.small, always on |
+| Dev EC2 | t3.small, stop when idle |
+| Tile server | t4g.small, always on |
+| Route 53 | per hosted zone |
+| Data transfer | varies |
+
+**Reference:** Salt Lake City deployment runs ~$30-48/month.

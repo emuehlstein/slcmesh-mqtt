@@ -1,12 +1,12 @@
 #!/bin/bash
 # ============================================================================
-# Chicago Offline - MeshCore Observer Installer
+# Salt Lake Offline - MeshCore Observer Installer
 #
 # Detects your node type and runs the right upstream installer with
-# pre-configured Chicago brokers.
+# pre-configured Salt Lake City brokers.
 #
 # Usage:
-#   bash <(curl -fsSL https://dev-landing.chicagooffline.com/install-observer.sh)
+#   bash <(curl -fsSL https://dev-landing.slcoffline.com/install-observer.sh)
 #
 # Supports:
 #   - Companions  (via agessaman/meshcore-packet-capture, no root)
@@ -18,15 +18,15 @@
 #   - LetsMesh EU  (mqtt-eu-v1.letsmesh.net)
 #   - chimesh.org  (mqtt.chimesh.org)
 #   - rflab.io     (mqtt.rflab.io)
-#   - Chicago Offline prod (ws.chioff.com)
-#   - Chicago Offline dev  (wsmqtt-dev.chicagooffline.com)
+#   - Salt Lake Offline prod (ws.slcoff.com)
+#   - Salt Lake Offline dev  (wsmqtt-dev.slcoffline.com)
 #
-# IATA region: ORD (Chicago)
+# IATA region: SLC (Salt Lake City)
 # ============================================================================
 set -e
 
-CONFIG_TOML="https://dev-landing.chicagooffline.com/00-chicagoland.toml"
-CONFIG_ENV="https://dev-landing.chicagooffline.com/00-chicagoland.env"
+CONFIG_TOML="https://dev-landing.slcoffline.com/00-chicagoland.toml"
+CONFIG_ENV="https://dev-landing.slcoffline.com/00-chicagoland.env"
 
 # Colors
 RED='\033[0;31m'
@@ -37,7 +37,7 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 echo ""
-echo -e "${BLUE}  Chicago Offline - MeshCore Observer Setup${NC}"
+echo -e "${BLUE}  Salt Lake Offline - MeshCore Observer Setup${NC}"
 echo -e "${BLUE}  ==========================================${NC}"
 echo ""
 echo "  This will install an MQTT observer and configure it to report to:"
@@ -45,10 +45,10 @@ echo "    - LetsMesh US  (mqtt-us-v1.letsmesh.net)"
 echo "    - LetsMesh EU  (mqtt-eu-v1.letsmesh.net)"
 echo "    - chimesh.org  (mqtt.chimesh.org)"
 echo "    - rflab.io     (mqtt.rflab.io)"
-echo "    - Chicago Offline prod (ws.chioff.com)"
-echo "    - Chicago Offline dev  (wsmqtt-dev.chicagooffline.com)"
+echo "    - Salt Lake Offline prod (ws.slcoff.com)"
+echo "    - Salt Lake Offline dev  (wsmqtt-dev.slcoffline.com)"
 echo ""
-echo "  IATA region: ORD (Chicago)"
+echo "  IATA region: SLC (Salt Lake City)"
 echo ""
 echo -e "${BOLD}  What type of node are you connecting?${NC}"
 echo ""
@@ -93,5 +93,5 @@ else
 fi
 
 echo ""
-echo -e "${GREEN}  Done! Your observer is configured for the Chicago Offline network.${NC}"
+echo -e "${GREEN}  Done! Your observer is configured for the Salt Lake Offline network.${NC}"
 echo ""

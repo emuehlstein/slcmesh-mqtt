@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# validate-dns.sh — Verify chicagooffline.com DNS zone state
+# validate-dns.sh — Verify slcoffline.com DNS zone state
 # Run before deploys to ensure zone matches desired state
 # Usage: ./scripts/validate-dns.sh [--fix]
 
@@ -11,32 +11,32 @@ ZONE_ID="Z0192662J0UU9ADD406Z"
 
 # Desired state: name -> ip
 declare -A DESIRED_PROD
-DESIRED_PROD["chicagooffline.com"]="13.58.181.117"
-DESIRED_PROD["scope.chicagooffline.com"]="13.58.181.117"
-DESIRED_PROD["health.chicagooffline.com"]="13.58.181.117"
-DESIRED_PROD["healthcheck.chicagooffline.com"]="13.58.181.117"
-DESIRED_PROD["mqtt.chicagooffline.com"]="13.58.181.117"
-DESIRED_PROD["wsmqtt.chicagooffline.com"]="13.58.181.117"
-DESIRED_PROD["keygen.chicagooffline.com"]="13.58.181.117"
-DESIRED_PROD["livemap.chicagooffline.com"]="13.58.181.117"
+DESIRED_PROD["slcoffline.com"]="13.58.181.117"
+DESIRED_PROD["scope.slcoffline.com"]="13.58.181.117"
+DESIRED_PROD["health.slcoffline.com"]="13.58.181.117"
+DESIRED_PROD["healthcheck.slcoffline.com"]="13.58.181.117"
+DESIRED_PROD["mqtt.slcoffline.com"]="13.58.181.117"
+DESIRED_PROD["wsmqtt.slcoffline.com"]="13.58.181.117"
+DESIRED_PROD["keygen.slcoffline.com"]="13.58.181.117"
+DESIRED_PROD["livemap.slcoffline.com"]="13.58.181.117"
 
 declare -A DESIRED_DEV
-DESIRED_DEV["dev-scope.chicagooffline.com"]="3.141.31.229"
-DESIRED_DEV["dev-landing.chicagooffline.com"]="3.141.31.229"
-DESIRED_DEV["dev-health.chicagooffline.com"]="3.141.31.229"
-DESIRED_DEV["dev-mqtt.chicagooffline.com"]="3.141.31.229"
-DESIRED_DEV["dev-wsmqtt.chicagooffline.com"]="3.141.31.229"
-DESIRED_DEV["dev-keygen.chicagooffline.com"]="3.141.31.229"
-DESIRED_DEV["dev-livemap.chicagooffline.com"]="3.141.31.229"
-DESIRED_DEV["dev-observers.chicagooffline.com"]="3.141.31.229"
+DESIRED_DEV["dev-scope.slcoffline.com"]="3.141.31.229"
+DESIRED_DEV["dev-landing.slcoffline.com"]="3.141.31.229"
+DESIRED_DEV["dev-health.slcoffline.com"]="3.141.31.229"
+DESIRED_DEV["dev-mqtt.slcoffline.com"]="3.141.31.229"
+DESIRED_DEV["dev-wsmqtt.slcoffline.com"]="3.141.31.229"
+DESIRED_DEV["dev-keygen.slcoffline.com"]="3.141.31.229"
+DESIRED_DEV["dev-livemap.slcoffline.com"]="3.141.31.229"
+DESIRED_DEV["dev-observers.slcoffline.com"]="3.141.31.229"
 
 declare -A DESIRED_MAP
-DESIRED_MAP["tiles.chicagooffline.com"]="3.20.103.82"
+DESIRED_MAP["tiles.slcoffline.com"]="3.20.103.82"
 
 # Forbidden records (should not exist)
 FORBIDDEN=(
-  "chimesh.chicagooffline.com"
-  "observers-dev.chicagooffline.com"
+  "chimesh.slcoffline.com"
+  "observers-dev.slcoffline.com"
 )
 
 RED='\033[0;31m'

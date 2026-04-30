@@ -17,7 +17,7 @@ fi
 BROKER_DIR="$(cd "$(dirname "$0")" && pwd)/meshcore-mqtt-broker"
 ENV_FILE="$HOME/meshcore-mqtt-broker.env"
 DATA_DIR="$HOME/meshcore-mqtt-broker-data"
-NETWORK_NAME="chicagooffline-net"
+NETWORK_NAME="slcoffline-net"
 IMAGE_NAME="meshcore-mqtt-broker:latest"
 CONTAINER_NAME="meshcore-mqtt-broker"
 
@@ -65,7 +65,7 @@ docker run -d \
 echo ""
 echo "✅ meshcore-mqtt-broker running"
 echo "   Internal:  ws://meshcore-mqtt-broker:8883"
-echo "   External:  wss://wsmqtt-dev.chicagooffline.com (via Caddy)"
+echo "   External:  wss://wsmqtt-dev.slcoffline.com (via Caddy)"
 echo ""
 echo "Container logs:"
 docker logs --tail 20 "$CONTAINER_NAME"

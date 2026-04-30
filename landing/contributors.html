@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Open-Source – Chicago Offline</title>
+  <title>Open-Source – Salt Lake Offline</title>
   
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKMJ5XBF62"></script>
@@ -17,14 +17,14 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0C0F1A;
-      --surface: #141829;
+      --bg: #0A0E18;
+      --surface: #121728;
       --border: #242840;
-      --accent-cyan: #00E5FF;
-      --accent-amber: #FFB300;
+      --accent-cyan: #4FC3F7;
+      --accent-amber: #FF7043;
       --accent-purple: #B565FF;
-      --text: #EDF2FF;
-      --muted: #A0AABF;
+      --text: #E8EAF6;
+      --muted: #90A4AE;
       --divider: #1e2338;
     }
 
@@ -184,10 +184,10 @@
 
 <div class="container">
 
-  <div class="brand">Chicago Offline</div>
+  <div class="brand">Salt Lake Offline</div>
 
   <h1>Open-Source & Infrastructure</h1>
-  <p class="subtitle">Resources for developers and contributors to the Chicago Mesh network.</p>
+  <p class="subtitle">Resources for developers and contributors to the SLC Mesh network.</p>
 
   <div class="divider"></div>
 
@@ -208,11 +208,11 @@
     </li>
     <li><strong>URLs:</strong>
       <ul>
-        <li><a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a> &mdash; Network Scope</li>
-        <li><a href="https://health.chicagooffline.com">health.chicagooffline.com</a> &mdash; Health Check</li>
-        <li><code>mqtt.chicagooffline.com:1883</code> &mdash; Plain TCP MQTT</li>
-        <li><code>wss://wsmqtt.chicagooffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
-        <li><a href="https://tiles.chicagooffline.com">tiles.chicagooffline.com</a> &mdash; Map Tile Server</li>
+        <li><a href="https://scope.slcoffline.com">scope.slcoffline.com</a> &mdash; Network Scope</li>
+        <li><a href="https://health.slcoffline.com">health.slcoffline.com</a> &mdash; Health Check</li>
+        <li><code>mqtt.slcoffline.com:1883</code> &mdash; Plain TCP MQTT</li>
+        <li><code>wss://wsmqtt.slcoffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
+        <li><a href="https://tiles.slcoffline.com">tiles.slcoffline.com</a> &mdash; Map Tile Server</li>
       </ul>
     </li>
   </ul>
@@ -233,12 +233,12 @@
     </li>
     <li><strong>URLs:</strong>
       <ul>
-        <li><a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a> &mdash; Dev Network Scope</li>
-        <li><a href="https://dev-health.chicagooffline.com">dev-health.chicagooffline.com</a> &mdash; Dev Health Check</li>
-        <li><a href="https://dev-landing.chicagooffline.com">dev-landing.chicagooffline.com</a> &mdash; Dev Landing Page</li>
-        <li><a href="https://dev-livemap.chicagooffline.com">dev-livemap.chicagooffline.com</a> &mdash; Dev Live Map</li>
-        <li><a href="https://dev-keygen.chicagooffline.com">dev-keygen.chicagooffline.com</a> &mdash; Dev Key Generator</li>
-        <li><code>wss://wsmqtt-dev.chicagooffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
+        <li><a href="https://dev-scope.slcoffline.com">dev-scope.slcoffline.com</a> &mdash; Dev Network Scope</li>
+        <li><a href="https://dev-health.slcoffline.com">dev-health.slcoffline.com</a> &mdash; Dev Health Check</li>
+        <li><a href="https://dev-landing.slcoffline.com">dev-landing.slcoffline.com</a> &mdash; Dev Landing Page</li>
+        <li><a href="https://dev-livemap.slcoffline.com">dev-livemap.slcoffline.com</a> &mdash; Dev Live Map</li>
+        <li><a href="https://dev-keygen.slcoffline.com">dev-keygen.slcoffline.com</a> &mdash; Dev Key Generator</li>
+        <li><code>wss://wsmqtt-dev.slcoffline.com/mqtt</code> &mdash; WebSocket MQTT (JWT auth)</li>
       </ul>
     </li>
   </ul>
@@ -264,11 +264,11 @@
   <h3>CoreScope Source (Fork)</h3>
   <ul>
     <li><strong>Upstream:</strong> <a href="https://github.com/meshcore-dev/CoreScope">github.com/meshcore-dev/CoreScope</a></li>
-    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/CoreScope-chicagooffline">github.com/emuehlstein/CoreScope-chicagooffline</a> (branch: <code>deploy/chicagooffline</code>)</li>
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/CoreScope-slcoffline">github.com/emuehlstein/CoreScope-slcoffline</a> (branch: <code>deploy/slcoffline</code>)</li>
     <li><strong>Build Mode:</strong> <code>CORESCOPE_IMAGE_MODE=fork</code> in <code>deploy.sh</code></li>
   </ul>
 
-  <h3>MeshCore Chicagoland Observer Firmware</h3>
+  <h3>MeshCore Salt Lake Cityland Observer Firmware</h3>
   <ul>
     <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/MeshCore">github.com/emuehlstein/MeshCore</a></li>
     <li><strong>Branch:</strong> <code>chioff-flex</code> (based on agessaman's <code>mqtt-bridge-implementation-flex</code>)</li>
@@ -278,18 +278,18 @@
     <li><strong>Default MQTT presets:</strong>
       <ul>
         <li><code>chimesh</code> &mdash; chimesh.org WSS broker</li>
-        <li><code>chioff</code> &mdash; chicagooffline.com WSS broker</li>
+        <li><code>chioff</code> &mdash; slcoffline.com WSS broker</li>
         <li><code>analyzer-us</code> &mdash; LetsMesh US (G2 only, or user-configured)</li>
       </ul>
     </li>
-    <li><strong>Chicagoland radio defaults:</strong> 910.525 MHz / BW 62.5 / SF7 / CR5, 3-byte path hash, moderate loop detect</li>
+    <li><strong>Salt Lake Cityland radio defaults:</strong> 910.525 MHz / BW 62.5 / SF7 / CR5, 3-byte path hash, moderate loop detect</li>
   </ul>
 
   <h3>Mesh Health Check</h3>
   <ul>
     <li><strong>Upstream:</strong> <a href="https://github.com/yellowcooln/meshcore-health-check">github.com/yellowcooln/meshcore-health-check</a></li>
-    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/meshcore-health-check">github.com/emuehlstein/meshcore-health-check</a> (Chicago Mesh color system reskin)</li>
-    <li><strong>Live:</strong> <a href="https://health.chicagooffline.com">health.chicagooffline.com</a></li>
+    <li><strong>Fork:</strong> <a href="https://github.com/emuehlstein/meshcore-health-check">github.com/emuehlstein/meshcore-health-check</a> (SLC Mesh color system reskin)</li>
+    <li><strong>Live:</strong> <a href="https://health.slcoffline.com">health.slcoffline.com</a></li>
   </ul>
 
   <h2>🚀 Deployment</h2>
@@ -322,10 +322,10 @@ ENVIRONMENT=production bash deploy.sh  # or ENVIRONMENT=dev</code></pre>
   <ol>
     <li>Make changes to CoreScope fork or config files</li>
     <li>Commit and push to <code>main</code> branch</li>
-    <li>GitHub Actions auto-deploys to dev (<a href="https://dev-scope.chicagooffline.com">dev-scope.chicagooffline.com</a>)</li>
+    <li>GitHub Actions auto-deploys to dev (<a href="https://dev-scope.slcoffline.com">dev-scope.slcoffline.com</a>)</li>
     <li>Test changes in browser</li>
     <li>Promote to prod: <code>git checkout prod && git merge main && git push && git checkout main</code></li>
-    <li>GitHub Actions auto-deploys to production (<a href="https://scope.chicagooffline.com">scope.chicagooffline.com</a>)</li>
+    <li>GitHub Actions auto-deploys to production (<a href="https://scope.slcoffline.com">scope.slcoffline.com</a>)</li>
   </ol>
 
   <h2>📊 Monitoring</h2>
@@ -365,18 +365,18 @@ docker logs -f caddy</code></pre>
 
     <h2>📡 Connecting Observer Nodes</h2>
 
-  <p>Want to add your node's packet data to the Chicago Offline live map and scope?</p>
-  <p><a href="https://dev-landing.chicagooffline.com/#observer-setup">See the observer setup guide &rarr;</a></p>
+  <p>Want to add your node's packet data to the Salt Lake Offline live map and scope?</p>
+  <p><a href="https://dev-landing.slcoffline.com/#observer-setup">See the observer setup guide &rarr;</a></p>
   <p style="margin-top:0.5rem">Covers the one-line installer, plain TCP, WebSocket+JWT, and per-node-type config.</p>
 
   <div class="divider"></div>
 
     <h2>💡 Contributing</h2>
 
-  <p>Interested in contributing to the Chicago Mesh network infrastructure?</p>
+  <p>Interested in contributing to the SLC Mesh network infrastructure?</p>
 
   <ul>
-    <li>Join the <a href="https://chimesh.org">Chicagoland Mesh community</a></li>
+    <li>Join the <a href="https://chimesh.org">Salt Lake Cityland Mesh community</a></li>
     <li>Open issues or PRs on the <a href="https://github.com/emuehlstein/chimesh-mqtt">chimesh-mqtt repo</a></li>
     <li>Deploy your own observer node and publish to the MQTT broker</li>
     <li>Help improve CoreScope or the Health Check app</li>
@@ -385,7 +385,7 @@ docker logs -f caddy</code></pre>
   <div class="divider"></div>
 
   <div class="footer">
-    <p>Chicago Mesh &mdash; ORD region &nbsp;·&nbsp; <a href="/">Back to home</a></p>
+    <p>SLC Mesh &mdash; SLC region &nbsp;·&nbsp; <a href="/">Back to home</a></p>
   </div>
 
 </div>

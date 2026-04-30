@@ -1,4 +1,4 @@
-// dev-scope.chicagooffline.com customizations
+// dev-scope.slcoffline.com customizations
 (function () {
   'use strict';
 

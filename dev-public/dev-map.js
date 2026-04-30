@@ -192,10 +192,10 @@
     // === Map Style System (dev-scope) ===
     // Styles: carto | satellite | hillshade
     // Carto and Hillshade inherit dark/light from the existing theme toggle.
-    // Hillshade: fetches available counties from tiles.chicagooffline.com/services,
+    // Hillshade: fetches available counties from tiles.slcoffline.com/services,
     // shows per-county checkboxes. Uses combined 9x tiles (3DEP+LiDAR) when available.
 
-    const TILE_SERVER = 'https://tiles.chicagooffline.com';
+    const TILE_SERVER = 'https://tiles.slcoffline.com';
 
     function getTheme() {
       return document.documentElement.getAttribute('data-theme') === 'dark' ||
@@ -272,7 +272,7 @@
         const enabled = savedCounties ? savedCounties.includes(county) : true;
         const layer = L.tileLayer(
           TILE_SERVER + '/services/' + best[county].svc.name + '/tiles/{z}/{x}/{y}.png',
-          { attribution: 'Hillshade &copy; chicagooffline.com', maxZoom: 16, minZoom: 10, opacity: _hillshadeOpacity }
+          { attribution: 'Hillshade &copy; slcoffline.com', maxZoom: 16, minZoom: 10, opacity: _hillshadeOpacity }
         );
         _hillshadeLayers[county] = layer;
         if (enabled) layer.addTo(map);

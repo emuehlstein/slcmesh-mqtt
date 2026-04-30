@@ -14,18 +14,18 @@
             "name": "wsmqtt-ws",
             "broker": "ws://meshcore-mqtt-broker:8883",
             "username": "corescope",
-            "password": "BROKER_CORESCOPE_PASSWORD",
+            "password": "BROKER_CORESCOPE_PASSWSLC",
             "topics": [
                 "meshcore/#"
             ],
-            "label": "CO",
+            "label": "SO",
             "tier": "secure"
         },
         {
             "name": "chimesh-org",
             "broker": "wss://mqtt.chimesh.org",
             "username": "viewer",
-            "password": "CHIMESH_VIEWER_PASSWORD",
+            "password": "CHIMESH_VIEWER_PASSWSLC",
             "topics": [
                 "meshcore/#"
             ],
@@ -40,18 +40,18 @@
         "#test": "9cd8fcf22a47333b591d96a2b848b73f",
         "#healthcheck": "3ae59c2cda86744c75e68b3975a902ae"
     },
-    "defaultRegion": "ORD",
+    "defaultRegion": "SLC",
     "dbPath": "/app/data/meshcore.db",
     "mapDefaults": {
         "center": [
-            41.8781,
-            -87.6298
+            40.7608,
+            -111.8910
         ],
         "zoom": 11
     },
     "branding": {
-        "siteName": "Chicago Offline",
-        "tagline": "MeshCore LoRa mesh network \u2014 off-grid comms for Chicago"
+        "siteName": "Salt Lake Offline",
+        "tagline": "MeshCore LoRa mesh network — off-grid comms for Salt Lake City"
     },
     "theme": {
         "accent": "#0077cc",
@@ -80,29 +80,29 @@
         "statusRed": "#ef4444"
     },
     "themeDark": {
-        "accent": "#00E5FF",
-        "accentHover": "#33EBFF",
-        "navBg": "#0C0F1A",
-        "navBg2": "#141829",
-        "navText": "#EDF2FF",
-        "navTextMuted": "#A0AABF",
-        "background": "#0C0F1A",
-        "text": "#EDF2FF",
-        "textMuted": "#A0AABF",
+        "accent": "#4FC3F7",
+        "accentHover": "#6FD8F8",
+        "navBg": "#0A0E18",
+        "navBg2": "#121728",
+        "navText": "#E8EAF6",
+        "navTextMuted": "#90A4AE",
+        "background": "#0A0E18",
+        "text": "#E8EAF6",
+        "textMuted": "#90A4AE",
         "border": "#1e2a3a",
-        "surface1": "#141829",
-        "surface2": "#1a2035",
+        "surface1": "#121728",
+        "surface2": "#151C2B",
         "surface3": "#202840",
-        "sectionBg": "#141829",
-        "cardBg": "#141829",
-        "contentBg": "#0C0F1A",
-        "detailBg": "#1a2035",
-        "inputBg": "#141829",
-        "rowStripe": "#111727",
+        "sectionBg": "#121728",
+        "cardBg": "#121728",
+        "contentBg": "#0A0E18",
+        "detailBg": "#151C2B",
+        "inputBg": "#121728",
+        "rowStripe": "#0F1420",
         "rowHover": "#1a2540",
         "selectedBg": "#0a2a4a",
-        "statusGreen": "#39FF14",
-        "statusYellow": "#FFB300",
+        "statusGreen": "#8BC34A",
+        "statusYellow": "#FF7043",
         "statusRed": "#ef4444"
     }
 }

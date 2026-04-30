@@ -21,7 +21,7 @@
 
 - Prod container (`corescope`): DISABLE_MOSQUITTO=false, port 1883 mapped
 - Dev container (`corescope-dev`): DISABLE_MOSQUITTO=true, port 1883 not mapped
-- Both on `chicagooffline-net` Docker network
+- Both on `slcoffline-net` Docker network
 - Both on same EC2 host (13.58.181.117 = prod, 3.141.31.229 = dev)
 
 ## Target Architecture
@@ -54,7 +54,7 @@
      -p 1883:1883 \
      -v ~/mosquitto-data:/mosquitto/data \
      -v ~/chimesh-mqtt/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro \
-     --network chicagooffline-net \
+     --network slcoffline-net \
      eclipse-mosquitto:2
    ```
 
@@ -87,13 +87,13 @@
 1. Deploy standalone mosquitto on dev EC2 (3.141.31.229)
 2. Restart CoreScope-dev with DISABLE_MOSQUITTO=true
 3. Verify ingestor connects to mosquitto:1883 via Docker network
-4. Verify observer nodes reconnect to mqtt.chicagooffline.com:1883
+4. Verify observer nodes reconnect to mqtt.slcoffline.com:1883
 
 ### Cutover on Prod
 1. Start standalone mosquitto container on prod (13.58.181.117)
 2. Stop old corescope container (brief MQTT blip, ~5-10 sec)
 3. Start new corescope container with DISABLE_MOSQUITTO=true
-4. Verify mqtt.chicagooffline.com:1883 still works from observer nodes
+4. Verify mqtt.slcoffline.com:1883 still works from observer nodes
 5. Verify CoreScope ingestor reconnects and receives packets
 
 ## Risks

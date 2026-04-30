@@ -1,12 +1,12 @@
 #!/bin/bash
 # ============================================================================
-# Chicago Offline - MeshCore Observer Installer
+# Salt Lake Offline - MeshCore Observer Installer
 #
 # Detects your node type and runs the right upstream installer with
-# pre-configured Chicago brokers.
+# pre-configured Salt Lake City brokers.
 #
 # Usage:
-#   bash <(curl -fsSL https://dev-landing.chicagooffline.com/install-observer.sh)
+#   bash <(curl -fsSL https://dev-landing.slcoffline.com/install-observer.sh)
 #
 # Supports:
 #   - Companions  (via agessaman/meshcore-packet-capture, no root)
@@ -16,18 +16,18 @@
 # Brokers configured (priority order):
 #   1. LetsMesh US  (mqtt-us-v1.letsmesh.net:443, WebSocket, JWT)
 #   2. chimesh.org  (mqtt.chimesh.org:443, WebSocket, JWT)
-#   3. Chicago Offline prod (wsmqtt.chicagooffline.com:443, WebSocket, JWT)
-#   4. Chicago Offline dev  (wsmqtt-dev.chicagooffline.com:443, WebSocket, JWT)
+#   3. Salt Lake Offline prod (wsmqtt.slcoffline.com:443, WebSocket, JWT)
+#   4. Salt Lake Offline dev  (wsmqtt-dev.slcoffline.com:443, WebSocket, JWT)
 #   5. rflab.io     (mqtt.rflab.io:443, WebSocket, JWT)
 #   6. LetsMesh EU  (mqtt-eu-v1.letsmesh.net:443, WebSocket, JWT)
-#   7. Chicago Offline TCP fallback (mqtt.chioff.com:1883, TCP, no auth)
+#   7. Salt Lake Offline TCP fallback (mqtt.slcoff.com:1883, TCP, no auth)
 #
-# IATA region: ORD (Chicago)
+# IATA region: SLC (Salt Lake City)
 # ============================================================================
 set -e
 
-CONFIG_TOML="https://dev-landing.chicagooffline.com/00-chicagoland.toml"
-CONFIG_ENV="https://dev-landing.chicagooffline.com/00-chicagoland.env"
+CONFIG_TOML="https://dev-landing.slcoffline.com/00-chicagoland.toml"
+CONFIG_ENV="https://dev-landing.slcoffline.com/00-chicagoland.env"
 
 # Colors
 RED='\033[0;31m'
@@ -38,19 +38,19 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 echo ""
-echo -e "${BLUE}  Chicago Offline - MeshCore Observer Setup${NC}"
+echo -e "${BLUE}  Salt Lake Offline - MeshCore Observer Setup${NC}"
 echo -e "${BLUE}  ==========================================${NC}"
 echo ""
 echo "  This will install an MQTT observer and configure it to report to:"
 echo "    1. LetsMesh US  (mqtt-us-v1.letsmesh.net:443)"
 echo "    2. chimesh.org  (mqtt.chimesh.org:443)"
-echo "    3. Chicago Offline prod (wsmqtt.chicagooffline.com:443)"
-echo "    4. Chicago Offline dev  (wsmqtt-dev.chicagooffline.com:443)"
+echo "    3. Salt Lake Offline prod (wsmqtt.slcoffline.com:443)"
+echo "    4. Salt Lake Offline dev  (wsmqtt-dev.slcoffline.com:443)"
 echo "    5. rflab.io     (mqtt.rflab.io:443)"
 echo "    6. LetsMesh EU  (mqtt-eu-v1.letsmesh.net:443)"
-echo "    7. Chicago Offline TCP fallback (mqtt.chioff.com:1883, no auth)"
+echo "    7. Salt Lake Offline TCP fallback (mqtt.slcoff.com:1883, no auth)"
 echo ""
-echo "  IATA region: ORD (Chicago)"
+echo "  IATA region: SLC (Salt Lake City)"
 echo ""
 echo -e "${BOLD}  What type of node are you connecting?${NC}"
 echo ""
@@ -95,5 +95,5 @@ else
 fi
 
 echo ""
-echo -e "${GREEN}  Done! Your observer is configured for the Chicago Offline network.${NC}"
+echo -e "${GREEN}  Done! Your observer is configured for the Salt Lake Offline network.${NC}"
 echo ""

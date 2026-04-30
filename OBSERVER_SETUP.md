@@ -1,14 +1,14 @@
-# MeshCore Chicagoland Observer Setup
+# MeshCore Salt Lake Cityland Observer Setup
 
-Guide for configuring MeshCore nodes as observers for the Chicago Mesh network.
+Guide for configuring MeshCore nodes as observers for the SLC Mesh network.
 
-## Quick Start: Chicagoland Firmware (Recommended)
+## Quick Start: Salt Lake Cityland Firmware (Recommended)
 
-Flash the **Chicagoland observer firmware** from [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) (`chioff-flex` branch). Pre-built binaries are available in the [latest release](https://github.com/emuehlstein/MeshCore/releases/latest).
+Flash the **Salt Lake Cityland observer firmware** from [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) (`chioff-flex` branch). Pre-built binaries are available in the [latest release](https://github.com/emuehlstein/MeshCore/releases/latest).
 
 ### What's Baked In (No Commands Needed)
 
-- **Radio:** 910.525 MHz / BW 62.5 / SF7 / CR5 (Chicagoland standard)
+- **Radio:** 910.525 MHz / BW 62.5 / SF7 / CR5 (Salt Lake Cityland standard)
 - **Path hash mode:** 2 (3-byte)
 - **Loop detect:** moderate
 - **MQTT presets (V3/V4/WSL3):** analyzer-us (slot 0) + chimesh (slot 1) + chioff (slot 2)
@@ -25,7 +25,7 @@ Connect via serial (115200 baud) and run:
 set wifi.ssid <SSID>
 set wifi.pwd <password>
 set mqtt.email <your-email>      # For LetsMesh JWT auth
-set mqtt.iata ORD                # Chicago region code
+set mqtt.iata SLC                # Salt Lake City region code
 
 # Required — node identity and location
 set name <YourNodeName>
@@ -59,8 +59,8 @@ set mqtt3.preset analyzer-us
 | Preset | Broker | Notes |
 |--------|--------|-------|
 | `chimesh` | wss://mqtt.chimesh.org | Community broker |
-| `chioff` | wss://wsmqtt.chicagooffline.com | Chicago Offline (prod) |
-| `chioff-dev` | wss://wsmqtt-dev.chicagooffline.com | Chicago Offline (dev) |
+| `chioff` | wss://wsmqtt.slcoffline.com | Salt Lake Offline (prod) |
+| `chioff-dev` | wss://wsmqtt-dev.slcoffline.com | Salt Lake Offline (dev) |
 | `analyzer-us` | LetsMesh US | Default on G2 |
 | `analyzer-eu` | LetsMesh EU | European broker |
 | `letsmesh` | LetsMesh (legacy) | Older LetsMesh endpoint |
@@ -94,12 +94,12 @@ Connect via USB, open the tool, click **Connect**, and fill in the fields. The t
 
 ## Alternative: Plain TCP (Any Firmware)
 
-If you're running standard MeshCore firmware without the Chicagoland presets:
+If you're running standard MeshCore firmware without the Salt Lake Cityland presets:
 
 ```bash
-set mqtt.server mqtt.chicagooffline.com
+set mqtt.server mqtt.slcoffline.com
 set mqtt.port 1883
-set mqtt.iata ORD
+set mqtt.iata SLC
 reboot
 ```
 
@@ -107,29 +107,29 @@ No authentication required. Works with any MQTT-enabled firmware or `mctomqtt` b
 
 ## Alternative: Pi Bridge (meshcore-packet-capture / mctomqtt)
 
-Run our installer to set up packet capture with all Chicagoland MQTT brokers pre-configured. Supports companions, repeaters, and room servers:
+Run our installer to set up packet capture with all Salt Lake Cityland MQTT brokers pre-configured. Supports companions, repeaters, and room servers:
 
 ```bash
-bash <(curl -fsSL https://chicagooffline.com/install-observer.sh)
+bash <(curl -fsSL https://slcoffline.com/install-observer.sh)
 ```
 
 The installer detects your node type and runs the appropriate upstream tool:
 - [meshcore-packet-capture](https://github.com/agessaman/meshcore-packet-capture) for companions
 - [mctomqtt](https://github.com/Cisien/meshcoretomqtt) for repeaters/room servers
 
-Pre-configured with 6 brokers: LetsMesh US & EU, chimesh.org, rflab.io, Chicago Offline (prod + dev).
+Pre-configured with 6 brokers: LetsMesh US & EU, chimesh.org, rflab.io, Salt Lake Offline (prod + dev).
 
 ### Config Only (Existing Installs)
 
 **Companions** (`.env` format):
 ```bash
-curl -O https://chicagooffline.com/00-chicagoland.env
+curl -O https://slcoffline.com/00-chicagoland.env
 cp 00-chicagoland.env ~/.meshcore-packet-capture/.env.local
 ```
 
 **Repeaters / Room Servers** (TOML format):
 ```bash
-curl -O https://chicagooffline.com/00-chicagoland.toml
+curl -O https://slcoffline.com/00-chicagoland.toml
 sudo cp 00-chicagoland.toml /etc/mctomqtt/config.d/
 ```
 
@@ -156,8 +156,8 @@ After configuring and rebooting:
    ```
 
 4. **Check CoreScope:**
-   - Production: https://scope.chicagooffline.com
-   - Dev: https://dev-scope.chicagooffline.com
+   - Production: https://scope.slcoffline.com
+   - Dev: https://dev-scope.slcoffline.com
    - Look for your node's packets in the feed
 
 ## MQTT Naming Reference
@@ -190,13 +190,13 @@ After configuring and rebooting:
 
 ### Packets not appearing in CoreScope
 - Verify `mqtt.rx` is on: `get mqtt.rx`
-- Check your radio parameters match the network (910.525/62.5/SF7/CR5 for Chicago)
-- Verify region code: `get mqtt.iata` should show `ORD`
+- Check your radio parameters match the network (910.525/62.5/SF7/CR5 for Salt Lake City)
+- Verify region code: `get mqtt.iata` should show `SLC`
 
 ## Related Documentation
 
 - [BUILD_CUSTOM_OBSERVER.md](BUILD_CUSTOM_OBSERVER.md) — Building firmware from source
-- [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) — Chicagoland firmware fork (branch: `chioff-flex`)
+- [emuehlstein/MeshCore](https://github.com/emuehlstein/MeshCore) — Salt Lake Cityland firmware fork (branch: `chioff-flex`)
 - [Latest release](https://github.com/emuehlstein/MeshCore/releases/latest) — Pre-built binaries (all boards)
-- [Chicago-Offline/meshcore-config](https://github.com/Chicago-Offline/meshcore-config) — Web Serial config tool
+- [Salt Lake City-Offline/meshcore-config](https://github.com/Salt Lake City-Offline/meshcore-config) — Web Serial config tool
 - [MeshCore CLI Commands](https://docs.meshcore.io/cli_commands/) — Full command reference

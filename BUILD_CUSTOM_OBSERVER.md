@@ -1,6 +1,6 @@
-# Build Chicagoland Observer Firmware
+# Build Salt Lake Cityland Observer Firmware
 
-Guide for building MeshCore observer firmware from the `chioff-flex` branch with Chicagoland defaults baked in.
+Guide for building MeshCore observer firmware from the `chioff-flex` branch with Salt Lake Cityland defaults baked in.
 
 ## Source Repository
 
@@ -9,9 +9,9 @@ git clone --branch chioff-flex https://github.com/emuehlstein/MeshCore.git
 cd MeshCore
 ```
 
-The `chioff-flex` branch is based on agessaman's `mqtt-bridge-implementation-flex` with Chicagoland-specific additions:
-- `chioff` and `chioff-dev` MQTT presets (WSS + JWT auth to chicagooffline.com)
-- Chicagoland radio defaults (910.525 MHz / BW 62.5 / SF7 / CR5)
+The `chioff-flex` branch is based on agessaman's `mqtt-bridge-implementation-flex` with Salt Lake Cityland-specific additions:
+- `chioff` and `chioff-dev` MQTT presets (WSS + JWT auth to slcoffline.com)
+- Salt Lake Cityland radio defaults (910.525 MHz / BW 62.5 / SF7 / CR5)
 - 3-byte path hash and moderate loop detect defaults
 - Board-specific MQTT slot configurations
 
@@ -88,13 +88,13 @@ These only apply on fresh flash (no saved preferences file). Existing nodes with
 
 **V3/V4 builds** (no PSRAM, 2 active slots max):
 - Slot 0: `chimesh` (chimesh.org WSS)
-- Slot 1: `chioff` (chicagooffline.com WSS)
+- Slot 1: `chioff` (slcoffline.com WSS)
 
 **G2 builds** (PSRAM, 5 active slots):
 - Slot 0: `analyzer-us` (LetsMesh US)
 - Slot 1: `chimesh` (chimesh.org WSS)
-- Slot 2: `chioff` (chicagooffline.com WSS)
-- Slot 3: `chioff-dev` (chicagooffline.com dev WSS) — enabled via `-D CHIOFF_DEFAULT_SLOT3`
+- Slot 2: `chioff` (slcoffline.com WSS)
+- Slot 3: `chioff-dev` (slcoffline.com dev WSS) — enabled via `-D CHIOFF_DEFAULT_SLOT3`
 
 ### MQTT RX/TX Defaults
 - `mqtt.rx`: ON (publishes RF-received packets to MQTT)
@@ -106,8 +106,8 @@ These only apply on fresh flash (no saved preferences file). Existing nodes with
 |----|------|-----------|
 | 0 | `none` | — (disable slot) |
 | 1 | `chimesh` | wss://mqtt.chimesh.org |
-| 2 | `chioff` | wss://wsmqtt.chicagooffline.com:443/mqtt |
-| 3 | `chioff-dev` | wss://wsmqtt-dev.chicagooffline.com:443/mqtt |
+| 2 | `chioff` | wss://wsmqtt.slcoffline.com:443/mqtt |
+| 3 | `chioff-dev` | wss://wsmqtt-dev.slcoffline.com:443/mqtt |
 | 4 | `analyzer-us` | LetsMesh US |
 | 5 | `analyzer-eu` | LetsMesh EU |
 | 6 | `letsmesh` | LetsMesh (legacy) |
@@ -161,7 +161,7 @@ After flashing, connect via serial (115200 baud):
 set wifi.ssid <SSID>
 set wifi.pwd <password>
 set mqtt.email <email>
-set mqtt.iata ORD
+set mqtt.iata SLC
 set name <NodeName>
 set lat <latitude>
 set lon <longitude>

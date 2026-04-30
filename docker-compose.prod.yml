@@ -1,4 +1,4 @@
-# docker-compose.prod.yml — Production stack for chicagooffline.com
+# docker-compose.prod.yml — Production stack for slcoffline.com
 #
 # Usage:
 #   docker compose -f docker-compose.prod.yml up -d --build
@@ -9,16 +9,16 @@
 
 x-common: &common
   restart: unless-stopped
-  networks: [chicagooffline]
+  networks: [slcoffline]
 
 services:
   # ── CoreScope (packet analyzer + web UI) ──────────────────────────────────
   corescope:
     <<: *common
     build:
-      context: ${CORESCOPE_FORK_DIR:-./CoreScope-chicagooffline}
+      context: ${CORESCOPE_FORK_DIR:-./CoreScope-slcoffline}
       args:
-        APP_VERSION: chicagooffline-production
+        APP_VERSION: slcoffline-production
     environment:
       - DISABLE_CADDY=true
       - DISABLE_MOSQUITTO=true
@@ -96,8 +96,8 @@ services:
       - ./keygen:/srv/keygen:ro
 
 networks:
-  chicagooffline:
-    name: chicagooffline-net
+  slcoffline:
+    name: slcoffline-net
 
 volumes:
   corescope-data:

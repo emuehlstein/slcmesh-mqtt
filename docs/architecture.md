@@ -1,4 +1,4 @@
-# chicagooffline.com Architecture
+# slcoffline.com Architecture
 
 ## System Overview
 
@@ -17,7 +17,7 @@ graph TB
     end
 
     subgraph "PROD EC2<br/>13.58.181.117<br/>i-03e3d22e2d0ecf096"
-        subgraph "Docker Network: chicagooffline-net"
+        subgraph "Docker Network: slcoffline-net"
             Caddy[Caddy<br/>:80/:443<br/>TLS + Reverse Proxy]
             CoreScope[CoreScope<br/>:3000<br/>Packet Analyzer]
             HealthCheck[meshcore-health-check<br/>:3090]
@@ -32,7 +32,7 @@ graph TB
     end
 
     subgraph "DEV EC2<br/>3.141.31.229<br/>i-015964acf101b916d"
-        subgraph "Docker Network: chicagooffline-net (dev)"
+        subgraph "Docker Network: slcoffline-net (dev)"
             CaddyDev[Caddy<br/>:80/:443<br/>TLS + Reverse Proxy]
             CoreScopeDev[CoreScope<br/>:3000]
             HealthCheckDev[meshcore-health-check<br/>:3090]
@@ -46,13 +46,13 @@ graph TB
     end
 
     subgraph "MAP EC2<br/>3.20.103.82<br/>i-000c894fdc2b38cf1"
-        TileServer[Tile Server<br/>tiles.chicagooffline.com]
+        TileServer[Tile Server<br/>tiles.slcoffline.com]
     end
 
     %% DNS routing
-    DNS -->|chicagooffline.com<br/>*.chicagooffline.com| Caddy
-    DNS -->|dev-*.chicagooffline.com| CaddyDev
-    DNS -->|tiles.chicagooffline.com| TileServer
+    DNS -->|slcoffline.com<br/>*.slcoffline.com| Caddy
+    DNS -->|dev-*.slcoffline.com| CaddyDev
+    DNS -->|tiles.slcoffline.com| TileServer
 
     %% Users
     Users --> DNS
@@ -63,21 +63,21 @@ graph TB
     MeshNodes -->|WebSocket MQTT :443| MQTTBrokerDev
 
     %% Caddy routing (prod)
-    Caddy -->|scope.chicagooffline.com| CoreScope
-    Caddy -->|health.chicagooffline.com<br/>healthcheck.chicagooffline.com| HealthCheck
-    Caddy -->|wsmqtt.chicagooffline.com<br/>ws.chioff.com| MQTTBroker
-    Caddy -->|livemap.chicagooffline.com| LiveMap
-    Caddy -->|keygen.chicagooffline.com| Keygen
-    Caddy -->|chicagooffline.com| Landing
-    Caddy -->|dev-landing.chicagooffline.com| DevLanding
+    Caddy -->|scope.slcoffline.com| CoreScope
+    Caddy -->|health.slcoffline.com<br/>healthcheck.slcoffline.com| HealthCheck
+    Caddy -->|wsmqtt.slcoffline.com<br/>ws.slcoff.com| MQTTBroker
+    Caddy -->|livemap.slcoffline.com| LiveMap
+    Caddy -->|keygen.slcoffline.com| Keygen
+    Caddy -->|slcoffline.com| Landing
+    Caddy -->|dev-landing.slcoffline.com| DevLanding
 
     %% Caddy routing (dev)
-    CaddyDev -->|dev-scope.chicagooffline.com| CoreScopeDev
-    CaddyDev -->|dev-health.chicagooffline.com| HealthCheckDev
-    CaddyDev -->|wsmqtt-dev.chicagooffline.com| MQTTBrokerDev
-    CaddyDev -->|dev-livemap.chicagooffline.com| LiveMapDev
-    CaddyDev -->|dev-keygen.chicagooffline.com| KeygenDev
-    CaddyDev -->|dev-landing.chicagooffline.com| LandingDev
+    CaddyDev -->|dev-scope.slcoffline.com| CoreScopeDev
+    CaddyDev -->|dev-health.slcoffline.com| HealthCheckDev
+    CaddyDev -->|wsmqtt-dev.slcoffline.com| MQTTBrokerDev
+    CaddyDev -->|dev-livemap.slcoffline.com| LiveMapDev
+    CaddyDev -->|dev-keygen.slcoffline.com| KeygenDev
+    CaddyDev -->|dev-landing.slcoffline.com| LandingDev
 
     %% Internal MQTT connections
     Mosquitto -.->|Internal| CoreScope
@@ -91,12 +91,12 @@ graph TB
     GHA -->|SSH deploy| CaddyDev
     GHA -->|SSH deploy| Caddy
 
-    style Caddy fill:#00E5FF,color:#000
-    style CaddyDev fill:#00E5FF,color:#000
-    style MQTTBroker fill:#39FF14,color:#000
-    style MQTTBrokerDev fill:#39FF14,color:#000
-    style CoreScope fill:#FFB300,color:#000
-    style CoreScopeDev fill:#FFB300,color:#000
+    style Caddy fill:#4FC3F7,color:#000
+    style CaddyDev fill:#4FC3F7,color:#000
+    style MQTTBroker fill:#8BC34A,color:#000
+    style MQTTBrokerDev fill:#8BC34A,color:#000
+    style CoreScope fill:#FF7043,color:#000
+    style CoreScopeDev fill:#FF7043,color:#000
 ```
 
 ## Key Components
@@ -115,12 +115,12 @@ graph TB
 - Used for pre-production testing
 
 ### Map Server (3.20.103.82)
-- **tiles.chicagooffline.com:** Tile server for map rendering
+- **tiles.slcoffline.com:** Tile server for map rendering
 
 ### DNS (Route 53: Z0192662J0UU9ADD406Z)
-- Wildcard `*.chicagooffline.com` → prod
+- Wildcard `*.slcoffline.com` → prod
 - Explicit `dev-*` records → dev
-- `tiles.chicagooffline.com` → map server
+- `tiles.slcoffline.com` → map server
 
 ### CI/CD
 - `main` branch → auto-deploy to dev
@@ -132,8 +132,8 @@ graph TB
 Observers/nodes connect to MQTT brokers in priority order:
 1. LetsMesh US (mqtt-us-v1.letsmesh.net:443, WebSocket, JWT token auth)
 2. ChiMesh.org (mqtt.chimesh.org:443, WebSocket, JWT token auth)
-3. Chicago Offline prod (wsmqtt.chicagooffline.com:443, WebSocket, JWT token auth)
-4. Chicago Offline dev (wsmqtt-dev.chicagooffline.com:443, WebSocket, JWT token auth)
+3. Salt Lake Offline prod (wsmqtt.slcoffline.com:443, WebSocket, JWT token auth)
+4. Salt Lake Offline dev (wsmqtt-dev.slcoffline.com:443, WebSocket, JWT token auth)
 5. rflab.io (mqtt.rflab.io:443, WebSocket, JWT token auth)
 6. LetsMesh EU (mqtt-eu-v1.letsmesh.net:443, WebSocket, JWT token auth)
-7. Chicago Offline TCP fallback (mqtt.chioff.com:1883, plain TCP, no auth, no TLS)
+7. Salt Lake Offline TCP fallback (mqtt.slcoff.com:1883, plain TCP, no auth, no TLS)

@@ -1,4 +1,4 @@
-# docker-compose.dev.yml — Development stack for dev-*.chicagooffline.com
+# docker-compose.dev.yml — Development stack for dev-*.slcoffline.com
 #
 # Usage:
 #   docker compose -f docker-compose.dev.yml up -d --build
@@ -9,16 +9,16 @@
 
 x-common: &common
   restart: unless-stopped
-  networks: [chicagooffline]
+  networks: [slcoffline]
 
 services:
   # ── CoreScope (dev instance) ──────────────────────────────────────────────
   corescope-dev:
     <<: *common
     build:
-      context: ${CORESCOPE_FORK_DIR:-./CoreScope-chicagooffline}
+      context: ${CORESCOPE_FORK_DIR:-./CoreScope-slcoffline}
       args:
-        APP_VERSION: chicagooffline-dev
+        APP_VERSION: slcoffline-dev
     environment:
       - DISABLE_CADDY=true
       - DISABLE_MOSQUITTO=true
@@ -84,8 +84,8 @@ services:
       - observer-matrix
 
 networks:
-  chicagooffline:
-    name: chicagooffline-net
+  slcoffline:
+    name: slcoffline-net
 
 volumes:
   corescope-dev-data:

@@ -41,9 +41,9 @@ deploy.sh                 — Old monolithic deploy (keep as deploy-legacy.sh un
    ```bash
    cd ~/chimesh-mqtt
    ENVIRONMENT=dev \
-   BROKER_CORESCOPE_PASSWORD=xxx \
-   BROKER_ADMIN_PASSWORD=xxx \
-   CHIMESH_VIEWER_PASSWORD=xxx \
+   BROKER_CORESCOPE_PASSWSLC=xxx \
+   BROKER_ADMIN_PASSWSLC=xxx \
+   CHIMESH_VIEWER_PASSWSLC=xxx \
    TEST_CHANNEL_SECRET=xxx \
    bash deploy-compose.sh
    ```

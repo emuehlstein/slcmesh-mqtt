@@ -5,7 +5,7 @@
 
 ## Goal
 
-Run `meshcore-mqtt-broker` (WebSocket MQTT) on prod alongside the existing standalone Mosquitto, so WS-capable observer firmware and mctomqtt clients can publish to prod via `wss://wsmqtt.chicagooffline.com/mqtt` with JWT auth.
+Run `meshcore-mqtt-broker` (WebSocket MQTT) on prod alongside the existing standalone Mosquitto, so WS-capable observer firmware and mctomqtt clients can publish to prod via `wss://wsmqtt.slcoffline.com/mqtt` with JWT auth.
 
 ## Current State
 
@@ -30,13 +30,13 @@ Run `meshcore-mqtt-broker` (WebSocket MQTT) on prod alongside the existing stand
 [mosquitto]              standalone, port 1883 (TCP, no auth) — UNCHANGED
 [meshcore-mqtt-broker]   WS broker, port 8883 (internal), JWT auth — NEW
 [corescope]              reads from BOTH mosquitto:1883 AND meshcore-mqtt-broker:8883
-[caddy]                  adds wsmqtt.chicagooffline.com → broker:8883 — UPDATED
+[caddy]                  adds wsmqtt.slcoffline.com → broker:8883 — UPDATED
 [meshcore-health-check]  port 3090 — UNCHANGED
 ```
 
 Observers can connect via either:
-- **TCP:** `mqtt://mqtt.chicagooffline.com:1883` (no auth, any firmware)
-- **WSS:** `wss://wsmqtt.chicagooffline.com/mqtt` (JWT auth, WS firmware)
+- **TCP:** `mqtt://mqtt.slcoffline.com:1883` (no auth, any firmware)
+- **WSS:** `wss://wsmqtt.slcoffline.com/mqtt` (JWT auth, WS firmware)
 
 CoreScope deduplicates packets by content hash — same packet arriving from both brokers creates one transmission + separate observations.
 
@@ -46,14 +46,14 @@ CoreScope deduplicates packets by content hash — same packet arriving from bot
 
 Add A record:
 ```
-A    wsmqtt.chicagooffline.com    → 13.58.181.117    TTL 60
+A    wsmqtt.slcoffline.com    → 13.58.181.117    TTL 60
 ```
 
 ### 2. Caddyfile (prod)
 
 Add vhost for WS broker:
 ```caddy
-wsmqtt.chicagooffline.com {
+wsmqtt.slcoffline.com {
     reverse_proxy meshcore-mqtt-broker:8883
 }
 ```
@@ -66,8 +66,8 @@ Change `WITH_MQTT_BROKER=false` → `WITH_MQTT_BROKER=true` for prod.
 
 Update the broker env file section to use environment-specific audience:
 ```bash
-AUTH_EXPECTED_AUDIENCE=wsmqtt.chicagooffline.com   # prod (currently hardcoded to wsmqtt-dev)
-AUTH_EXPECTED_AUDIENCE=wsmqtt-dev.chicagooffline.com  # dev
+AUTH_EXPECTED_AUDIENCE=wsmqtt.slcoffline.com   # prod (currently hardcoded to wsmqtt-dev)
+AUTH_EXPECTED_AUDIENCE=wsmqtt-dev.slcoffline.com  # dev
 ```
 
 The broker section already handles building, env file creation, and container startup — it just needs to run for prod too.
@@ -88,7 +88,7 @@ Switch from legacy single `mqtt` field to `mqttSources` array with both brokers:
       "name": "wsmqtt-ws",
       "broker": "ws://meshcore-mqtt-broker:8883/mqtt",
       "username": "corescope",
-      "password": "BROKER_CORESCOPE_PASSWORD",
+      "password": "BROKER_CORESCOPE_PASSWSLC",
       "topics": ["meshcore/#"]
     }
   ]
@@ -100,18 +100,18 @@ Note: CoreScope connects to the WS broker internally via Docker network (no TLS 
 ### 5. GH Secrets (prod environment)
 
 Add to `production` environment (if not already there):
-- `BROKER_CORESCOPE_PASSWORD` — password for CoreScope subscriber account
-- `BROKER_ADMIN_PASSWORD` — password for admin/debug account
+- `BROKER_CORESCOPE_PASSWSLC` — password for CoreScope subscriber account
+- `BROKER_ADMIN_PASSWSLC` — password for admin/debug account
 
 ### 6. deploy.sh — Broker env audience fix
 
-The broker env file currently hardcodes `AUTH_EXPECTED_AUDIENCE=wsmqtt-dev.chicagooffline.com`. Needs to be dynamic:
+The broker env file currently hardcodes `AUTH_EXPECTED_AUDIENCE=wsmqtt-dev.slcoffline.com`. Needs to be dynamic:
 
 ```bash
 if [ "$ENVIRONMENT" = "dev" ]; then
-  BROKER_AUDIENCE="wsmqtt-dev.chicagooffline.com"
+  BROKER_AUDIENCE="wsmqtt-dev.slcoffline.com"
 else
-  BROKER_AUDIENCE="wsmqtt.chicagooffline.com"
+  BROKER_AUDIENCE="wsmqtt.slcoffline.com"
 fi
 ```
 
@@ -132,12 +132,12 @@ Currently deploy.sh does `docker rm -f` on every deploy — same pattern we just
 
 ### 8. config.json password injection
 
-The `BROKER_CORESCOPE_PASSWORD` placeholder in config.json needs to be resolved at deploy time. Dev already does this with `sed`. Extend to prod:
+The `BROKER_CORESCOPE_PASSWSLC` placeholder in config.json needs to be resolved at deploy time. Dev already does this with `sed`. Extend to prod:
 
 ```bash
 # Inject broker password for both environments (not just dev)
-if [ -n "${BROKER_CORESCOPE_PASSWORD:-}" ]; then
-  sed "s/BROKER_CORESCOPE_PASSWORD/${BROKER_CORESCOPE_PASSWORD}/g" \
+if [ -n "${BROKER_CORESCOPE_PASSWSLC:-}" ]; then
+  sed "s/BROKER_CORESCOPE_PASSWSLC/${BROKER_CORESCOPE_PASSWSLC}/g" \
     "$CORESCOPE_CONFIG" > /tmp/corescope-config-resolved.json
   cp /tmp/corescope-config-resolved.json "$CORESCOPE_DATA_DIR/config.json"
 else
@@ -154,10 +154,10 @@ fi
 
 ### After deploy
 - [ ] `docker ps` shows `meshcore-mqtt-broker` running on prod
-- [ ] `curl -i https://wsmqtt.chicagooffline.com/` returns WS upgrade or broker redirect (confirms Caddy + TLS working)
+- [ ] `curl -i https://wsmqtt.slcoffline.com/` returns WS upgrade or broker redirect (confirms Caddy + TLS working)
 - [ ] CoreScope logs show connections to both `mosquitto:1883` and `meshcore-mqtt-broker:8883`
-- [ ] Observer on WS firmware can connect to `wsmqtt.chicagooffline.com` and packets appear in scope.chicagooffline.com
-- [ ] Observer on standard firmware still connects via `mqtt.chicagooffline.com:1883` — no disruption
+- [ ] Observer on WS firmware can connect to `wsmqtt.slcoffline.com` and packets appear in scope.slcoffline.com
+- [ ] Observer on standard firmware still connects via `mqtt.slcoffline.com:1883` — no disruption
 - [ ] Dedup stats: `DuplicateTransmissions` counter ticks up for packets seen on both brokers (expected)
 
 ## Risks
@@ -177,7 +177,7 @@ fi
 
 - `deploy.sh` — `WITH_MQTT_BROKER=true` for prod, dynamic audience, survive-deploy pattern
 - `config.json` — switch to `mqttSources` array with both brokers
-- `Caddyfile` — add `wsmqtt.chicagooffline.com` vhost
+- `Caddyfile` — add `wsmqtt.slcoffline.com` vhost
 - Route 53 — add DNS A record
 - GH `production` environment — add broker secrets
 

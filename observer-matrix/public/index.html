@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Observer Status Matrix — Chicago Mesh</title>
+<title>Observer Status Matrix — SLC Mesh</title>
 <style>
   :root {
-    --bg: #0C0F1A;
-    --surface: #141829;
+    --bg: #0A0E18;
+    --surface: #121728;
     --surface2: #1a1f30;
-    --cyan: #00E5FF;
-    --amber: #FFB300;
-    --green: #39FF14;
+    --cyan: #4FC3F7;
+    --amber: #FF7043;
+    --green: #8BC34A;
     --red: #ef4444;
-    --text: #EDF2FF;
-    --muted: #A0AABF;
+    --text: #E8EAF6;
+    --muted: #90A4AE;
     --border: #1e2a3a;
     --divider: #1e2338;
-    --row-stripe: #111727;
+    --row-stripe: #0F1420;
     --row-hover: #1a2540;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -340,7 +340,7 @@
 <body>
 
 <div class="header">
-  <h1>📡 Observer Matrix <span>— Chicago Mesh</span></h1>
+  <h1>📡 Observer Matrix <span>— SLC Mesh</span></h1>
   <div class="meta">
     <div id="sources"></div>
     <span class="refresh-info">auto-refresh 30s</span>
@@ -374,7 +374,7 @@
 <div class="setup-section" id="observer-setup">
 
   <h2>Connect Your Observer</h2>
-  <p class="section-sub">Configure a MeshCore observer node to publish packet data to the Chicago Mesh MQTT broker. Your node's data will appear in the matrix above and feed into CoreScope, Live Map, and Health Check.</p>
+  <p class="section-sub">Configure a MeshCore observer node to publish packet data to the SLC Mesh MQTT broker. Your node's data will appear in the matrix above and feed into CoreScope, Live Map, and Health Check.</p>
 
   <div class="info-box">
     <p><strong>What's an observer?</strong> An observer is a MeshCore node running firmware that captures packets heard over LoRa radio and publishes them to an MQTT broker over WiFi. It's like a packet sniffer for the mesh — you don't need to be a repeater or route traffic, just listen and report.</p>
@@ -383,15 +383,15 @@
   <h3>Prerequisites</h3>
   <ul>
     <li>A MeshCore-compatible LoRa device (Heltec v3, T-Beam, etc.)</li>
-    <li>Observer firmware flashed — <a href="https://github.com/emuehlstein/MeshCore/releases/latest">Chicagoland firmware</a> (chioff-flex branch) or upstream <code>observer-uplink-native-dev</code></li>
+    <li>Observer firmware flashed — <a href="https://github.com/emuehlstein/MeshCore/releases/latest">Salt Lake Cityland firmware</a> (chioff-flex branch) or upstream <code>observer-uplink-native-dev</code></li>
     <li>Serial connection to the node (USB)</li>
     <li>WiFi network the node can reach</li>
   </ul>
 
   <!-- Method 1 -->
   <div class="method-card">
-    <h3><span class="method-badge recommended">Recommended</span> Chicagoland Firmware (chioff-flex)</h3>
-    <p>Flash the Chicagoland firmware &mdash; all MQTT brokers and radio settings are baked in. Just add WiFi and identity.</p>
+    <h3><span class="method-badge recommended">Recommended</span> Salt Lake Cityland Firmware (chioff-flex)</h3>
+    <p>Flash the Salt Lake Cityland firmware &mdash; all MQTT brokers and radio settings are baked in. Just add WiFi and identity.</p>
     <h4>Serial Configuration</h4>
     <p>Connect via serial (115200 baud) and run:</p>
     <pre><code># Configure WiFi
@@ -399,16 +399,16 @@ set wifi.ssid YourNetworkName
 set wifi.pwd YourPassword
 
 # Set region and identity
-set mqtt.iata ORD
+set mqtt.iata SLC
 set name MyObserver
-set lat 41.8781
-set lon -87.6298
+set lat 40.7608
+set lon -111.8910
 
 # Save and reboot
 reboot</code></pre>
     <h4>What's Baked In</h4>
     <ul>
-      <li><strong>Radio:</strong> 910.525 MHz / BW 62.5 / SF7 / CR5 (Chicagoland standard)</li>
+      <li><strong>Radio:</strong> 910.525 MHz / BW 62.5 / SF7 / CR5 (Salt Lake Cityland standard)</li>
       <li><strong>MQTT slots:</strong> analyzer-us + chimesh + chioff (auto-configured)</li>
       <li><strong>Auth:</strong> Ed25519 JWT (automatic)</li>
       <li><strong>mqtt.rx:</strong> ON &mdash; publishes received packets</li>
@@ -419,13 +419,13 @@ reboot</code></pre>
   <div class="method-card">
     <h3><span class="method-badge advanced">Advanced</span> Plain TCP (Any Firmware)</h3>
     <p>If you're running standard MeshCore firmware (not chioff-flex), use plain TCP to our Mosquitto broker:</p>
-    <pre><code>set mqtt.server mqtt.chicagooffline.com
+    <pre><code>set mqtt.server mqtt.slcoffline.com
 set mqtt.port 1883
-set mqtt.iata ORD
+set mqtt.iata SLC
 reboot</code></pre>
     <h4>Connection Details</h4>
     <ul>
-      <li><strong>Broker:</strong> <code>mqtt.chicagooffline.com:1883</code></li>
+      <li><strong>Broker:</strong> <code>mqtt.slcoffline.com:1883</code></li>
       <li><strong>Protocol:</strong> Plain TCP (no TLS)</li>
       <li><strong>Auth:</strong> None required</li>
     </ul>
@@ -435,10 +435,10 @@ reboot</code></pre>
   <h3>Alternative: mctomqtt Bridge</h3>
   <p>If you're running <a href="https://github.com/agessaman/meshcore-packet-capture">meshcore-packet-capture</a> (mctomqtt) on a Raspberry Pi or similar, it can bridge packets from a USB-connected node to the MQTT broker — no observer firmware needed.</p>
   <pre><code># TCP (production)
-mctomqtt --broker mqtt://mqtt.chicagooffline.com:1883 --topic meshcore/ORD
+mctomqtt --broker mqtt://mqtt.slcoffline.com:1883 --topic meshcore/SLC
 
 # WSS (dev — requires WS support in mctomqtt)
-mctomqtt --broker wss://wsmqtt.chicagooffline.com/mqtt --topic meshcore/ORD</code></pre>
+mctomqtt --broker wss://wsmqtt.slcoffline.com/mqtt --topic meshcore/SLC</code></pre>
 
   <div class="divider"></div>
 
@@ -447,13 +447,13 @@ mctomqtt --broker wss://wsmqtt.chicagooffline.com/mqtt --topic meshcore/ORD</cod
   <ol>
     <li><strong>Check serial output</strong> — look for <code>[MQTT] Connected</code></li>
     <li><strong>Check the matrix above</strong> — your node should appear within a few minutes</li>
-    <li><strong>Check CoreScope</strong> — look for your packets at <a href="https://scope.chicagooffline.com/#/live">scope.chicagooffline.com</a></li>
+    <li><strong>Check CoreScope</strong> — look for your packets at <a href="https://scope.slcoffline.com/#/live">scope.slcoffline.com</a></li>
   </ol>
 
   <h3>Troubleshooting</h3>
   <ul>
     <li><strong>MQTT not connecting:</strong> Verify WiFi with <code>get wifi.status</code>, check DNS, confirm port 1883 isn't blocked</li>
-    <li><strong>Packets not in CoreScope:</strong> Verify topic format (<code>meshcore/ORD/&lt;pubkey&gt;/packets</code>), check your public key with <code>get public.key</code></li>
+    <li><strong>Packets not in CoreScope:</strong> Verify topic format (<code>meshcore/SLC/&lt;pubkey&gt;/packets</code>), check your public key with <code>get public.key</code></li>
     <li><strong>Commands not recognized:</strong> Make sure you're on observer firmware, not standard repeater. Check with <code>ver</code></li>
   </ul>
 
@@ -461,14 +461,14 @@ mctomqtt --broker wss://wsmqtt.chicagooffline.com/mqtt --topic meshcore/ORD</cod
   <ul>
     <li><a href="https://github.com/emuehlstein/chimesh-mqtt/blob/main/OBSERVER_SETUP.md">Full Observer Setup Guide</a> — Detailed configuration reference</li>
     <li><a href="https://github.com/emuehlstein/chimesh-mqtt/blob/main/BUILD_CUSTOM_OBSERVER.md">Build Custom Observer Firmware</a> — Compile from source</li>
-    <li><a href="https://github.com/emuehlstein/MeshCore/tree/chioff-flex">chioff-flex Firmware</a> — Chicagoland defaults + multi-slot MQTT</li>
-    <li><a href="https://chimesh.org">Chicagoland Mesh Community</a> — Join the community</li>
+    <li><a href="https://github.com/emuehlstein/MeshCore/tree/chioff-flex">chioff-flex Firmware</a> — Salt Lake Cityland defaults + multi-slot MQTT</li>
+    <li><a href="https://chimesh.org">Salt Lake Cityland Mesh Community</a> — Join the community</li>
   </ul>
 
 </div>
 
 <div class="footer">
-  Chicago Mesh — ORD region · <a href="https://chicagooffline.com">Home</a> · <a href="https://chicagooffline.com/contributors.html">Open-Source</a>
+  SLC Mesh — SLC region · <a href="https://slcoffline.com">Home</a> · <a href="https://slcoffline.com/contributors.html">Open-Source</a>
 </div>
 
 <script>
