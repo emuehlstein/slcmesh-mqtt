@@ -186,6 +186,24 @@
   }
   .expand-btn:hover { color: var(--cyan); }
 
+  /* Sortable headers */
+  thead th.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: 1.4rem;
+  }
+  thead th.sortable:hover { color: var(--text); }
+  thead th.sortable::after {
+    content: '⇅';
+    position: absolute;
+    right: 0.3rem;
+    opacity: 0.3;
+    font-size: 0.65rem;
+  }
+  thead th.sortable.sort-asc::after { content: '▲'; opacity: 0.8; }
+  thead th.sortable.sort-desc::after { content: '▼'; opacity: 0.8; }
+
   /* ── Setup section ─────────────────────────────────────────────────────── */
   .setup-section {
     margin-top: 3rem;
@@ -339,10 +357,10 @@
     <thead>
       <tr>
         <th></th>
-        <th>Observer</th>
-        <th>Key Prefix</th>
-        <th>Model</th>
-        <th>Firmware</th>
+        <th class="sortable" data-sort="name">Observer</th>
+        <th class="sortable" data-sort="pubkey">Key Prefix</th>
+        <th class="sortable" data-sort="model">Model</th>
+        <th class="sortable" data-sort="firmware">Firmware</th>
         <th id="env-headers"><!-- filled by JS --></th>
       </tr>
     </thead>
@@ -456,6 +474,10 @@ mctomqtt --broker wss://wsmqtt.chicagooffline.com/mqtt --topic meshcore/ORD</cod
 <script>
 const POLL_MS = 30000;
 let expanded = new Set();
+let sortCol = null;   // column key: 'name','pubkey','model','firmware', or source name
+let sortDir = 'asc';  // 'asc' or 'desc'
+let lastSources = [];
+let lastObservers = [];
 
 function ago(ms) {
   if (ms == null) return '—';
@@ -476,8 +498,10 @@ async function refresh() {
   try {
     const res = await fetch('/api/observers');
     const data = await res.json();
+    lastSources = data.sources;
+    lastObservers = data.observers;
     renderSources(data.sources);
-    renderTable(data.sources, data.observers);
+    renderTable(data.sources, sortObservers(data.observers, data.sources));
   } catch (e) {
     console.error('Fetch error:', e);
   }
@@ -494,15 +518,61 @@ function renderSources(sources) {
   }).join('');
 }
 
+function sortObservers(observers, sources) {
+  if (!sortCol) return observers;
+  const sorted = [...observers];
+  sorted.sort((a, b) => {
+    let va, vb;
+    if (sortCol === 'name') { va = a.name; vb = b.name; }
+    else if (sortCol === 'pubkey') { va = a.pubkeyPrefix; vb = b.pubkeyPrefix; }
+    else if (sortCol === 'model') { va = a.model; vb = b.model; }
+    else if (sortCol === 'firmware') { va = a.firmware; vb = b.firmware; }
+    else {
+      // Source column — sort by lastSeenAgo (nulls last)
+      const ea = a.environments[sortCol];
+      const eb = b.environments[sortCol];
+      va = ea?.lastSeenAgo ?? Infinity;
+      vb = eb?.lastSeenAgo ?? Infinity;
+      return sortDir === 'asc' ? va - vb : vb - va;
+    }
+    va = (va || '').toLowerCase();
+    vb = (vb || '').toLowerCase();
+    if (va < vb) return sortDir === 'asc' ? -1 : 1;
+    if (va > vb) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  return sorted;
+}
+
+function handleSort(col) {
+  if (sortCol === col) {
+    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortCol = col;
+    sortDir = 'asc';
+  }
+  renderTable(lastSources, sortObservers(lastObservers, lastSources));
+}
+
 function renderTable(sources, observers) {
   const envTh = document.getElementById('env-headers');
   const headRow = envTh.parentElement;
   document.querySelectorAll('.env-th').forEach(e => e.remove());
   envTh.style.display = 'none';
+
+  // Update sort indicators on static headers
+  headRow.querySelectorAll('th.sortable').forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (th.dataset.sort === sortCol) th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+  });
+
   for (const s of sources) {
     const th = document.createElement('th');
-    th.className = 'env-th';
+    th.className = 'env-th sortable';
+    th.dataset.sort = s.name;
     th.textContent = s.label;
+    if (sortCol === s.name) th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+    th.addEventListener('click', () => handleSort(s.name));
     headRow.appendChild(th);
   }
 
@@ -565,6 +635,11 @@ function esc(s) {
   d.textContent = s;
   return d.innerHTML;
 }
+
+// Bind sort clicks on static headers
+document.querySelectorAll('thead th.sortable').forEach(th => {
+  th.addEventListener('click', () => handleSort(th.dataset.sort));
+});
 
 refresh();
 setInterval(refresh, POLL_MS);
