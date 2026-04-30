@@ -1,23 +1,21 @@
 # Chicagoland MeshCore MQTT Configuration
 # Drop this file into /etc/mctomqtt/config.d/
 #
-# Includes: letsmesh (US + EU), chimesh.org, chicagooffline.com (prod + dev)
+# Includes: letsmesh (US + EU), chimesh.org, chicagooffline.com (prod + dev), rflab.io
 #
 # All brokers use JWT token auth -- your device signs with its Ed25519 key.
 # No passwords needed. Requires firmware supporting `get prv.key` (v1.8.0+).
 #
-# NOTE: If your 00-user.toml already has letsmesh-us and letsmesh-eu,
-# you can remove those entries to avoid duplicates, or just disable
-# the ones in this file by setting enabled = false.
+# Priority order: LetsMesh US → ChiMesh → ChiOff prod → ChiOff dev → rflab → LetsMesh EU
 #
 # Usage:
-#   curl -O https://dev-landing.chicagooffline.com/00-chicagooffline.toml
-#   sudo cp 00-chicagooffline.toml /etc/mctomqtt/config.d/
+#   curl -O https://dev-landing.chicagooffline.com/00-chicagoland.toml
+#   sudo cp 00-chicagoland.toml /etc/mctomqtt/config.d/
 #   sudo systemctl restart mctomqtt   # Linux
 #   sudo launchctl unload /Library/LaunchDaemons/com.meshcore.mctomqtt.plist && \
 #   sudo launchctl load /Library/LaunchDaemons/com.meshcore.mctomqtt.plist  # macOS
 
-# -- letsmesh.net (US) -----------------------------------------------------
+# -- 1. LetsMesh US --------------------------------------------------------
 [[broker]]
 name = "letsmesh-us"
 enabled = true
@@ -36,26 +34,7 @@ verify = true
 method = "token"
 audience = "mqtt-us-v1.letsmesh.net"
 
-# -- letsmesh.net (EU) -----------------------------------------------------
-[[broker]]
-name = "letsmesh-eu"
-enabled = true
-server = "mqtt-eu-v1.letsmesh.net"
-port = 443
-transport = "websockets"
-keepalive = 60
-qos = 0
-retain = true
-
-[broker.tls]
-enabled = true
-verify = true
-
-[broker.auth]
-method = "token"
-audience = "mqtt-eu-v1.letsmesh.net"
-
-# -- chimesh.org ------------------------------------------------------------
+# -- 2. ChiMesh.org --------------------------------------------------------
 [[broker]]
 name = "chimesh"
 enabled = true
@@ -74,7 +53,7 @@ verify = true
 method = "token"
 audience = "mqtt.chimesh.org"
 
-# -- chicagooffline.com (prod) ---------------------------------------------
+# -- 3. Chicago Offline (prod) ---------------------------------------------
 [[broker]]
 name = "chioff-prod"
 enabled = true
@@ -93,7 +72,26 @@ verify = true
 method = "token"
 audience = "wsmqtt.chicagooffline.com"
 
-# -- rflab.io ---------------------------------------------------------------
+# -- 4. Chicago Offline (dev) ----------------------------------------------
+[[broker]]
+name = "chioff-dev"
+enabled = true
+server = "wsmqtt-dev.chicagooffline.com"
+port = 443
+transport = "websockets"
+keepalive = 60
+qos = 0
+retain = true
+
+[broker.tls]
+enabled = true
+verify = true
+
+[broker.auth]
+method = "token"
+audience = "wsmqtt-dev.chicagooffline.com"
+
+# -- 5. rflab.io -----------------------------------------------------------
 [[broker]]
 name = "rflab.io"
 enabled = true
@@ -112,11 +110,11 @@ verify = true
 method = "token"
 audience = "mqtt.rflab.io"
 
-# -- chicagooffline.com (dev) ----------------------------------------------
+# -- 6. LetsMesh EU --------------------------------------------------------
 [[broker]]
-name = "chioff-dev"
+name = "letsmesh-eu"
 enabled = true
-server = "wsmqtt-dev.chicagooffline.com"
+server = "mqtt-eu-v1.letsmesh.net"
 port = 443
 transport = "websockets"
 keepalive = 60
@@ -129,4 +127,4 @@ verify = true
 
 [broker.auth]
 method = "token"
-audience = "wsmqtt-dev.chicagooffline.com"
+audience = "mqtt-eu-v1.letsmesh.net"

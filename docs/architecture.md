@@ -131,10 +131,10 @@ graph TB
 
 Observers/nodes connect to MQTT brokers in priority order:
 1. LetsMesh US (mqtt-us-v1.letsmesh.net:443)
-2. LetsMesh EU (mqtt-eu-v1.letsmesh.net:443)
-3. ChiMesh.org (mqtt.chimesh.org:443)
-4. rflab.io (mqtt.rflab.io:443)
-5. Chicago Offline prod (wsmqtt.chicagooffline.com:443)
-6. Chicago Offline dev (wsmqtt-dev.chicagooffline.com:443)
+2. ChiMesh.org (mqtt.chimesh.org:443)
+3. Chicago Offline prod (wsmqtt.chicagooffline.com:443)
+4. Chicago Offline dev (wsmqtt-dev.chicagooffline.com:443)
+5. rflab.io (mqtt.rflab.io:443)
+6. LetsMesh EU (mqtt-eu-v1.letsmesh.net:443)
 
 All brokers use JWT token authentication (Ed25519 key signing).
