@@ -45,6 +45,17 @@ services:
     volumes:
       - broker-data:/data
 
+
+  # -- MQTT Bridge (WS broker -> mosquitto) -----------------------------------
+  mqtt-bridge:
+    <<: *common
+    build:
+      context: ./mqtt-bridge
+    env_file: .env.mqtt-bridge
+    depends_on:
+      - mosquitto
+      - meshcore-mqtt-broker
+
   # ── Mesh Health Check ─────────────────────────────────────────────────────
   meshcore-health-check:
     <<: *common
