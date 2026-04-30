@@ -2,7 +2,7 @@ name: Deploy Salt Lake Offline
 
 on:
   push:
-    branches: [main, prod]
+    branches: [main, slc-prod]
   workflow_dispatch:
     inputs:
       environment:
@@ -19,28 +19,28 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ (github.event.inputs.environment != '' && github.event.inputs.environment) || (github.ref == 'refs/heads/prod' && 'production') || 'dev' }}
+    environment: ${{ (github.event.inputs.environment != '' && github.event.inputs.environment) || (github.ref == 'refs/heads/slc-prod' && 'production') || 'dev' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Resolve environment name
+      - name: Resolve environment
         id: env
         run: |
           if [ -n "${{ github.event.inputs.environment }}" ]; then
             echo "name=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref }}" = "refs/heads/prod" ]; then
+          elif [ "${{ github.ref }}" = "refs/heads/slc-prod" ]; then
             echo "name=production" >> $GITHUB_OUTPUT
           else
             echo "name=dev" >> $GITHUB_OUTPUT
           fi
-          
-          # Both environments deploy from the same branch content
-          # prod branch is a promotion of main
-          if [ "${{ github.ref }}" = "refs/heads/prod" ]; then
-            echo "branch=prod" >> $GITHUB_OUTPUT
+
+          if [ "${{ github.ref }}" = "refs/heads/slc-prod" ]; then
+            echo "branch=slc-prod" >> $GITHUB_OUTPUT
+            echo "compose_file=docker-compose.prod.yml" >> $GITHUB_OUTPUT
           else
             echo "branch=main" >> $GITHUB_OUTPUT
+            echo "compose_file=docker-compose.dev.yml" >> $GITHUB_OUTPUT
           fi
 
       - name: Setup SSH
@@ -52,52 +52,48 @@ jobs:
 
       - name: Deploy to EC2
         env:
-          HC_SECRET_B64: ${{ secrets.CARTOGRAPHER_HEALTHCHECK_KEY }}
           ENVIRONMENT: ${{ steps.env.outputs.name }}
-          BROKER_CORESCOPE_PASSWSLC: ${{ secrets.BROKER_CORESCOPE_PASSWSLC }}
-          CHIMESH_VIEWER_PASSWSLC: ${{ secrets.CHIMESH_VIEWER_PASSWSLC }}
-          BROKER_ADMIN_PASSWSLC: ${{ secrets.BROKER_ADMIN_PASSWSLC }}
-          BROKER_REMOTE_CORESCOPE_PASSWSLC: ${{ secrets.BROKER_REMOTE_CORESCOPE_PASSWSLC }}
-          DEPLOY_KEY_CONTENT: ${{ secrets.DEPLOY_KEY }}
+          COMPOSE_FILE: ${{ steps.env.outputs.compose_file }}
+          BRANCH: ${{ steps.env.outputs.branch }}
+          BROKER_CORESCOPE_PASSWORD: ${{ secrets.BROKER_CORESCOPE_PASSWORD }}
+          BROKER_ADMIN_PASSWORD: ${{ secrets.BROKER_ADMIN_PASSWORD }}
         run: |
-          # Write deploy key to EC2 for git clone (via scp to avoid shell escaping issues)
-          if [ -n "$DEPLOY_KEY_CONTENT" ]; then
-            printf '%s\n' "$DEPLOY_KEY_CONTENT" > /tmp/chimesh_deploy_key
-            chmod 600 /tmp/chimesh_deploy_key
-            scp -i ~/.ssh/id_rsa /tmp/chimesh_deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/.ssh/chimesh_deploy
-            rm -f /tmp/chimesh_deploy_key
-          fi
-
-          # Write env file for remote deploy (avoids inline env breaking on special chars)
-          cat > /tmp/deploy-env.sh << ENVEOF
-          export HC_SECRET="${HC_SECRET_B64}"
-          export RESET_DB="${{ github.event.inputs.reset_db }}"
-          export ENVIRONMENT="${ENVIRONMENT}"
-          export BROKER_CORESCOPE_PASSWSLC="${BROKER_CORESCOPE_PASSWSLC}"
-          export CHIMESH_VIEWER_PASSWSLC="${CHIMESH_VIEWER_PASSWSLC}"
-          export BROKER_ADMIN_PASSWSLC="${BROKER_ADMIN_PASSWSLC}"
-          export BROKER_REMOTE_CORESCOPE_PASSWSLC="${BROKER_REMOTE_CORESCOPE_PASSWSLC}"
-          ENVEOF
-          scp -i ~/.ssh/id_rsa /tmp/deploy-env.sh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/deploy-env.sh
-          rm -f /tmp/deploy-env.sh
-
           ssh -i ~/.ssh/id_rsa \
             -o ServerAliveInterval=60 -o ServerAliveCountMax=10 \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} bash -s << 'ENDSSH'
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} bash -s << ENDSSH
             set -e
-            source /tmp/deploy-env.sh
-            rm -f /tmp/deploy-env.sh
-            REPO_DIR=$HOME/slcmesh-mqtt
-            BRANCH="${{ steps.env.outputs.branch }}"
-            export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/chimesh_deploy -o StrictHostKeyChecking=no"
-            if [ ! -d "$REPO_DIR/.git" ]; then
-              git clone git@github.com:emuehlstein/slcmesh-mqtt.git $REPO_DIR
-            else
-              git -C $REPO_DIR fetch origin
-              git -C $REPO_DIR reset --hard origin/$BRANCH
+            REPO_DIR=\$HOME/slcmesh-mqtt
+            
+            # Pull latest code
+            cd \$REPO_DIR
+            git fetch origin
+            git reset --hard origin/${BRANCH}
+            
+            # Pull submodule repos
+            for dir in CoreScope-slcoffline meshcore-health-check meshcore-mqtt-live-map; do
+              if [ -d "\$dir/.git" ]; then
+                git -C \$dir pull --ff-only 2>/dev/null || true
+              fi
+            done
+            
+            # Reset DB if requested
+            if [ "${RESET_DB}" = "true" ]; then
+              echo "Resetting CoreScope database..."
+              docker compose -f ${COMPOSE_FILE} stop corescope corescope-dev 2>/dev/null || true
+              VOLUME=\$(docker volume ls -q | grep corescope | head -1)
+              if [ -n "\$VOLUME" ]; then
+                MOUNT=\$(docker volume inspect \$VOLUME --format '{{.Mountpoint}}')
+                sudo rm -f \$MOUNT/meshcore.db
+                echo "Database wiped"
+              fi
             fi
-            cd $REPO_DIR
-            RESET_DB="${RESET_DB:-}" TEST_CHANNEL_SECRET="$HC_SECRET" ENVIRONMENT="${ENVIRONMENT:-production}" BROKER_CORESCOPE_PASSWSLC="${BROKER_CORESCOPE_PASSWSLC:-}" BROKER_ADMIN_PASSWSLC="${BROKER_ADMIN_PASSWSLC:-}" CHIMESH_VIEWER_PASSWSLC="${CHIMESH_VIEWER_PASSWSLC:-}" BROKER_REMOTE_CORESCOPE_PASSWSLC="${BROKER_REMOTE_CORESCOPE_PASSWSLC:-}" bash deploy-compose.sh
+            
+            # Build and deploy
+            docker compose -f ${COMPOSE_FILE} build
+            docker compose -f ${COMPOSE_FILE} up -d
+            
+            echo "Deploy complete: ${ENVIRONMENT} (${COMPOSE_FILE})"
+            docker ps --format "table {{.Names}}\t{{.Status}}"
           ENDSSH
 
       - name: Cleanup
