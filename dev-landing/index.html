@@ -3,35 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Salt Lake Offline — MeshCore LoRa Mesh Network for Salt Lake City</title>
-  <meta name="description" content="Salt Lake City's off-grid messaging network built on MeshCore and LoRa radio. Text without internet or cell service. 25+ active devices across Salt Lake Cityland." />
-  <meta name="keywords" content="MeshCore, LoRa, mesh network, Salt Lake City, off-grid messaging, radio network, emergency communications, MeshCore Salt Lake City, LoRa mesh" />
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKMJ5XBF62"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-WKMJ5XBF62');
-  </script>
+  <title>Salt Lake Offline — Open-Source MeshCore Infrastructure for SLC</title>
+  <meta name="description" content="A turnkey, open-source MeshCore LoRa mesh network stack for Salt Lake City. Sister project to chicagooffline.com. Ready for a local maintainer." />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg: #0A0E18;
       --surface: #121728;
-      --surface2: #1a1f30;
       --border: #242840;
-      --accent-cyan: #4FC3F7;
-      --accent-amber: #FF7043;
-      --accent-green: #8BC34A;
-      --accent-purple: #B565FF;
+      --accent: #4FC3F7;
+      --coral: #FF7043;
+      --green: #8BC34A;
       --text: #E8EAF6;
       --muted: #90A4AE;
       --divider: #1e2338;
     }
-
     body {
       background: var(--bg);
       color: var(--text);
@@ -43,272 +29,65 @@
       padding: 0 1.25rem 2.5rem;
       line-height: 1.65;
     }
-
-    .dev-banner {
-      width: 100vw;
-      background: var(--accent-amber);
-      color: #0A0E18;
-      text-align: center;
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.35rem 0;
-      margin-bottom: 2rem;
-    }
-
     .page { width: 100%; max-width: 720px; }
 
-    /* ── Hero ── */
     .hero {
       text-align: center;
-      padding: 3rem 0 2.5rem;
+      padding: 4rem 0 2.5rem;
     }
-
     .hero h1 {
-      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-size: clamp(2rem, 5.5vw, 3rem);
       font-weight: 800;
       letter-spacing: -0.03em;
       line-height: 1.1;
       margin-bottom: 1rem;
     }
-
     .hero .sub {
       color: var(--muted);
       font-size: 1.1rem;
-      max-width: 520px;
-      margin: 0 auto 2rem;
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
     }
-
-    .btn-primary {
+    .badge {
       display: inline-block;
-      background: var(--accent-cyan);
-      color: var(--bg);
+      background: var(--coral);
+      color: #fff;
+      font-size: 0.7rem;
       font-weight: 700;
-      font-size: 0.95rem;
-      padding: 0.75rem 2rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
       border-radius: 999px;
-      text-decoration: none;
-      transition: transform 0.15s, box-shadow 0.15s;
+      margin-bottom: 1.5rem;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 20px -4px var(--accent-cyan);
-    }
-
-    /* ── Sections ── */
-    section {
-      padding: 2rem 0;
-    }
-
-    section + section {
-      border-top: 1px solid var(--divider);
-    }
-
+    section { padding: 2rem 0; }
+    section + section { border-top: 1px solid var(--divider); }
     .section-label {
       font-size: 0.65rem;
       font-weight: 700;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--accent-cyan);
+      color: var(--accent);
       margin-bottom: 1rem;
     }
-
     h2 {
       font-size: 1.5rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       margin-bottom: 0.75rem;
     }
+    p { color: var(--muted); margin-bottom: 0.75rem; max-width: 600px; }
+    a { color: var(--accent); }
+    a:hover { text-decoration: underline; }
+    strong { color: var(--text); }
 
-    p {
-      color: var(--muted);
-      margin-bottom: 0.75rem;
-      max-width: 600px;
-    }
-
-    /* ── Inline icons ── */
-    .inline-icon {
-      width: 1em;
-      height: 1em;
-      vertical-align: -0.125em;
-      margin-right: 0.2em;
-      flex-shrink: 0;
-    }
-
-    /* ── Steps ── */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin: 1.25rem 0;
-    }
-
-    .step {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.25rem;
-    }
-
-    .step-num {
-      display: inline-block;
-      width: 28px;
-      height: 28px;
-      line-height: 28px;
-      text-align: center;
-      background: var(--accent-cyan);
-      color: var(--bg);
-      font-weight: 800;
-      font-size: 0.8rem;
-      border-radius: 50%;
-      margin-bottom: 0.6rem;
-    }
-
-    .step h3 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 0.3rem;
-    }
-
-    .step p {
-      font-size: 0.82rem;
-      margin-bottom: 0;
-    }
-
-    /* ── Live network ── */
-    .live-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      margin: 1rem 0 1.25rem;
-    }
-
-    .live-stat {
-      display: flex;
-      align-items: baseline;
-      gap: 0.4rem;
-    }
-
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--accent-green);
-      border-radius: 50%;
-      display: inline-block;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    .live-num {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--text);
-    }
-
-    .live-label {
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    /* ── Who it's for ── */
-    .audience {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 0.75rem;
-      margin: 1rem 0;
-    }
-
-    .audience-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem 1.1rem;
-    }
-
-    .audience-item strong {
-      display: block;
-      font-size: 0.9rem;
-      margin-bottom: 0.2rem;
-      color: var(--text);
-    }
-
-    .audience-item span {
-      font-size: 0.8rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    /* ── Get started ── */
-    .start-steps {
-      list-style: none;
-      margin: 1rem 0;
-    }
-
-    .start-steps li {
-      padding: 0.6rem 0;
-      border-bottom: 1px solid var(--divider);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .start-steps li:last-child { border-bottom: none; }
-
-    .start-steps .num {
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
-      text-align: center;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--muted);
-      flex-shrink: 0;
-    }
-
-    .start-steps a {
-      color: var(--accent-cyan);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .start-steps a:hover { text-decoration: underline; }
-
-    .reassure {
-      font-size: 0.82rem;
-      color: var(--muted);
-      font-style: italic;
-      margin-top: 0.5rem;
-    }
-
-    /* ── Final CTA ── */
-    .final-cta {
-      text-align: center;
-      padding: 3rem 0 2rem;
-      border-top: 1px solid var(--divider);
-    }
-
-    .final-cta h2 {
-      max-width: 480px;
-      margin: 0 auto 1.25rem;
-    }
-
-    /* ── Tool cards ── */
     .tools-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 0.75rem;
       margin: 1rem 0;
     }
-
     .tool-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -316,27 +95,54 @@
       padding: 1rem 1.1rem;
       text-decoration: none;
       color: var(--text);
-      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+      transition: border-color 0.15s, transform 0.15s;
     }
+    .tool-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .tool-card strong { display: block; font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .tool-card span { font-size: 0.78rem; color: var(--muted); }
+    .tool-card .status { color: var(--green); font-size: 0.7rem; font-weight: 600; }
 
-    .tool-card:hover {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 14px -4px var(--accent-cyan);
-      transform: translateY(-1px);
+    .repo-list {
+      list-style: none;
+      margin: 1rem 0;
     }
-
-    .tool-card strong {
-      display: block;
+    .repo-list li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--divider);
       font-size: 0.9rem;
-      margin-bottom: 0.2rem;
+    }
+    .repo-list li:last-child { border-bottom: none; }
+    .repo-list code {
+      background: var(--surface);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.82rem;
     }
 
-    .tool-card span {
-      font-size: 0.78rem;
-      color: var(--muted);
+    .cta-box {
+      background: var(--surface);
+      border: 2px solid var(--coral);
+      border-radius: 14px;
+      padding: 2rem;
+      text-align: center;
+      margin: 2rem 0;
     }
+    .cta-box h2 { color: var(--coral); }
+    .cta-box p { margin: 0.75rem auto; max-width: 500px; }
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      margin-top: 0.5rem;
+      transition: transform 0.15s;
+    }
+    .btn:hover { transform: translateY(-2px); text-decoration: none; }
 
-    /* ── Footer ── */
     .footer {
       color: var(--muted);
       font-size: 0.78rem;
@@ -345,47 +151,6 @@
       border-top: 1px solid var(--divider);
       margin-top: 1rem;
     }
-
-    .footer a {
-      color: var(--accent-cyan);
-      text-decoration: none;
-    }
-
-    .footer a:hover { text-decoration: underline; }
-
-    /* ── Light mode ── */
-    :root.light {
-      --bg: #f0f4f8;
-      --surface: #ffffff;
-      --surface2: #f8faff;
-      --border: #d0d7e8;
-      --accent-cyan: #0077cc;
-      --accent-amber: #b87000;
-      --accent-green: #1a7a00;
-      --accent-purple: #7c3aed;
-      --text: #0f1117;
-      --muted: #4a5070;
-      --divider: #dde2f0;
-    }
-    @media (prefers-color-scheme: light) {
-      :root:not(.dark) {
-        --bg: #f0f4f8;
-        --surface: #ffffff;
-        --surface2: #f8faff;
-        --border: #d0d7e8;
-        --accent-cyan: #0077cc;
-        --accent-amber: #b87000;
-        --accent-green: #1a7a00;
-        --accent-purple: #7c3aed;
-        --text: #0f1117;
-        --muted: #4a5070;
-        --divider: #dde2f0;
-      }
-    }
-    .light .dev-banner { background: var(--accent-amber); color: #ffffff; }
-    @media (prefers-color-scheme: light) { :root:not(.dark) .dev-banner { background: var(--accent-amber); color: #ffffff; } }
-    .light .btn-primary { color: #ffffff; }
-    @media (prefers-color-scheme: light) { :root:not(.dark) .btn-primary { color: #ffffff; } }
 
     /* ── Top nav ── */
     .top-nav {
@@ -402,7 +167,6 @@
       top: 0;
       z-index: 90;
     }
-
     .top-nav a {
       display: flex;
       align-items: center;
@@ -416,287 +180,157 @@
       transition: color 0.15s, background 0.15s;
       white-space: nowrap;
     }
-
     .top-nav a:hover {
-      color: var(--accent-cyan);
+      color: var(--accent);
       background: var(--surface);
     }
-
     .top-nav a svg {
-      width: 14px;
-      height: 14px;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      fill: none;
-      flex-shrink: 0;
+      width: 14px; height: 14px;
+      stroke: currentColor; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round;
+      fill: none; flex-shrink: 0;
     }
-
     @media (max-width: 480px) {
       .top-nav a span.nav-label { display: none; }
       .top-nav a svg { width: 18px; height: 18px; }
       .top-nav { gap: 0.5rem; }
     }
-
-    /* ── Theme toggle pill ── */
-    .theme-toggle {
-      position: fixed;
-      top: 2.8rem;
-      right: 1.25rem;
-      display: flex;
-      align-items: center;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 0.2rem;
-      gap: 0;
-      z-index: 100;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    .theme-toggle:hover { border-color: var(--accent-cyan); }
-    .theme-toggle button {
-      all: unset;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .theme-toggle button.active {
-      background: var(--accent-cyan);
-    }
-    .theme-toggle button.active .icon { filter: brightness(0); }
   </style>
 </head>
 <body>
 
-  <div class="dev-banner">Development Preview</div>
-
   <nav class="top-nav">
-    <a href="https://dev-scope.slcoffline.com/#/live">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+    <a href="https://scope.slcoffline.com/#/live">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 5 0 0 1 0 13"/></svg>
       <span class="nav-label">Scope</span>
     </a>
-    <a href="https://dev-health.slcoffline.com">
+    <a href="https://health.slcoffline.com">
       <svg viewBox="0 0 24 24"><polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/></svg>
-      <span class="nav-label">Health Check</span>
+      <span class="nav-label">Health</span>
     </a>
-    <a href="https://dev-livemap.slcoffline.com">
+    <a href="https://livemap.slcoffline.com">
       <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       <span class="nav-label">Live Map</span>
     </a>
-    <a href="https://dev-keygen.slcoffline.com">
+    <a href="https://keygen.slcoffline.com">
       <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
       <span class="nav-label">Keygen</span>
     </a>
-    <a href="https://chimesh.org">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 1 0 18M12 3a14.5 14.5 0 0 0 0 18"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
-      <span class="nav-label">Community</span>
+    <a href="https://github.com/emuehlstein/slcmesh-mqtt">
+      <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      <span class="nav-label">GitHub</span>
     </a>
   </nav>
 
   <div class="page">
 
-    <!-- ── Hero ── -->
     <div class="hero">
-      <h1>Text when the internet&nbsp;is&nbsp;down.</h1>
-      <p class="sub">A local messaging network for Salt Lake City built on long-range radio — no internet, no cell towers, no monthly bill.</p>
-      <a class="btn-primary" href="#get-started">Join the Network</a>
+      <div class="badge">Looking for a maintainer</div>
+      <h1>Salt Lake Offline</h1>
+      <p class="sub">A complete, open-source MeshCore LoRa mesh infrastructure for Salt Lake City — ready for a local enthusiast to take over.</p>
     </div>
 
-    <!-- ── Why ── -->
+    <!-- What is this -->
     <section>
-      <div class="section-label">Why this exists</div>
-      <h2>When the grid goes down, you're not&nbsp;alone.</h2>
-      <p>Power outages. Storms. Overcrowded events where cell service grinds to a halt. Or you're camping outside coverage and want to stay connected to your group.</p>
-      <p>Salt Lake Offline is a messaging network built on <strong style="color:var(--text)">MeshCore</strong> and <strong style="color:var(--text)">LoRa radio</strong>. Small devices talk to each other over long-range radio waves — up to several miles — forming a mesh that works when nothing else does.</p>
+      <div class="section-label">What is this</div>
+      <h2>A turnkey mesh network stack, built and donated.</h2>
+      <p><strong>Salt Lake Offline</strong> is a sister project to <a href="https://chicagooffline.com">chicagooffline.com</a>, which runs a live MeshCore LoRa mesh network across Chicagoland. We built this identical stack for Salt Lake City because SLC has great terrain for mesh radio and an active outdoor community.</p>
+      <p>Everything is deployed and running — the MQTT brokers, the packet analyzer, the live map, the health check, the firmware builds. All it needs is someone local to own it.</p>
     </section>
 
-    <!-- ── How it works ── -->
+    <!-- What's included -->
     <section>
-      <div class="section-label">How it works</div>
-      <h2>Three steps. No tech degree required.</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <h3>Get a LoRa radio device</h3>
-          <p>Small, affordable hardware. About $35.</p>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <h3>Flash MeshCore firmware</h3>
-          <p>One-click setup. Connects to the mesh automatically.</p>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <h3>Start messaging</h3>
-          <p>Pair with the app. No account needed.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Live network ── -->
-    <section>
-      <div class="section-label">Live network</div>
-      <h2>The network is live right now.</h2>
-      <p>Real MeshCore devices across Salt Lake City, relaying messages over LoRa radio every day. This isn't a concept — it's running.</p>
-      <video autoplay loop muted playsinline style="width:100%;border-radius:12px;border:1px solid var(--border);margin:1rem 0" poster="network-hero.png">
-        <source src="network-live.mp4" type="video/mp4" />
-        <img src="network-live.gif" alt="Live map of Salt Lake Offline MeshCore network showing active nodes across Salt Lake Cityland" style="width:100%;border-radius:12px" />
-      </video>
-      <div class="live-bar">
-        <div class="live-stat">
-          <span class="live-dot"></span>
-          <span class="live-num">—</span>
-          <span class="live-label">active devices</span>
-        </div>
-        <div class="live-stat">
-          <span class="live-num">—</span>
-          <span class="live-label">messages today</span>
-        </div>
-        <div class="live-stat">
-          <span class="live-num">—</span>
-          <span class="live-label">coverage area</span>
-        </div>
-      </div>
+      <div class="section-label">What's running</div>
+      <img src="slc-scope.png" alt="Salt Lake Offline CoreScope — live packet analyzer showing Wasatch Front mesh nodes" style="width:100%;border-radius:12px;border:1px solid var(--border);margin:0 0 1.5rem" />
+      <h2>Full stack, already deployed.</h2>
       <div class="tools-grid">
-        <a class="tool-card" href="https://dev-scope.slcoffline.com/#/live">
-          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg> Network Scope</strong>
-          <span>Live packet analyzer and node map</span>
+        <a class="tool-card" href="https://scope.slcoffline.com">
+          <strong>📡 CoreScope</strong>
+          <span>Packet analyzer — live MQTT traffic, node map, signal data</span>
+          <div class="status">● Live</div>
         </a>
-        <a class="tool-card" href="https://dev-livemap.slcoffline.com">
-          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> Live Map</strong>
-          <span>Real-time node map with routes and weather</span>
+        <a class="tool-card" href="https://livemap.slcoffline.com">
+          <strong>🗺️ Live Map</strong>
+          <span>Real-time node positions, routes, weather overlay</span>
+          <div class="status">● Live</div>
         </a>
-        <a class="tool-card" href="https://dev-health.slcoffline.com">
-          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 12 6 12 8 5 10 19 12 12 14 15 16 12 22 12"/></svg> Health Check</strong>
-          <span>Test which devices hear your signal</span>
+        <a class="tool-card" href="https://health.slcoffline.com">
+          <strong>💓 Health Check</strong>
+          <span>Test if your device can reach the network</span>
+          <div class="status">● Live</div>
         </a>
-        <a class="tool-card" href="https://dev-keygen.slcoffline.com">
-          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> Key Generator</strong>
-          <span>Create a custom device identity</span>
+        <a class="tool-card" href="https://keygen.slcoffline.com">
+          <strong>🔑 Key Generator</strong>
+          <span>Create vanity device identities</span>
+          <div class="status">● Live</div>
         </a>
+        <div class="tool-card">
+          <strong>📻 MQTT Broker</strong>
+          <span>WebSocket broker with JWT auth at wsmqtt.slcoffline.com</span>
+          <div class="status">● Live</div>
+        </div>
+        <div class="tool-card">
+          <strong>⚡ SLC Firmware</strong>
+          <span>Pre-built observer firmware for 5 boards, IATA=SLC</span>
+          <div class="status">● <a href="https://github.com/emuehlstein/MeshCore/releases/tag/slcoff-v0.1.0">v0.1.0</a></div>
+        </div>
       </div>
     </section>
 
-    <!-- ── Who it's for ── -->
+    <!-- Open source -->
     <section>
-      <div class="section-label">Who it's for</div>
-      <h2>You don't have to be technical.</h2>
-      <div class="audience">
-        <div class="audience-item">
-          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Curious people</strong>
-          <span>You saw this and thought "wait, that's a thing?" It is.</span>
-        </div>
-        <div class="audience-item">
-          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 22h20L12 2z"/><path d="M12 12v4"/><path d="M7.5 22l4.5-7 4.5 7"/></svg> Outdoors / camping</strong>
-          <span>Stay connected with your group, miles from cell service.</span>
-        </div>
-        <div class="audience-item">
-          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/><line x1="12" y1="7" x2="12" y2="11"/></svg> Neighborhoods</strong>
-          <span>A block-level network that doesn't need Comcast.</span>
-        </div>
-        <div class="audience-item">
-          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="12" y1="2" x2="12" y2="4"/></svg> Emergency prep</strong>
-          <span>When the grid fails, radio still works.</span>
-        </div>
-        <div class="audience-item">
-          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Event crews</strong>
-          <span>Coordinate at festivals, races, or markets without fighting for bandwidth.</span>
-        </div>
-        <div class="audience-item">
-          <strong><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M17 2l-5 5-5-5"/><circle cx="8" cy="16" r="2"/><line x1="14" y1="12" x2="20" y2="12"/><line x1="14" y1="16" x2="20" y2="16"/></svg> Radio &amp; MeshCore enthusiasts</strong>
-          <span>LoRa mesh networking. A new reason to build and experiment.</span>
-        </div>
-      </div>
+      <div class="section-label">100% Open Source</div>
+      <h2>Every line of code, every config file.</h2>
+      <p>Nothing proprietary. Fork it, modify it, make it yours.</p>
+      <ul class="repo-list">
+        <li><a href="https://github.com/emuehlstein/slcmesh-mqtt">emuehlstein/slcmesh-mqtt</a> — Infrastructure: Caddy, MQTT, Docker Compose, CI/CD</li>
+        <li><a href="https://github.com/emuehlstein/CoreScope-chicagooffline">emuehlstein/CoreScope-chicagooffline</a> — CoreScope fork (<code>deploy/slcoffline</code> branch)</li>
+        <li><a href="https://github.com/emuehlstein/MeshCore">emuehlstein/MeshCore</a> — Firmware fork (<code>slcoff-flex</code> branch)</li>
+        <li><a href="https://github.com/yellowcooln/meshcore-mqtt-live-map">yellowcooln/meshcore-mqtt-live-map</a> — Live map (upstream)</li>
+        <li><a href="https://github.com/yellowcooln/meshcore-health-check">yellowcooln/meshcore-health-check</a> — Health check (upstream)</li>
+        <li><a href="https://github.com/agessaman/meshcore-web-keygen">agessaman/meshcore-web-keygen</a> — Key generator (upstream)</li>
+      </ul>
     </section>
 
-    <!-- ── Get started ── -->
-    <section id="get-started">
-      <div class="section-label">Get started</div>
-      <h2>Up and running in minutes.</h2>
-      <ol class="start-steps">
-        <li>
-          <span class="num">1</span>
-          <span><a href="buy.html">Buy a device →</a> Small, affordable radio hardware.</span>
-        </li>
-        <li>
-          <span class="num">2</span>
-          <span><a href="setup.html">Set it up →</a> Quick start guide. Takes five&nbsp;minutes.</span>
-        </li>
-        <li>
-          <span class="num">3</span>
-          <span><strong>You're on the network.</strong> Start messaging.</span>
-        </li>
-      </ol>
-      <p class="reassure">No subscription. No account. The device is yours.</p>
+    <!-- What a maintainer gets -->
+    <section>
+      <div class="section-label">What you'd take over</div>
+      <h2>Two small EC2 instances. That's it.</h2>
+      <p>The entire stack runs on a <strong>t3.small</strong> prod server and a <strong>t3.small</strong> dev server in AWS us-west-2 (Oregon). Monthly cost is around <strong>$15-20</strong> total.</p>
+      <p>GitHub Actions handles deploys — push to <code>main</code> deploys to dev, push to <code>slc-prod</code> deploys to production. TLS certificates are automatic via Caddy + Let's Encrypt.</p>
+      <p>We'll transfer the AWS instances, the domain (<strong>slcoffline.com</strong>), and the GitHub repo to you. Or you can clone everything and start fresh on your own infra.</p>
     </section>
 
-    <!-- ── Final CTA ── -->
-    <div class="final-cta">
-      <h2>Salt Lake City already has a network that works without the&nbsp;internet.</h2>
-      <a class="btn-primary" href="#get-started">Join the Network</a>
+    <!-- Radio details -->
+    <section>
+      <div class="section-label">Radio config</div>
+      <h2>MeshCore on 910.525 MHz.</h2>
+      <p>Same US frequency/bandwidth settings used across the MeshCore community. Compatible with all US MeshCore nodes.</p>
+      <p><strong>910.525 MHz</strong> &nbsp;·&nbsp; BW 62.5 kHz &nbsp;·&nbsp; SF 7 &nbsp;·&nbsp; CR 5 &nbsp;·&nbsp; 3-byte path hash</p>
+      <p>Pre-built firmware with <strong>IATA=SLC</strong> and the slcoffline.com broker is available for Heltec V3, V4, WSL3, and Station G2 boards.</p>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-box">
+      <h2>Want to run the SLC mesh?</h2>
+      <p>If you're in Salt Lake City and want to maintain a community mesh network, this is yours for the taking. Everything is built, tested, and documented.</p>
+      <a class="btn" href="mailto:muehlbucks@gmail.com?subject=Salt%20Lake%20Offline%20handoff">Get in Touch →</a>
     </div>
 
-    <!-- ── Footer ── -->
+    <!-- Sister site -->
+    <section>
+      <div class="section-label">Sister project</div>
+      <h2>Built by the Chicago Offline team.</h2>
+      <p><a href="https://chicagooffline.com">chicagooffline.com</a> has been running a MeshCore mesh across Chicagoland since early 2026. We built Salt Lake Offline using the same stack to prove the model is portable — any city can have this.</p>
+      <p>The goal is simple: seed the infrastructure, find a local champion, hand it over. If SLC works, we'll do it again for more cities.</p>
+    </section>
+
     <div class="footer">
-      Salt Lake Offline &mdash; SLC region &nbsp;·&nbsp;
-      <a href="https://chimesh.org">Salt Lake Cityland Mesh</a> &nbsp;·&nbsp;
-      <a href="/contributors.html">Open-Source</a> &nbsp;&middot;&nbsp;
-      <a href="https://observers-dev.slcoffline.com/#observer-setup">Add Your Data</a>
+      Salt Lake Offline &mdash; a <a href="https://chicagooffline.com">chicagooffline.com</a> sister project &nbsp;·&nbsp;
+      <a href="https://github.com/emuehlstein/slcmesh-mqtt">GitHub</a> &nbsp;·&nbsp;
+      All open source
     </div>
 
   </div>
-
-  <!-- Theme toggle pill -->
-  <div class="theme-toggle" role="radiogroup" aria-label="Theme">
-    <button id="theme-light" aria-label="Light mode"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span></button>
-    <button id="theme-dark" aria-label="Dark mode"><span class="icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button>
-  </div>
-
-  <script>
-    (function() {
-      var root = document.documentElement;
-      var stored = localStorage.getItem('theme');
-      var lightBtn = document.getElementById('theme-light');
-      var darkBtn = document.getElementById('theme-dark');
-
-      function setTheme(mode) {
-        root.classList.remove('light', 'dark');
-        if (mode === 'light') root.classList.add('light');
-        if (mode === 'dark') root.classList.add('dark');
-        lightBtn.classList.toggle('active', mode === 'light');
-        darkBtn.classList.toggle('active', mode === 'dark');
-        localStorage.setItem('theme', mode);
-      }
-
-      // Init: use stored pref, else detect system
-      if (stored) {
-        setTheme(stored);
-      } else {
-        var isLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-        lightBtn.classList.toggle('active', isLight);
-        darkBtn.classList.toggle('active', !isLight);
-      }
-
-      lightBtn.addEventListener('click', function() { setTheme('light'); });
-      darkBtn.addEventListener('click', function() { setTheme('dark'); });
-
-      // Update if system pref changes (and no stored override)
-      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
-        if (!localStorage.getItem('theme')) {
-          lightBtn.classList.toggle('active', e.matches);
-          darkBtn.classList.toggle('active', !e.matches);
-        }
-      });
-    })();
-  </script>
-
 </body>
 </html>
